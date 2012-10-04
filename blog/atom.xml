@@ -4,7 +4,7 @@ layout: nil
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
-  <title>www.batsov.com</title>
+  <title>The SnowPlow Analytics Blog</title>
   <link href="http://snowplowanalytics.com.com/"/>
   <link type="application/atom+xml" rel="self" href="http://snowplowanalytics.com/blog/atom.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
@@ -16,7 +16,7 @@ layout: nil
 
   {% for post in site.posts %}
   <entry>
-    <id>http://www.batsov.com{{ post.id }}</id>
+    <id>http://snowplowanalytics.com{{ post.id }}</id>
     <link type="text/html" rel="alternate" href="http://snowplowanalytics.com{{ post.url }}"/>
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
