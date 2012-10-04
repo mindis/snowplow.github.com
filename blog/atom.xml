@@ -5,7 +5,7 @@ layout: nil
 <feed xmlns="http://www.w3.org/2005/Atom">
  
   <title>The SnowPlow Analytics Blog</title>
-  <link href="http://snowplowanalytics.com.com/"/>
+  <link href="http://snowplowanalytics.com/"/>
   <link type="application/atom+xml" rel="self" href="http://snowplowanalytics.com/blog/atom.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>http://snowplowanalytics.com/</id>
