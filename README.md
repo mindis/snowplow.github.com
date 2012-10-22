@@ -58,6 +58,8 @@ As all the Jekyll processing is performed locally, you need to make sure that Je
 2. [jekyll-pagination](https://github.com/blackwinter/jekyll-pagination). To install the gem execute `sudo gem install jekyll-pagination`.
 3. ... (no other plugins used currently)
 
+In addition, you need to ensure that [Pygements](http://pygments.org/) is installed locally. (This is a syntax highlighter written in Python.) Installation instructions can be found [here](http://pygments.org/docs/installation/#installing-a-released-version). We recommend using [easy_install](http://peak.telecommunity.com/DevCenter/EasyInstall#using-easy-install).
+
 More explanation on how to update the site is given below:
 
 #### 2. Making changes locally
