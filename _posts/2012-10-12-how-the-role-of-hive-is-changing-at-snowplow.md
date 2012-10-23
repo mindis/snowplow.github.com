@@ -14,4 +14,4 @@ Last night I gave a presentation to the clever folks at Hive London covering thr
 
 The slides from the presentation are below. As always, any questions / comments, please post them below.
 
-<iframe src="http://www.slideshare.net/slideshow/embed_code/14696456" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" >  </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/yalisassoon/how-we-use-hive-at-snowplow-and-how-the-role-of-hive-is-changing" title="How we use Hive at SnowPlow, and how the role of HIve is changing" target="_blank">How we use Hive at SnowPlow, and how the role of Hive is changing</a> </strong> from <strong><a href="http://www.slideshare.net/yalisassoon" target="_blank">yalisassoon</a></strong> </div>
+<iframe src="http://www.slideshare.net/slideshow/embed_code/14696456" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" >  </iframe> 
