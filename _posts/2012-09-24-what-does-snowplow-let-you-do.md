@@ -35,6 +35,8 @@ Google Analytics in particular only lets users create reports about of set combi
 3. Engagement levels (e.g. number of visits, number of page views, conversion rates) by traffic source
 4. Improvements to conversion rates over time
 
+<!--more-->
+
 In contrast, because SnowPlow gives you access to the underlying data, it is possible to use BI tools like [Tableau][tableau] and [PowerPivot][powerpivot] to quickly slice and dice web analytics data by any dimensions / metrics you want. We'll be posting examples of how to do this in the next few days.
 
 ### 3. Use machine learning tools on your web analytics data
