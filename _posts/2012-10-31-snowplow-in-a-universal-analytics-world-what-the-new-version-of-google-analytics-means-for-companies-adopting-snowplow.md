@@ -92,7 +92,7 @@ There are several different considerations here:
 * Google Analytics still does not give you access to your customer-level and event-level data. Therefore, **there will always be ways that you can crunch SnowPlow data that you cannot accomplish in GA**: drilling down to segments of one visitor is just the most obvious example
 * There are a range of analytics techniques which are hard to imagine Google implementing at all, even with the new data sets that are available. To give just three examples:
  1. Using machine learning techniques (e.g. [Mahout] [mahout]) to **segment audience by behaviour**
- 2. Performing **event analytics** / pathing in a way that takes into account the **structure of the website**. This is described brilliantly by [Gary Angel] [gary-angel] on the [Semphonic blog] [semphonic]). This methodology includes identifying those events that are predictive of customer lifetime value
+ 2. Performing **event analytics** / pathing in a way that takes into account the **structure of the website**. This is described brilliantly by [Gary Angel] [gary-angel] on the [Semphonic blog] [semphonic]. This methodology includes identifying those events that are predictive of customer lifetime value
  3. Building and testing models that **predict customer lifetime value ahead of time**, so that you can quickly (and robustly) calculate the ROI on marketing campaigns, and adjust your spend accordingly
 * There will always be barriers analysts run up against in trying to fit all of their data into Google's schema. For example, it's not obvious how Google's single `client_id` will cope with different packages (CRM, email, CMS et al) each having their own internal set of user IDs
 
@@ -111,7 +111,7 @@ Finally, there are also a number of **data ownership** and **architectural issue
 * This is the **most valuable data** your company owns. Does it make sense to leave the warehousing and storage of that data to a third-party who in many cases is providing the service for free? What guarantees does you have that that data will always be available, 3, 5 or 10 years down the line?
 * Does it make sense to feed your detailed event- and customer-level data to Google Analytics, when GA does not share that data back with you at the same atomic level of detail. (GA rolls the data up to **aggregates** which are less flexible to work with from an analytics perspective)
 * What happens when **innacurate data** is loaded into Google Analytics? Without the ablity to query and diligence the data directly, leave alone clean and reprocess data, there are very limited options available for a business that has innaccurate data in GA. This becomes a bigger issue as implementation become more complex (because data is being ingested across digital and offline platforms), and GA becomes the de facto tool for all customer analytics
-* If you need to setup regular ETL processes to load the data from your third-party systems into GA, you could **expend the same energy setting up SnowPlow instead**
+* If you need to setup regular ETL processes to load the data from all of your third-party systems into GA, you could **expend the same energy setting up SnowPlow instead**
 
 ## Closing thoughts
 
