@@ -87,7 +87,7 @@ Nevertheless, the case for implementing SnowPlow alongside GA is still compellin
 
 ### 2.1 Analytics capabilities
 
-There are several different aspects here:
+There are several different considerations here:
 
 * Google Analytics still does not give you access to your customer-level and event-level data. Therefore, **there will always be ways that you can crunch SnowPlow data that you cannot accomplish in GA**: drilling down to segments of one visitor is just the most obvious example
 * There are a range of analytics techniques which are hard to imagine Google implementing at all, even with the new data sets that are available. To give just three examples:
@@ -104,7 +104,7 @@ There are also important capabilities around using your event data and derived a
 * Because SnowPlow is open-source software which can be installed on your own servers, it should be possible to co-locate SnowPlow with your own software (CMSes, ecommerce packages, custom apps etc) and thus tightly integrate these data-driven products into your offering
 * Because GA doesn't provide the granular customer-level and event-level data, GA data cannot be used to prototype or drive these data-driven services
 
-### 2.3 
+### 2.3 Data ownership and technical architecture
 
 Finally, there are also a number of **data ownership** and **architectural issues** which we believe make a SnowPlow solution an important compliment, if not yet a full alternative, to a GA implementation. These relate to the fact that, with GA, businesses get more value out by feeding more and more data in: to realise all of the new potential above, they need to be feeding GA with data covering their _complete_ set of customer interactions. However:
 
