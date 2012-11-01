@@ -14,12 +14,12 @@ Earlier this week, Google announced a series of significant advances in Google A
 ![universal-analytics-image] [google-universal-analytics-image]
 
 <a name="what" />
-## What changes has Google announced?
+## 1. What changes has Google announced?
 
 The most significant change Google has announced is the new [Measurement Protocol] [measurement-protocol], which enables businesses using GA to capture much more data. This will make it possible for Google to deliver a much broader range of reports, of higher business value, than was previously possible. To understand the changes, we start by considering what [new data points](#new-data-points) businesses can _feed_ GA, before considering [what that means for GA's reporting capabilities](/blog/2012/10/31/snowplow-proposition-in-a-universal-analytics-world-what-the-new-version-of-ga-means-for-snowplow-adoption#reporting-capabilities).
 
 <a name="new-data-points" />
-### Custom user identifiers
+### 1.1 Custom user identifiers
 
 The first new data points that businesses can feed into Google Analytics is a user's `client_id` (basically, a customer ID) as defined on the business's own systems.
 
@@ -33,7 +33,7 @@ For businesses using GA, being able to augment Google's user identification with
 <!--more-->
 
 <a name="customer-journey" />
-### Capturing events across a user's entire customer journey (not just the web, not just digital interactions)
+### 1.2 Capturing events across a user's entire customer journey (not just the web, not just digital interactions)
 
 We have long argued that web analytics is just one customer data source - and that analysts performing customer analytics need to crunch data covering the customer's complete journey, including other digital channels and offline interactions. That means joining data sets from different digital products and offline data sets to generate a single customer view. To date, companies that have implemented "single customer views" have typically struggled incorporating web behaviour in those views.
 
@@ -43,7 +43,7 @@ The Measurement Protocol can also be used to capture events on digital platforms
 
 Taken together, this means it will be possible for Google Analytics to offer reports detailing customer behaviour across the complete customer journey. Building on this, it should also be possible for GA to enable analysts to calculate [customer lifetime value] [clv] (if the value of different events was passed in with the events): this is one of the most important metrics in customer analytics, and one that has been conspicuous by its absence from web analytics outside of solutions like [SnowPlow] [clv] until now. The Measurement Protocol potentially means a huge increase in the scope and value of reports that it should be possible to generate in Google Analytics.
 
-### Capturing customer-acquisition cost data
+### 1.3 Capturing customer-acquisition cost data
 
 One of the most common types of analytics performed on web data is working out the return on marketing investment for different customer-acquisition channels. To perform this analysis, we need to combine:
 
@@ -53,14 +53,14 @@ One of the most common types of analytics performed on web data is working out t
 
 Now that Google lets businesses reliably track their users over their entire lifecycles (on and offline), it becomes possible to calculate the user's lifetime value, as detailed [above](#customer-journey), delivering on point #3. Google has always enabled business to capture #2. Now, Google  lets you send the cost data into Google Analytics (point #1) - so that the return of each campaign can be accurately calculated. (Previously, only spend data from AdWords could be imported into GA.) With this information, companies should be better placed to drive marketing spend decisions based on Google Analytics reports. Again though, the reality is more nuanced, because typically those spend decisions have to be made _before_ a customer's lifetime value (#3) can be accurately calculated, so companies really need to develop predictive models of how valuable customers are likely to be. Anything but the most basic models are likely to require tools outside of GA to develop, and then pulling that data out of GA to power those models.
 
-### Custom dimensions and metrics
+### 1.4 Custom dimensions and metrics
 
 The [Measurement Protocol] [measurement-protocol] enables businesses to define and capture their own dimensions and metrics each time an event that is tracked. Those additional metrics and dimensions are then available to report in in GA. 
 
 As well as enabling businesses to add custom dimension and metric values to individual event tracking calls, Google also lets businesses bulk upload multiple dimensions at a time into the GA, if a relationship between those custom dimensions and dimensions already in GA can be defined, and GA knows what values to ascribe events already in it to those new dimensions, based on that defined relationship. To give an example: you could upload the product names/SKUs associated with each web page, enabling reporting on page views by SKU. Or, you could upload a range of product metadata (e.g. book titles and authors) and associate that with an ISBN custom field.
 
 <a name="reporting-capabilities" />
-### What new reporting is enabled through the capture of all these additional data points?
+### 1.5 What new reporting is enabled through the capture of all these additional data points?
 
 Taken together, the additional data that businesses can feed into Google Analytics gives Google enough to offer a much broader and more valuable range of reporting than was previously possible:
 
@@ -68,7 +68,7 @@ Taken together, the additional data that businesses can feed into Google Analyti
 2. **Event analytics** across platforms, on and offline. GA can now report on user's complete journey, not just what they do on websites, but also their behaviours on other digital platforms (esp.  mobile) and offline.
 
 <a name="whysnowplow" />
-## How do the advances in GA change the case for adopting SnowPlow
+## 2. How do the advances in GA change the case for adopting SnowPlow?
 
 Prior to the latest announcement, the case for adopting SnowPlow alongside your GA implementation was as follows:
 
@@ -83,14 +83,20 @@ Following the latest announcement, some of these arguments fall away:
 * The additional data points _should_ improve GA's platform and catalogue analytics capabilities; we will only be able to confirm this once we start working with the updated version of GA
 * Therefore, the gap between what is possible with GA, and what is possible with SnowPlow, has shrunk
 
-Nevertheless, the case for implementing SnowPlow alongside GA is still compelling. On the **analytics** side:
+Nevertheless, the case for implementing SnowPlow alongside GA is still compelling, for three main reasons. To take each of these in turn:
 
-* Google still does not give you access to your customer-level and event-level data. Therefore, **there will always be ways you can crunch SnowPlow data that you cannot accomplish in GA**: drilling down to segments of one visitor is just the most obvious example
+### 2.1 Analytics capabilities
+
+There are several different aspects here:
+
+* Google Analytics still does not give you access to your customer-level and event-level data. Therefore, **there will always be ways that you can crunch SnowPlow data that you cannot accomplish in GA**: drilling down to segments of one visitor is just the most obvious example
 * There are a range of analytics techniques which are hard to imagine Google implementing at all, even with the new data sets that are available. To give just three examples:
  1. Using machine learning techniques (e.g. [Mahout] [mahout]) to **segment audience by behaviour**
  2. Performing **event analytics** / pathing in a way that takes into account the **structure of the website**. This is described brilliantly by [Gary Angel] [gary-angel] on the [Semphonic blog] [semphonic]). This methodology includes identifying those events that are predictive of customer lifetime value
  3. Building and testing models that **predict customer lifetime value ahead of time**, so that you can quickly (and robustly) calculate the ROI on marketing campaigns, and adjust your spend accordingly
 * There will always be barriers analysts run up against in trying to fit all of their data into Google's schema. For example, it's not obvious how Google's single `client_id` will cope with different packages (CRM, email, CMS et al) each having their own internal set of user IDs
+
+### 2.2 Creating live, data-driven products
 
 There are also important capabilities around using your event data and derived analyses in **live, data-driven products**:
 
@@ -98,12 +104,16 @@ There are also important capabilities around using your event data and derived a
 * Because SnowPlow is open-source software which can be installed on your own servers, it should be possible to co-locate SnowPlow with your own software (CMSes, ecommerce packages, custom apps etc) and thus tightly integrate these data-driven products into your offering
 * Because GA doesn't provide the granular customer-level and event-level data, GA data cannot be used to prototype or drive these data-driven services
 
+### 2.3 
+
 Finally, there are also a number of **data ownership** and **architectural issues** which we believe make a SnowPlow solution an important compliment, if not yet a full alternative, to a GA implementation. These relate to the fact that, with GA, businesses get more value out by feeding more and more data in: to realise all of the new potential above, they need to be feeding GA with data covering their _complete_ set of customer interactions. However:
 
 * This is the **most valuable data** your company owns. Does it make sense to leave the warehousing and storage of that data to a third-party who in many cases is providing the service for free? What guarantees does you have that that data will always be available, 3, 5 or 10 years down the line?
 * Does it make sense to feed your detailed event- and customer-level data to Google Analytics, when GA does not share that data back with you at the same atomic level of detail. (GA rolls the data up to **aggregates** which are less flexible to work with from an analytics perspective)
 * What happens when **innacurate data** is loaded into Google Analytics? Without the ablity to query and diligence the data directly, leave alone clean and reprocess data, there are very limited options available for a business that has innaccurate data in GA. This becomes a bigger issue as implementation become more complex (because data is being ingested across digital and offline platforms), and GA becomes the de facto tool for all customer analytics
 * If you need to setup regular ETL processes to load the data from your third-party systems into GA, you could **expend the same energy setting up SnowPlow instead**
+
+## Closing thoughts
 
 We at SnowPlow Analytics are enormously excited by the progress Google are making with their Universal Analytics proposition, and especially the good work Google are doing educating the market into the value of customer-centric analytics. But to unleash the full power of that type of customer, platform and catalogue analytics, the serious analyst will still need access to the customer-level and event-level data: ideally on infrastructure that is totally under your own control. SnowPlow is still the best way of getting hold and storing that data.
 
