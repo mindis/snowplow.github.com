@@ -2,7 +2,7 @@
 layout: section
 category: product
 title: Roadmap
-weight: 7
+weight: 8
 ---
 
 # The SnowPlow product roadmap
