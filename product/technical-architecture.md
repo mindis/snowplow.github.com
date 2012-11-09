@@ -30,7 +30,7 @@ The current version of SnowPlow employs a range of powerful and scalable technol
 
 The forthcoming version of SnowPlow will offer a number of complimentary modules. In particular, we are in the process of upgrading the ETL, storage and analytics processes, so as well as outputing the data into S3 for analysis in Hive, we output the data to [Infobright] [infobright] to process in SQL. For companies that do not collect petabytes of data, Infobright scales to terabytes and enables for much faster querying at lower server costs. It also is more easily directly integrated into visualisation and business intelligence tools. 
 
-For more information on SnowPlow technology, visit the [technology] [technology] section of the site and / or the [Github repo] [github-repo].
+For more information on SnowPlow technology, visit the [technical documentation] [tech-docs] section of the site and / or the [SnowPlow wiki] [wiki].
 
 [Learn more] [intro-to-snowplow-analytics] about how to perform analyses in SnowPlow.
 
@@ -55,3 +55,5 @@ For more information on SnowPlow technology, visit the [technology] [technology]
 [infobright]: http://www.infobright.org/
 [intro-to-snowplow-analytics]: analysing-data-with-snowplow.html
 [get-started]: get-started.html
+[tech-docs]: https://github.com/snowplow/snowplow/wiki/SnowPlow-technical-documentation
+[wiki]: https://github.com/snowplow/snowplow/wiki

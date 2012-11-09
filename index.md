@@ -5,49 +5,67 @@ title: SnowPlow Analytics - your web analytics data in your hands
 permalink: index.html
 ---
 
-# SnowPlow  
+<div class="shortcolumn">
+	<h2>Your web data in your hands</h2>
+	<p>Direct access to every line of your web analytics data</p>
+	<ul>
+		<li><strong>Drill down</strong> to <strong>individual customers</strong> and <strong>individual events</strong> on their journeys</li>
+		<li>Zoom out to <strong>compare</strong> the <strong>behaviours between user cohorts</strong></li>
+		<li><strong>Segment your audience</strong> by behaviour</li>
+		<li>Develop and power <strong>recommendation and personalisation engines</strong> based on user behaviour</li>
+	</ul>
+</div>
 
-## Your web analytics data in your hands
+<div class="shortcolumn">
+	<h2>The widest range of analytics</h2>
+	<p>Perform <strong><i>any</i></strong> analytics, incl:</p>
+	<ul>
+		<li><a href="/analytics/customer-analytics/overview.html">Customer analytics</a> e.g. cohort analysis, customer lifetime value, attribution</li>
+		<li><a href="/analytics/platform-analytics/overview.html">Platform analytics</a> e.g. event stream analysis, flexible funnels</li>
+		<li><a href="/analytics/catalogue-analytics/overview.html">Catalogue analytics</a> Compare the performance of products and media</li>
+		<li>Use your favorite tools incl: <a href="http://www.r-project.org/">R</a>, <a href="http://www.tableausoftware.com/">Tableau</a> and <a href="http://mahout.apache.org/">Mahout</a></li>
+	</ul>
+	<p>Explore the <a href="http://hive.apache.org/">Analytics Cookbook</a> for more.</p>
+</div>
 
-Direct access to every line of your web analytics data
+<div class="shortcolumn">
+	<h2>Powerful, scalable, robust</h2>
+	<ul>
+		<li><strong>Hadoop powered</strong> web analytics</li>
+		<li>Scales to <strong>billions of events</strong> (rows of data) per day</li>
+		<li>Data can be stored in <strong>Amazon S3</strong> or <strong>Infobright Community Edition</strong></li>
+		<li>Data can be analysed using <a href="http://hive.apache.org/">Apache Hive</a> and a range of other Hadoop and non-Hadoop tools</li>
+	</ul>
+</div>
 
-* **Drill down** to **individual customers** and **individual events** on their journeys
-* Zoom out to **compare** the **behaviours between user cohorts**
-* **Join your web analytics data** with other data sets (e.g. CRM, product / media catalogue, financial systems)
-* **Segment your audience** by behaviour
-* Develop and power **recommendation and personalisation engines** based on customer behaviour
+<div class="column">
+	<h2>Open source</h2>
+	<ul>
+		<li><strong>No lock in</strong>. <strong>Your</strong> data is kept on <strong>your</strong> S3 account or Infobright instance</li>
+		<li><strong>Active community</strong> extending SnowPlow into new platforms and analyses tools</li>
+		<li>Complete code available on <a href="https://github.com/snowplow/snowplow">Github</a></li>
+	</ul>
+	<p style="text-align:center;"><a href="https://github.com/snowplow/snowplow"><img src="/static/img/github.png" width="150" /></a></p>
+	<ul>
+		<li><a href="https://github.com/snowplow/snowplow/wiki/SnowPlow-setup-guide">Setup guide</a> and <a href="https://github.com/snowplow/snowplow/wiki/SnowPlow-technical-documentation">technical documentation</a> available on <a href="https://github.com/snowplow/snowplow/wiki">wiki</a></li>
+	</ul>
+</div>
 
-## The power to perform the widest range of analytics
+<div class="column">
+	<h2>Latest from the blog</h2>
+	<ul>
+		{% for post in site.posts limit:7 %}
+		<li><a href="{{ post.url }}">{{ post.title }}</a> <abbr>{{ post.date | date_to_string }}</abbr></li>
+		{% endfor %}
+	</ul>			
+</div>
 
-Because you have direct access to your data, you have the flexibility to perform **any** analysis you'd like, using any of the tools you like
+<div class="column">
+	<h2>SnowPlow on Twitter</h2>
+	<a class="twitter-timeline" width="266" height="200" href="https://twitter.com/SnowPlowData" data-widget-id="266927205374885888">Tweets by @SnowPlowData</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-* [Customer analytics] [customer-analytics] e.g. cohort analysis, customer lifetime value, attribution modelling
-* [Platform analytics] [platform-analytics] e.g. event stream analysis, flexible funnels, ROI in development milestones
-* [Catalogue analytics] [catalogue-analytics] e.g. compare the performance of different media items (for content sites) or products (for retailers) over time and by customer segment 
-* Perform analysis in your favourite analytics tools including [R] [r-project], [Tableau] [tableau], [Microstrategy] [microstrategy], [Mahout] [mahout], [Weka] [weka]
-
-Explore the [Analytics Cookbook] [analytics-cookbook] to get a taste for what is possible
-
-## The most powerful, scalable and robust web analytics platform in the world
-
-* **Hadoop-powered** web analytics
-* Scales to **billions of events** (rows of data) per day
-* Data is stored in **Amazon S3**
-* Data is made available for analysis in [Apache Hive] [apache-hive] via [EMR] [amazon-emr] and/or [Infobright] [infobright] columnar database
-
-## Open source
-
-* **No lock in**. *Your* data is kept on *your* Amazon S3 account / Infobright instance
-* **Active community** is already growing up around SnowPlow, developing new functionality to enable SnowPlow to collect data in more environments (e.g. mobile, cross-domain) and grow the range of analytics tools available to use with SnowPlow
-* **Complete code** available on [Github] [github-repo]
-
-## Learn more
-
-* Find out more about the [SnowPlow product][product]
-* [Setup SnowPlow] [setup-snopwlow] today
-* Learn more about SnowPlow: what problems we [built SnowPlow to solve] [problems-built-to-solve], how it is [architected] [technical-architecture], what developments are on the [roadmap] [snowplow-roadmap]
-* Want help with SnowPlow? Find out about our [professional services] [professional-services] and [other sources of support] [more-sources-of-support]
-* Keep up to date with the latest SnowPlow developments on [Github] [github-repo], the [blog] [blog] and [Twitter] [Twitter]
+</div>
 
 [customer-analytics]: /analytics/customer-analytics/overview.html
 [platform-analytics]: /analytics/platform-analytics/overview.html
