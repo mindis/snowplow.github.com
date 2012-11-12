@@ -54,7 +54,7 @@ permalink: index.html
 <div class="column">
 	<h2>Latest from the blog</h2>
 	<ul>
-		{% for post in site.posts limit:7 %}
+		{% for post in site.posts limit:6 %}
 		<li><a href="{{ post.url }}">{{ post.title }}</a> <abbr>{{ post.date | date_to_string }}</abbr></li>
 		{% endfor %}
 	</ul>			
