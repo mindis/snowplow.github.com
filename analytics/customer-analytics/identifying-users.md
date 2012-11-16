@@ -15,15 +15,13 @@ All customer analytics starts with a solid understanding of what constitutes a c
 3. [More robust approaches to identifying customers through tracking login events] (#login-events). A guide to a more reliable approach to identifying users, based on using SnowPlow to track login events
 
 
-<a name="user_id" ></a>
-## 1. Understanding `user_id`s
+<h2><a name="user_id">1. Understanding `user_id`s</a></h2>
 
 When a user visits a website with SnowPlow tracking, SnowPlow checks the users browser to see if a SnowPlow cookie has been set. If it has not, SnowPlow creates a new `user_id` and drops a browser cookie containing it. Then when the user returns to the site, SnowPlow will recognise the user from the `user_id` stored in the cookie on her browser.
 
 This approach to identifying users is in line with that employed all tag-based web analytics programs. What is unique about SnowPlow is that it exposes the user_id on every line of SnowPlow data to analysts crunching SnowPlow data. 
 
-<a name="benefits_of_user_id" /></a>
-## 2. Benefits of exposing the `user_id` for analysis
+<h2><a name="benefits_of_user_id">2. Benefits of exposing the `user_id` for analysis</a></h2>
 
 ### 2a. Ability to view a user's complete engagement record
 
@@ -82,7 +80,7 @@ FROM (
 
 ### 2c. Ability to categorise users by cohorts
 
-Because we can easily slice data by user_id (rather than session), it is easy to define [cohorts][cohort-analysis] to use in [cohort-analysis][cohort-analysis]. For example, to divide users into cohorts based on the month that they first used a service, we can execute the following query:
+Because we can easily slice data by user_id (rather than session), it is easy to define [cohorts][cohort-analysis] to use in [cohort-analysis] [cohort-analysis]. For example, to divide users into cohorts based on the month that they first used a service, we can execute the following query:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -93,10 +91,9 @@ FROM events
 GROUP BY user_id
 {% endhighlight%}
 
-We can then aggregate results for each individual `user_id` by cohort (`group by cohort`), to compare different metrics (e.g. engagement levels) between different cohorts as a whole. (For more in-depth examples of how this is done in practice, see the [cohort analysis][cohort-analysis] section.)
+We can then aggregate results for each individual `user_id` by cohort (`group by cohort`), to compare different metrics (e.g. engagement levels) between different cohorts as a whole. (For more in-depth examples of how this is done in practice, see the [cohort analysis] [cohort-analysis] section.)
 
-<a name="login-events" /></a>
-## 3. More sophisticated approaches to user identification: login events
+<h2><a name="login-events">3. More sophisticated approaches to user identification: login events</a></h2>
 
 Whilst exposing the `user_id` makes slicing data by user easy for an analyst, relying on cookies to reliably identify users is risky for a number of reasons:
 
@@ -112,7 +109,7 @@ When a user logs in to a website, the [SnowPlow event tracker][event-tracking] s
 
 where the `login_id` is the `user_id` as defined on the login system, rather than SnowPlow's own `user_id`. This can be accomplished using the following Javascript to execute the event tracker. (Full documentation on the SnowPlow evene tracker can be found [here] [event-tracking]).
 
-These fields then become available in SnowPlow in the `ev_action` and `ev_value` fields. So, to create a map of SnowPlow `user_id`s to the `login_id`s employed in your login, you can run the following query:
+These fields then become available in SnowPlow in the `ev_action` and `ev_label` fields. So, to create a map of SnowPlow `user_id`s to the `login_id`s employed in your login, you can run the following query:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -121,7 +118,7 @@ user_id AS snowplow_user_id,
 ev_label AS login_id
 FROM events
 WHERE ev_action LIKE 'login'
-GROUP BY user_id, ev_value
+GROUP BY user_id, ev_label
 {% endhighlight %}
 
 When a user logs in to a service from multiple computers, each SnowPlow `user_id`, associated with each computer, will be matched against their single `login_id`. (I.e. there will be a many-to-one relationship between Snowplow `user_id` and `login_id`.) To perform customer analytics using the more robust method of user identification, we simply aggregate over (`GROUP BY`) `login_id` rather than SnowPlow `user_id`.
