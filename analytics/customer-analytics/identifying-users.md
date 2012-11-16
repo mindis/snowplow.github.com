@@ -15,14 +15,14 @@ All customer analytics starts with a solid understanding of what constitutes a c
 3. [More robust approaches to identifying customers through tracking login events] (#login-events). A guide to a more reliable approach to identifying users, based on using SnowPlow to track login events
 
 
-<a name="user_id" />
+<a name="user_id" ></a>
 ## 1. Understanding `user_id`s
 
 When a user visits a website with SnowPlow tracking, SnowPlow checks the users browser to see if a SnowPlow cookie has been set. If it has not, SnowPlow creates a new `user_id` and drops a browser cookie containing it. Then when the user returns to the site, SnowPlow will recognise the user from the `user_id` stored in the cookie on her browser.
 
 This approach to identifying users is in line with that employed all tag-based web analytics programs. What is unique about SnowPlow is that it exposes the user_id on every line of SnowPlow data to analysts crunching SnowPlow data. 
 
-<a name="benefits_of_user_id" />
+<a name="benefits_of_user_id" /></a>
 ## 2. Benefits of exposing the `user_id` for analysis
 
 ### 2a. Ability to view a user's complete engagement record
@@ -95,7 +95,7 @@ GROUP BY user_id
 
 We can then aggregate results for each individual `user_id` by cohort (`group by cohort`), to compare different metrics (e.g. engagement levels) between different cohorts as a whole. (For more in-depth examples of how this is done in practice, see the [cohort analysis][cohort-analysis] section.)
 
-<a name="login-events" />
+<a name="login-events" /></a>
 ## 3. More sophisticated approaches to user identification: login events
 
 Whilst exposing the `user_id` makes slicing data by user easy for an analyst, relying on cookies to reliably identify users is risky for a number of reasons:
@@ -108,15 +108,17 @@ Websites where users login, however, have the opportunity to identify users much
 When a user logs in to a website, the [SnowPlow event tracker][event-tracking] should be fired to capture the login event. The user's login ID (as defined in whichever system is used to manage the login process e.g. the CMS, Facebook etc.) should be captured in the SnowPlow event tracker. The values should be set as follows:
 
 	event_action: 'login'
-	event_value: login_id
+	event_label: login_id
 
-where the `login_id` is the `user_id` as defined on the login system, rather than SnowPlow's own `user_id`. These fields then become available in SnowPlow in the `ev_action` and `ev_value` fields. So, to create a map of SnowPlow `user_id`s to the `login_id`s employed in your login, you can run the following query:
+where the `login_id` is the `user_id` as defined on the login system, rather than SnowPlow's own `user_id`. This can be accomplished using the following Javascript to execute the event tracker. (Full documentation on the SnowPlow evene tracker can be found [here] [event-tracking]).
+
+These fields then become available in SnowPlow in the `ev_action` and `ev_value` fields. So, to create a map of SnowPlow `user_id`s to the `login_id`s employed in your login, you can run the following query:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
 SELECT
 user_id AS snowplow_user_id,
-ev_value AS login_id
+ev_label AS login_id
 FROM events
 WHERE ev_action LIKE 'login'
 GROUP BY user_id, ev_value
@@ -129,6 +131,6 @@ When a user logs in to a service from multiple computers, each SnowPlow `user_id
 [Read on][join-customer-data] to learn how to join SnowPlow customer data with [other sources of customer data][join-customer-data].
 
 [cohort-analysis]: /analytics/customer-analytics/cohort-analysis.html
-[event-tracking]: https://github.com/snowplow/snowplow/wiki/Integrating-SnowPlow-into-your-website#wiki-events
+[event-tracking]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-events
 [join-customer-data]: /analytics/customer-analytics/joining-customer-data.html
 [attribution]: /analytics/customer-analytics/attributino.html
