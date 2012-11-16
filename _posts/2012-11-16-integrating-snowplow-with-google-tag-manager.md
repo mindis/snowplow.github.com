@@ -36,3 +36,4 @@ We're very excited by Google's launch of Tag Manager, and recommend all new Snow
 [setup-gtm]: https://github.com/snowplow/snowplow/wiki/Integrating%20javascript%20tags%20with%20Google%20Tag%20Manager#wiki-setup-gtm
 [setup-snowplow-in-gtm]: https://github.com/snowplow/snowplow/wiki/Integrating%20javascript%20tags%20with%20Google%20Tag%20Manager#wiki-snowplow-setup
 [js-tracker]: https://github.com/snowplow/snowplow/tree/master/1-trackers/javascript-tracker
+[qubit]: http://www.opentag.qubitproducts.com/
