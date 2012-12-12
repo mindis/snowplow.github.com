@@ -12,9 +12,6 @@ SnowPlow data is stored effectively in a log file format, where each line of dat
 
 Although this guide is written specifically for SnowPlow data, the basic approach to converting log format data into a structure suitable for OLAP data should work for other log or event data sets as well.
 
-### Contents
-
-
 1. [Why use OLAP?] (#why)
 2. [What is OLAP exactly?](#what)
 3. [What structure does the data need to be in to support an OLAP cube?](#structure)
@@ -23,6 +20,7 @@ Although this guide is written specifically for SnowPlow data, the basic approac
 6. [Testing the results with Tableau](#tableau-test)
 7. [Testing the results with Qlikview](#qlikview-test)
 8. [Limitations in OLAP analysis](#limitations)
+
 
 <a name="why" ><h3>1. Why use OLAP?</h3> </a>
 
@@ -35,7 +33,7 @@ OLAP tools like Tableau, Pentaho and Microstrategy are very popular amongst data
 OLAP tools are especially well suited for SnowPlow web analytics data:
 
 1. There are a wide range of dimensions we might want to slice and dice web analytics data by, including time, user, visit, geography, device, browser, type of web page, web page, content and/or product, acquisition channel...
-2. There are a wide variety of metrics we might want to compare between dimension combinations e.g. unique users, visits, page views, events, purchases, conversion rates, revenue.
+2. There are a wide variety of metrics we might want to compare between dimension combinations e.g. unique users, visits, page views, events, purchases, conversion rates, revenue...
 3. Web analysts are generally very familiar with OLAP analysis / pivot tables: Google Analytics [cusotm reports] [ga-custom-reports] enables analysts to select metrics and dimensions like a primitive (and incredibly slow) OLAP cube, for example.
 
 Back to [top] (#top).
@@ -46,7 +44,7 @@ Back to [top] (#top).
 
 OLAP is an approach for analysing multi-dimensional data. OLAP stands for "online analytics processing", but it in fact relates to something much more tightly defined in data analytics: the treating of multidimensional data as a cube.
 
-An OLAP cube is a multi-dimensional array of data. Data points are made up of one or more metrics. (In our cases, uniques, visits, page views, transactions, revenue, number of content items consumed etc.) Data can be viewed by a range of different dimensions. (In our case, time of day, day in the week, time of the year, year, customer cohort, type of device, type of browser etc.) An OLAP reporting tool makes it easy for analysts to view the metrics they want, sliced by the particular dimensions they're interested in. So, for example, if an analyst wanted to see if conversion rates had been improving over time, they might slice the conversion rates metric by the time dimension (e.g. by month), to view if there had been an improvement. If there had been an improvement, they might then drill down to see if that improvement had been across the board: was it true of all customer segments, across all device types etc.?
+An OLAP cube is a multi-dimensional array of data. Data points are made up of one or more metrics. (In our cases, uniques, visits, page views, transactions, revenue, number of content items consumed etc.) Data can be viewed by a range of different dimensions. (In our case, examples include time of day, day in the week, time of the year, year, customer cohort, type of device, type of browser etc.) An OLAP reporting tool makes it easy for analysts to view the metrics they want, sliced by the particular dimensions they're interested in. So, for example, if an analyst wanted to see if conversion rates had been improving over time, they might slice the conversion rates metric by the time dimension (e.g. by month), to view if there had been an improvement. If there had been an improvement, they might then drill down to see if that improvement had been across the board: was it true of all customer segments, across all device types etc.?
 
 When we say OLAP cube, then, we visualise a "cube" of data points (i.e. metrics) at the intersection of multiple dimensions. (Three in the case of a cube, but more often there are more dimensions. Technically we should talk in terms of a "hyper-cube", but it doens't really matter.)
 
@@ -105,6 +103,47 @@ With OLAP analysis, increased granularity doesn't just support better drill down
 So granularity is good. The good news is that SnowPlow data is very granular: at least one line of data per event. If we wanted (and it's perfectly legitimate to), we could feed SnowPlow data into our OLAP reporting tool without aggregating it at all. However, there is a cost associated with this level of granularity: it means that the data volumes are greater, and so it is likely that the reporting tool will work more slowly. This used to be a much more important consideration (when RAM wasn't so cheap, and before columnar databases like Infobright and SSD drives). However, it is still a reasonable consideration today.
 
 One example of an approach to aggregating SnowPlow data: we could aggregate it at the level of the user, session and event. (Be it a particular page load, product add to basket etc.) In this case, if we had a user who had visited a particular page 3x in one session, we would only have one line of data representing those three page views. (As opposed to having three in our original SnowPlow events data set.) This would reduce our volume of data somewhat (likely by a factor of 0.1 - 0.25), but still give us a lot of reporting flexibility. (We'd be able to drill down to the user and action level.) We would not, however, be able to perform any path analysis. (I.e. look at the sequence of events in a particular user session.) In any case, this type of analysis isn't well supported by OLAP tools like Tableau.
+
+#### 3.2 Ensure all dimensions information associated with each event is in every line of data
+
+There are a number of dimensions that are already available on every line of SnowPlow data. For example, the browser and operating system fields are populated in every line of SnowPlow data. 
+
+However, there are other dimensions that are not available on every line of SnowPlow data. In fact, these dimensions need to be deduced by looking at user behaviour across multiple lines of data. To give two related examples:
+
+Say we are interested in bucketing users into cohorts based on the first time they performed a particular action e.g. "signup". Maybe we bucket users by month. Then the user cohort of each of our users can easily be derived using the following SQL:
+
+{% highlight mysql %}
+SELECT
+user_id,
+CONCAT(YEAR(MIN(dt)), "-", MONTH(MIN(dt)))
+FROM events
+WHERE 
+ev_action LIKE "signup"
+GROUP BY user_id
+{% endhighlight %}
+
+However, to derive the cohort by user, we've had to scan all the rows of data for each of our users. When we feed our data into an OLAP reporting tool like Tableau, we need a column in it called "cohort", and for each event for each user, that column needs to be populated with the results from the above query.
+
+To take another example: say we want to bucket users again, but this time by the channel that drove them to our website in the first place. Again, to work this out, we need to look at the first event for each of those users, and see what drove him / her there. Our SQL query would look like:
+
+{% highlight mysql %}
+SELECT
+e.user_id,
+mkt_source AS first_referer
+FROM events_pbz e
+INNER JOIN
+( 	SELECT 
+	user_id,
+	min(concat(dt," ",tm) ) as first_touch_timestamp
+	FROM `events_pbz`
+	group by user_id ) users
+ON users.user_id = e.user_id
+AND CONCAT(e.dt, " ", e.tm) = first_touch_timestamp
+{% endhighlight %}
+
+In our modified data set for our OLAP reporting tool, we'd want a column for this data (maybe called "first referrer") that was populated with the `first_referer` field generated by the above query.
+
+In both the above cases, we take data that we deduce about a dimension by scanning multiple rows of events data (in each case, about the "user" dimension), and add it into an additional column so that it is available on every row. This means that it is straightforward for the OLAP tool to identify events that should be aggregated together when slicing and dicing by that dimension, without having to scan multiple lines of data.
 
 <a name="practical"><h3>4. Some practical considerations related to databases and tables</h3></a>
 
