@@ -46,6 +46,8 @@ OLAP is an approach for analysing multi-dimensional data. OLAP stands for "onlin
 
 An OLAP cube is a multi-dimensional array of data. Data points are made up of one or more metrics. (In our cases, uniques, visits, page views, transactions, revenue, number of content items consumed etc.) Data can be viewed by a range of different dimensions. (In our case, examples include time of day, day in the week, time of the year, year, customer cohort, type of device, type of browser etc.) An OLAP reporting tool makes it easy for analysts to view the metrics they want, sliced by the particular dimensions they're interested in. So, for example, if an analyst wanted to see if conversion rates had been improving over time, they might slice the conversion rates metric by the time dimension (e.g. by month), to view if there had been an improvement. If there had been an improvement, they might then drill down to see if that improvement had been across the board: was it true of all customer segments, across all device types etc.?
 
+<p style="text-align:center;"><img src="/static/img/olap/example-cube.png" alt="olap cube" width="250"/></p>
+
 When we say OLAP cube, then, we visualise a "cube" of data points (i.e. metrics) at the intersection of multiple dimensions. (Three in the case of a cube, but more often there are more dimensions. Technically we should talk in terms of a "hyper-cube", but it doens't really matter.)
 
 Back to [top] (#top).
@@ -56,9 +58,13 @@ Back to [top] (#top).
 
 We "slice" data when we pick two dimensions to view a particular metric by. The analogy is to take a "slice" through an OLAP cube to produce a 2D data set.
 
+<p style="text-align:center;"><img src="/static/img/olap/slice.png" alt="slice olap cube" width="180"/></p>
+
 #### 2.2.2. Dice data
 
 Rather than slice data into two dimensions, we might want to create a subcube with more than 2 dimensions. This operation is called "dice".
+
+<p style="text-align:center;"><img src="/static/img/olap/dice.png" alt="dice olap cube" width="140" /></p>
 
 #### 2.2.3. Drill up and drill down
 
@@ -83,6 +89,8 @@ Pivoting means swaping one dimension for another. Typically this is used in two 
 1. With an initial data set, to spot if there are interesting relationships between particular dimensions (e.g. product mix by city or conversion rate by time of day).
 2. To better understand a relationship once one has been spotted. (Does product mix _only_ vary by city? Or is it actually that user segments vary by city, and it is user segment that is predictive of product mix?)
 
+<p style="text-align:center;"><img src="/static/img/olap/pivot.png" alt="pivot olap cube" width="140" /></p>
+
 Back to [top] (#top).
 
 <a name="structure"><h3>3. What structure does the data need to be in to support an OLAP cube?</h3></a>
@@ -100,7 +108,7 @@ The more granular our data, the more reporting flexibility we have. One of the m
 
 With OLAP analysis, increased granularity doesn't just support better drill down facilities. It also enables more pivotting possibilities - as you can slice and dice more combinations of metrics against one another.
 
-So granularity is good. The good news is that SnowPlow data is very granular: at least one line of data per event. If we wanted (and it's perfectly legitimate to), we could feed SnowPlow data into our OLAP reporting tool without aggregating it at all. However, there is a cost associated with this level of granularity: it means that the data volumes are greater, and so it is likely that the reporting tool will work more slowly. This used to be a much more important consideration (when RAM wasn't so cheap, and before columnar databases like Infobright and SSD drives). However, it is still a reasonable consideration today.
+So granularity is good. The good news is that SnowPlow data is very granular: at least one line of data per event. If we wanted (and it's perfectly legitimate to), we could feed SnowPlow data into our OLAP reporting tool without aggregating it at all. However, there is a cost associated with this level of granularity: it means that the data volumes are greater, and so it is likely that the reporting tool will work more slowly. This used to be a much more important consideration (when RAM wasn't so cheap, and before columnar databases like Infobright, in-memory databases and SSD drives). However, it is still a reasonable consideration today.
 
 One example of an approach to aggregating SnowPlow data: we could aggregate it at the level of the user, session and event. (Be it a particular page load, product add to basket etc.) In this case, if we had a user who had visited a particular page 3x in one session, we would only have one line of data representing those three page views. (As opposed to having three in our original SnowPlow events data set.) This would reduce our volume of data somewhat (likely by a factor of 0.1 - 0.25), but still give us a lot of reporting flexibility. (We'd be able to drill down to the user and action level.) We would not, however, be able to perform any path analysis. (I.e. look at the sequence of events in a particular user session.) In any case, this type of analysis isn't well supported by OLAP tools like Tableau.
 
@@ -145,11 +153,24 @@ In our modified data set for our OLAP reporting tool, we'd want a column for thi
 
 In both the above cases, we take data that we deduce about a dimension by scanning multiple rows of events data (in each case, about the "user" dimension), and add it into an additional column so that it is available on every row. This means that it is straightforward for the OLAP tool to identify events that should be aggregated together when slicing and dicing by that dimension, without having to scan multiple lines of data.
 
-<a name="practical"><h3>4. Some practical considerations related to databases and tables</h3></a>
+<a name="practical"><h3>4. Some practical considerations related to star schemas and columnar databases</h3></a>
 
-TO WRITE
+OLAP has a long history (which means it is an old technology). In the literatue on OLAP, data structures are typically described in terms of star schemas: a denormalized data structure with a central "fact table" of the actual events that occured, linked to dimensions table (by lookups) that shed light on each individual action.
+
+<p style="text-align:center;"><img src="/static/img/olap/star-schema.png" alt="pivot olap cube" /></p>
+
+<p style="font-size:small;text-align:right">Image taken from <a href="http://en.wikipedia.org/wiki/Star_schema">Wikipedia</a></p>
+
+Columar databases like Infobright mean organising data formally in a star schema is no longer necessary: we still store denormalized data, but effectively collapse all the dimension tables into the fact table, to create a single "fat" fact table with all the relevant dimensions:
+
+<p style="text-align:center;"><img src="/static/img/olap/desired-structure-for-olap.png" alt="desired structure" width="500" /></p>
+
+Columnar databases make this possible because they make "columns cheap": query times are a function of the number of columns in the query - any that are unused are ignored. Having all the columns in a single table makes querying significantly easier: it means no joins are necessary. It also means tools like Tableau can run directly on our data table, without having to peform any joins themselves. (Which is generally a time consuming operation.)
+
 
 <a name="conversion"><h3>5. Converting SnowPlow event log data into dimensional OLAP structure: step by step guide</h3></a>
+
+Now that we know how we need to restructure SnowPlow data, we're in a position to define the table that will house our OLAP data. 
 
 TO WRITE
 
