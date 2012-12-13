@@ -6,9 +6,9 @@ title: Converting SnowPlow data into a format suitable for OLAP
 weight: 2
 ---
 
-<h1><a name="top">Converting SnowPlow data into a format suitable for OLAP</a></h1>
+<h1><a name="top">Converting SnowPlow data into a format suitable for OLAP reporting tools e.g. Tableau, Qlikview, Pentaho, Microstrategy</a></h1>
 
-SnowPlow data is stored effectively in a log file format, where each line of data represents one "event" on a particular user journey. This data structure is unsuitable for traditional BI / analysis tools like Tableau or Pentaho, which require that the data be structured in a format suitable for OLAP analysis. (Sometimes also called _pivot tables_.) In this section of the cookbook, we describe how to restructure SnowPlow event data into a format suitable for OLAP analysis, so that it can be visualised using tools like Tableau and Pentaho.
+SnowPlow data is stored in a log file format, where each line of data represents one "event" on a particular user journey. This data structure is unsuitable for traditional BI / analysis tools like Tableau or Pentaho, which require that the data be structured in a format suitable for OLAP analysis. (Sometimes also called _pivot tables_.) In this section of the cookbook, we describe how to restructure SnowPlow event data into a format suitable for OLAP analysis, so that it can be interrogated using tools like Tableau and Qlikview.
 
 Although this guide is written specifically for SnowPlow data, the basic approach to converting log format data into a structure suitable for OLAP data should work for other log or event data sets as well.
 
@@ -17,14 +17,14 @@ Although this guide is written specifically for SnowPlow data, the basic approac
 3. [What structure does the data need to be in to support an OLAP cube?](#structure)
 4. [Some practical considerations related to databases and tables](#practical)
 5. [Converting SnowPlow event log data into dimensional OLAP structure: step by step guide](#conversion)
-6. [Testing the results with Tableau](#tableau-test)
-7. [Testing the results with Qlikview](#qlikview-test)
+6. [Interrogating the data with Tableau](#tableau-test)
+7. [Interrogating the data with Qlikview](#qlikview-test)
 8. [Limitations in OLAP analysis](#limitations)
 
 
 <a name="why" ><h3>1. Why use OLAP?</h3> </a>
 
-OLAP tools like Tableau, Pentaho and Microstrategy are very popular amongst data analysts because they 
+OLAP tools like Tableau, Qlikview, Pentaho and Microstrategy are very popular amongst data analysts because they 
 
 1. Make it easy to slice data along different dimensions, exploring different relationships over time, and answering a wealth of different business questions
 2. They do not require much technical knowledge to use. (E.g. no need to know SQL or Python).
@@ -34,7 +34,7 @@ OLAP tools are especially well suited for SnowPlow web analytics data:
 
 1. There are a wide range of dimensions we might want to slice and dice web analytics data by, including time, user, visit, geography, device, browser, type of web page, web page, content and/or product, acquisition channel...
 2. There are a wide variety of metrics we might want to compare between dimension combinations e.g. unique users, visits, page views, events, purchases, conversion rates, revenue...
-3. Web analysts are generally very familiar with OLAP analysis / pivot tables: Google Analytics [cusotm reports] [ga-custom-reports] enables analysts to select metrics and dimensions like a primitive (and incredibly slow) OLAP cube, for example.
+3. Web analysts are generally very familiar with OLAP analysis / pivot tables: Google Analytics [custom reports] [ga-custom-reports] enables analysts to select metrics and dimensions like a primitive (and incredibly slow) OLAP cube, for example.
 
 Back to [top] (#top).
 
@@ -116,18 +116,19 @@ One example of an approach to aggregating SnowPlow data: we could aggregate it a
 
 There are a number of dimensions that are already available on every line of SnowPlow data. For example, the browser and operating system fields are populated in every line of SnowPlow data. 
 
-However, there are other dimensions that are not available on every line of SnowPlow data. In fact, these dimensions need to be deduced by looking at user behaviour across multiple lines of data. To give two related examples:
+However, there are other dimensions that are not available on every line of SnowPlow data. In fact, these dimensions need to be deduced by looking at user behaviour across multiple lines of data. To give two examples:
 
 Say we are interested in bucketing users into cohorts based on the first time they performed a particular action e.g. "signup". Maybe we bucket users by month. Then the user cohort of each of our users can easily be derived using the following SQL:
 
 {% highlight mysql %}
 SELECT
-user_id,
-CONCAT(YEAR(MIN(dt)), "-", MONTH(MIN(dt)))
+	user_id,
+	CONCAT(YEAR(MIN(dt)), "-", MONTH(MIN(dt)))
 FROM events
 WHERE 
-ev_action LIKE "signup"
-GROUP BY user_id
+	ev_action LIKE "signup"
+GROUP BY 
+	user_id
 {% endhighlight %}
 
 However, to derive the cohort by user, we've had to scan all the rows of data for each of our users. When we feed our data into an OLAP reporting tool like Tableau, we need a column in it called "cohort", and for each event for each user, that column needs to be populated with the results from the above query.
@@ -136,9 +137,10 @@ To take another example: say we want to bucket users again, but this time by the
 
 {% highlight mysql %}
 SELECT
-e.user_id,
-mkt_source AS first_referrer
-FROM events e
+	e.user_id,
+	mkt_source AS first_referrer
+FROM 
+	events e
 INNER JOIN
 ( 	SELECT 
 	user_id,
@@ -151,7 +153,9 @@ AND CONCAT(e.dt, " ", e.tm) = first_touch_timestamp
 
 In our modified data set for our OLAP reporting tool, we'd want a column for this data (maybe called "first referrer") that was populated with the `first_referrer` field generated by the above query.
 
-In both the above cases, we take data that we deduce about a dimension by scanning multiple rows of events data (in each case, about the "user" dimension), and add it into an additional column so that it is available on every row. This means that it is straightforward for the OLAP tool to identify events that should be aggregated together when slicing and dicing by that dimension, without having to scan multiple lines of data.
+In both the above cases, we take data that we deduce about a dimension by scanning multiple rows of events data (in each case, about the "user" dimension), and add it into an additional column in or OLAP data set so that it is available on every row. This means that it is straightforward for the OLAP tool to identify events that should be aggregated together when slicing and dicing by that dimension, without having to scan multiple lines of data.
+
+Back to [top] (#top).
 
 <a name="practical"><h3>4. Some practical considerations related to star schemas and columnar databases</h3></a>
 
@@ -167,13 +171,14 @@ Columar databases like Infobright mean organising data formally in a star schema
 
 Columnar databases make this possible because they make "columns cheap": query times are a function of the number of columns in the query - any that are unused are ignored. Having all the columns in a single table makes querying significantly easier: it means no joins are necessary. It also means tools like Tableau can run directly on our data table, without having to peform any joins themselves. (Which is generally a time consuming operation.)
 
+Back to [top] (#top).
 
 <a name="conversion"><h3>5. Converting SnowPlow event log data into dimensional OLAP structure: step by step guide</h3></a>
 
 Converting SnowPlow event log data into a dimensional OLAP struture is a four step process
 
 1. [Define the structure of our OLAP data table](#structure-2), including both metric and dimension columns
-2. [Work out what level of granularity to use](#granularity) i.e. what each line of data reprents (one event or a higher level of aggregation)?
+2. [Work out what level of granularity to use](#granularity) i.e. what each line of data reprents. (One event or a higher level of aggregation?)
 3. [Define our table](#define)
 4. [Work out how to compute each line of data](#compute)
 5. [Generate the OLAP data](#generate)
@@ -230,7 +235,7 @@ A social network might want to include:
 * Number of X way conversations
 * Number of shares
 
-To keep this tutorial a manageable length, we'll only include the first three metrics (uniques, visits and page views) in our example. However, extending our OLAP data table to include many more metrics is possible (and recommended): one of the explicit aims of SnowPlow, after all, is to enable you to report the metrics that matter to your business, however particular those metrics are.
+To keep this tutorial a manageable length, we'll only include the first three metrics (uniques, visits and page views) in our example. However, extending our OLAP data table to include many more metrics is possible (and recommended): one of the explicit aims of SnowPlow, after all, is to enable you to report the metrics that matter to your business, however particular those metrics are. (For a video of an example cube with many more dimensions, see our blog post on [analysing SnowPlow data with Tableau] [analysing-snowplow-data-with-tableau].)
 
 ### 5.1.2 Dimensions
 
@@ -281,13 +286,13 @@ We should recognise that there is a hierarchy in the three entities we've identi
 
 Remember - we're only including a handful of dimensions to keep this tutorial manageable. We recommend including as many dimensions as possible, to support as wide a range of OLAP analyses as possible.
 
-<h3><a name="granularity">5.2 Work out what level of granularity to use i.e. what each line of data reprents (one event or a higher level of aggregation)?</a></h3>
+<h3><a name="granularity">5.2 Work out what level of granularity to use i.e. what each line of data reprents. (One event or a higher level of aggregation?)</a></h3>
 
 We discussed the merits and costs or keeping more granular data in your OLAP cube. For the sakes of this example, we're going aggregate data by page by visit. That means we will be able to look at the number of page views and number of unique page views by visit, but not analyse e.g. for users who look at a particular web page twice in one session e.g. how many page views they viewed in between the two of the same page.
 
 <h3><a name="define">5.3 Define our table</a></h3>
 
-To return to our example, we are now in a position to define the structure of the OLAP data as it would look in Infobright:
+To return to our example, we are now in a position to define the structure of the OLAP data as it would look in <a name="table-def">Infobright</a>:
 
 {% highlight mysql %}
 
@@ -296,22 +301,22 @@ CREATE TABLE IF NOT EXISTS demo_cube (
 	# User
 		`user_id` varchar(16) comment 'lookup',
 		`cohort` varchar(16) comment 'lookup',
-		`first_visit_referrer_source` varchar(255) comment 'lookup',
-		`first_visit_referrer_medium` varchar(255) comment 'lookup',
-		`first_visit_referrer_term` varchar(255) comment 'lookup',
-		`first_visit_referrer_content` varchar(2083),
-		`first_visit_referrer_campaign` varchar(255) comment 'lookup',
+		`first_visit_mkt_source` varchar(255) comment 'lookup',
+		`first_visit_mkt_medium` varchar(255) comment 'lookup',
+		`first_visit_mkt_term` varchar(255) comment 'lookup',
+		`first_visit_mkt_content` varchar(2083),
+		`first_visit_mkt_campaign` varchar(255) comment 'lookup',
 		`first_visit_page_referrer` varchar(2083),
 
 	# Visit
 		`visit_id` int,
  		`dt` date,
 		`tm` time,
-		`visit_referrer_source` varchar(255) comment 'lookup',
-		`visit_referrer_medium` varchar(255) comment 'lookup',
-		`visit_referrer_term` varchar(255) comment 'lookup',
-		`visit_referrer_content` varchar(2083),
-		`visit_referrer_campaign` varchar(255) comment 'lookup',
+		`visit_mkt_source` varchar(255) comment 'lookup',
+		`visit_mkt_medium` varchar(255) comment 'lookup',
+		`visit_mkt_term` varchar(255) comment 'lookup',
+		`visit_mkt_content` varchar(2083),
+		`visit_mkt_campaign` varchar(255) comment 'lookup',
 		`visit_page_referrer` varchar(2083),
 
 	# Page
@@ -356,14 +361,14 @@ Let us first generate the missing visit data. We want the date, time and traffic
 
 {% highlight mysql %}
 SELECT
-v.user_id,
-v.visit_id,
-e2.mkt_source AS visit_mkt_source,
-e2.mkt_medium AS visit_mkt_medium,
-e2.mkt_term AS visit_mkt_term,
-e2.mkt_content AS visit_mkt_content,
-e2.mkt_campaign AS visit_mkt_campaign,
-e2.page_referrer AS visit_page_referrer
+	v.user_id,
+	v.visit_id,
+	e2.mkt_source AS visit_mkt_source,
+	e2.mkt_medium AS visit_mkt_medium,
+	e2.mkt_term AS visit_mkt_term,
+	e2.mkt_content AS visit_mkt_content,
+	e2.mkt_campaign AS visit_mkt_campaign,
+	e2.page_referrer AS visit_page_referrer
 FROM events e2
 INNER JOIN
 (	SELECT
@@ -382,21 +387,20 @@ And then join it with our original data set to populate the missing visit dimens
 
 {% highlight mysql %}
 SELECT
-page_views.user_id,
-page_views.visit_id,
-visits.dt,
-visits.tm,
-visits.visit_mkt_source,
-visits.visit_mkt_medium,
-visits.visit_mkt_content,
-visits.visit_mkt_campaign,
-visits.visit_page_referrer,
-page_views.page_url,
-page_views.page_title,
-page_views.page_views
-
+	page_views.user_id,
+	page_views.visit_id,
+	visits.dt,
+	visits.tm,
+	visits.visit_mkt_source,
+	visits.visit_mkt_medium,
+	visits.visit_mkt_term,
+	visits.visit_mkt_content,
+	visits.visit_mkt_campaign,
+	visits.visit_page_referrer,
+	page_views.page_url,
+	page_views.page_title,
+	page_views.page_views
 FROM
-
 (	SELECT
 		user_id,
 		visit_id,
@@ -404,13 +408,11 @@ FROM
 		page_title,
 		count(distinct(txn_id)) AS page_views
 	FROM
-		events_pbz e
+		events e
 	GROUP BY 
 		user_id, visit_id, page_url, page_title
 ) page_views
-
 LEFT JOIN
-
 	(	SELECT
 		v.user_id,
 		v.visit_id,
@@ -422,39 +424,222 @@ LEFT JOIN
 		e2.mkt_content AS visit_mkt_content,
 		e2.mkt_campaign AS visit_mkt_campaign,
 		e2.page_referrer AS visit_page_referrer
-		FROM events_pbz e2
+		FROM events e2
 		INNER JOIN
 		(	SELECT
 			user_id,
 			visit_id,
 			MIN(CONCAT(dt, " ", tm)) AS first_touch_timestamp
-			FROM events_pbz
+			FROM events
 			GROUP BY user_id, visit_id) v
 		ON v.user_id = e2.user_id
 		AND v.visit_id = e2.visit_id
 		AND CONCAT(e2.dt, " ", e2.tm) = v.first_touch_timestamp
 		GROUP BY user_id, visit_id
 ) visits
-
 ON page_views.user_id = visits.user_id
 AND page_views.visit_id = visits.visit_id
 {% endhighlight %}
 
+Now we only need to add the missing user dimension fields i.e. `cohort` and traffic source fields. Both can be derived from the first event that each user takes, _ever_, using the following query:
 
+{% highlight mysql %}
+SELECT
+	u.user_id,
+	CONCAT(YEAR(dt), "-", MONTH(dt)) AS cohort,
+	e3.mkt_source AS first_visit_mkt_source,
+	e3.mkt_medium AS first_visit_mkt_medium,
+	e3.mkt_term AS first_visit_mkt_term,
+	e3.mkt_content AS first_visit_mkt_content,
+	e3.mkt_campaign AS first_visit_mkt_campaign,
+	e3.page_referrer AS first_visit_page_referrer
+FROM events e3
+INNER JOIN
+(	SELECT
+	user_id,
+	MIN(CONCAT(dt, " ", tm)) AS first_touch_timestamp
+	FROM events
+	WHERE visit_id = 1
+	GROUP BY user_id, visit_id) u
+ON u.user_id = e3.user_id
+AND CONCAT(e3.dt, " ", e3.tm) = u.first_touch_timestamp
+GROUP BY u.user_id
+{% endhighlight %}
+
+Now need to join these additional data fields to our data set:
+
+{% highlight mysql %}
+
+SELECT
+	page_views.user_id,
+	users.cohort,
+	users.first_visit_mkt_source,
+	users.first_visit_mkt_medium,
+	users.first_visit_mkt_term,
+	users.first_visit_mkt_content,
+	users.first_visit_mkt_campaign,
+	users.first_visit_page_referrer,
+	page_views.visit_id,
+	visits.dt,
+	visits.tm,
+	visits.visit_mkt_source,
+	visits.visit_mkt_medium,
+	visits.visit_mkt_term,
+	visits.visit_mkt_content,
+	visits.visit_mkt_campaign,
+	visits.visit_page_referrer,
+	page_views.page_url,
+	page_views.page_title,
+	page_views.page_views
+FROM
+(	SELECT
+		user_id,
+		visit_id,
+		page_url,
+		page_title,
+		count(distinct(txn_id)) AS page_views
+	FROM
+		events e
+	GROUP BY 
+		user_id, visit_id, page_url, page_title
+) page_views
+LEFT JOIN
+	(	SELECT
+		v.user_id,
+		v.visit_id,
+		e2.dt,
+		e2.tm,
+		e2.mkt_source AS visit_mkt_source,
+		e2.mkt_medium AS visit_mkt_medium,
+		e2.mkt_term AS visit_mkt_term,
+		e2.mkt_content AS visit_mkt_content,
+		e2.mkt_campaign AS visit_mkt_campaign,
+		e2.page_referrer AS visit_page_referrer
+		FROM events e2
+		INNER JOIN
+		(	SELECT
+			user_id,
+			visit_id,
+			MIN(CONCAT(dt, " ", tm)) AS first_touch_timestamp
+			FROM events
+			GROUP BY user_id, visit_id) v
+		ON v.user_id = e2.user_id
+		AND v.visit_id = e2.visit_id
+		AND CONCAT(e2.dt, " ", e2.tm) = v.first_touch_timestamp
+		GROUP BY user_id, visit_id
+) visits
+ON page_views.user_id = visits.user_id
+AND page_views.visit_id = visits.visit_id
+LEFT JOIN
+	( 	SELECT
+			u.user_id,
+			CONCAT(YEAR(dt), "-", MONTH(dt)) AS cohort,
+			e3.mkt_source AS first_visit_mkt_source,
+			e3.mkt_medium AS first_visit_mkt_medium,
+			e3.mkt_term AS first_visit_mkt_term,
+			e3.mkt_content AS first_visit_mkt_content,
+			e3.mkt_campaign AS first_visit_mkt_campaign,
+			e3.page_referrer AS first_visit_page_referrer
+		FROM events e3
+		INNER JOIN
+		(	SELECT
+			user_id,
+			MIN(CONCAT(dt, " ", tm)) AS first_touch_timestamp
+			FROM events
+			WHERE visit_id = 1
+			GROUP BY user_id, visit_id) u
+		ON u.user_id = e3.user_id
+		AND CONCAT(e3.dt, " ", e3.tm) = u.first_touch_timestamp
+		GROUP BY u.user_id
+) users
+ON page_views.user_id = users.user_id
+{% endhighlight %}
+
+The above query will return SnowPlow data in a format suitable for processing in an OLAP reporting tool like Tableau.
 
 <h3><a name="generate">5.5 Generate the OLAP data</a></h3>
 
-<a name="tableau-test"><h3>6. Testing the results with Tableau</h3></a>
+Generating the data required is as simple as running the above query. However, using SQL statements to generate versions of the SnowPlow events data to use in OLAP reporting tools is not computationally efficient: in particular, it requires multiple passes through the entire data set and several joins between subtables derived from the events table, all of which are pretty costly.
+
+For that reason, we recommend using SQL to generate **agile data cubes**: to quickly generate data for querying in Tableau / Qlikview / Pentaho with a view to experimenting with new dimensions and metrics, for example. If it turns out that a particular data cube is of value to you, and you want to continue to use it (and keep it updated), we'd recommend using [Cascading] [cascading] in a Hadoop environment to keep you OLAP data set up-to-date. We will document how to do this in due course.
+
+If you're running Infobright Community Edition, you wont be able to write the output of the query directly into a new table because `INSERT` statements are not supported. Instead, we'll write our results to file, and then import them back into Infobright.
+
+To write the results to file, execute the above query, but add `INTO OUTFILE {{FILENAME}}` at the end of the statement.
+
+Now create a new table to house the data, using the [table definition given above] (#table-def).
+
+Now we can load our saved data into our new table
+
+{% highlight mysql %}
+LOAD DATA INFILE '{{FILE PATH AND LOCATION HERE}}'
+INTO TABLE demo_cube;
+{% endhighlight %}
+
+We're ready to connect our OLAP reporting tool of choice (e.g. Tableau, Qlikview) to our data set in Infobright!
+
+Back to [top] (#top).
+
+<a name="tableau-test"><h3>6. Interrogating the data with Tableau</h3></a>
+
+Connecting Tableau desktop edition to Infobright is a bit fiddly: in most cases, your data will be on a remote Infobright instance and you'll want to establish an SSH connection between the PC running Tableau and that instance. Instructions on how to do this is beyond the scope of this tutorial, but a decent explanation of how to setup a tunnel using [Putty][putty] can be found [here][putty-ssh-tunnel-tutorial].
+
+Once you have setup your tunnel, launch Tableau and select **connect to data**. Select **MySQL** from the list of options:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-1.JPG" alt="connect tableau to data" width="350"/></p>
+
+In our case I've setup Putty to forward requests to `localhost:1234` to my remote Infobright instance. The server name and port number you'll need to enter will be determined by the nature of the tunnel you've established.
+
+Enter the username and password to log into your Infobright instance and click **Connect**. Select the database you created the table in: your table should be visible:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-2.JPG" alt="olap cube"/></p>
+
+You'll be given an option as to how much of the data you want imported into Tableau's fast data engine. If your data set isn't too large, you can try importing all of it. Otherwise, select "import some data" or "Connect live"". Your workbook should launch:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-3.JPG" alt="olap cube"/></p>
+
+Tableau's made some guesses as to which one of our columns are dimensions and which are metrics. If the field is numeric, Tableau assumes it is a metric. If it's not, it assumes it's a dimension. That works for _most_ of our fields, but not for `visit_id` (which is a dimension). Simply drag `visit_id` from the **Measures** pane to the **Dimensions pane**:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-4.JPG" alt="olap cube"/></p>
+
+Now we need to add our two missing metrics: `uniques` and `visits`. To add `uniques`, right click on `user_id` (in the dimensions pane) and select **Create calculated field**. Tableau gives us the opportunity to create a new, calcultaed field. Fill in the name and formula as below:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-5.JPG" alt="calculated field - uniques" width="550" /></p>
+
+Click **OK**: `Uniques` will now be listed as a **Measure**. Now we need to create a new calculated field for **Visits**:
+
+<p style="text-align:center;"><img src="/static/img/olap/tableau-6.JPG" alt="calculated field - visits" width="550" /></p>
+
+Now we're all set! We can drag and drop our fields and metrics to our heart's content, to explore our data set. To see a video demonstration of how to do this (including with a cube with more dimensions and metrics than in this tutorial) see our blog post on [analysing SnowPlow data with Tableau] [analysing-snowplow-data-with-tableau].
+
+Back to [top] (#top).
+
+<a name="qlikview-test"><h3>7. Interrogating the data with Qlikview</h3></a>
 
 TO WRITE
 
-<a name="qlikview-test"><h3>7. Testing the results with Qlikview</h3></a>
-
-TO WRITE
+Back to [top] (#top).
 
 <a name="limitations"><h3>8. Limitations in OLAP analysis</h3></a>
 
-TO WRITE
+One of the things that people often note when running tools like Tableau on top of SnowPlow data is that it is quick and easy to put together the vast majority of reports delivered by standard analytics package like Google Analytics and even the type of cohort analysis delivered by toolsl like [Mixpanel][mixpanel] and [Kissmetrics][kissmetrics]. This sometimes leads excited analysts to forget all the analytics possibilities that are **not** supported by OLAP tools:
+
+1. Path / journey analysis
+2. Building and testing statistical models of customer behaviour e.g. customer lifetime models. (Although the model build might be informed by the results and visualisations generated by an OLAP tool.)
+3. Machine learning approaches e.g. clustering and classifying visitors by behaviour
+4. Predictive analytics: how much do we expect to make from this product launch, or this customer, going forwards?
+
+That is not to take anything away from OLAP tools, just to remind users that they are one in an arsenal of analytic techniques, that SnowPlow makes it possible to leverage with web analytics data.
+
+Back to [top] (#top).
+
+
 
 
 [ga-custom-reports]: http://www.google.com/analytics/features/custom-reports.html
+[cascading]: http://www.cascading.org/
+[putty]: http://www.chiark.greenend.org.uk/~sgtatham/putty/
+[putty-ssh-tunnel-tutorial]: http://oldsite.precedence.co.uk/nc/putty.html
+[analysing-snowplow-data-with-tableau]: /blog/2012/10/24/web-analytics-with-tableau-and-snowplow/
+[mixpanel]: https://mixpanel.com/
+[kissmetrics]: http://www.kissmetrics.com/
