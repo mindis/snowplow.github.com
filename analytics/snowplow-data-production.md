@@ -14,8 +14,7 @@ The better you understand how your SnowPlow data is stored and structured, the e
 2. [Where SnowPlow data lives] [location]
 3. [How SnowPlow data is structured] [structure]
 
-<a name="production" />
-## How SnowPlow data is produced
+ <a name="production"><h2>How SnowPlow data is produced</h2></a>
 
 *Note: this is just an overview geared towards data analysts. For a complete explanation of the SnowPlow technology stack including source code, visit the [wiki] [wiki] and [Github repository] [github-repo]*.
 

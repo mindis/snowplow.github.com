@@ -19,8 +19,7 @@ If the data is warehoused using Hive, it physically lives in Amazon S3. When you
 
 In the case of Infobright, the data lives in a table on your Infobright instance, where it is queried just like any table in a database.
 
-<a name="apachehive" />
-## Apache Hive
+<a name="apachehive "><h2>Apache Hive</h2></a>
 
 [Apache Hive] [hive] is a datawarehousing platform developed by the techies at Facebook and built on top of Hadoop. It lets analysts run SQL-like queries against large volumes of data stored in flat files. (The syntax is especially close to MySQL, in particular.) From a SnowPlow analytics perspective, the important things to understand about Hive are:
 
@@ -31,8 +30,7 @@ In the case of Infobright, the data lives in a table on your Infobright instance
 
 Using Hive, it is possible to run analyses against your raw Cloudfront logs directly, as described [below] (#analyse-cloudfront-logs-directly). More often, though, analysts choose to transfer the data into a format that enables faster querying in Hive, as described [here] (#optimised-hive).
 
-<a name="analyse-cloudfront-logs-directly" />
-### Querying Cloudfront logs directly in Hive
+<a name="analyse-cloudfront-logs-directly "><h2>Querying Cloudfront logs directly in Hive</h2></a>
 
 Querying the Cloudfront log data directly in Hive is straightforward. First, from the terminal, navigate to the directory with your [Elastic Mapreduce command line tools] [emr-cli] and launch a Hive interactive session:
 
@@ -75,16 +73,16 @@ hive
 We now need to create a table in Hive based on the Cloudfront logs. To do that, we first need to let Hive know where the SnowPlow deserializer is, so that Hive can read the raw log files. To do that, execute the following command:
 
 {% highlight mysql %}
-ADD JAR s3://{{JARS-BUCKET-NAME}}/snowplow-log-deserializers-0.4.7.jar;
+ADD JAR s3://snowplow-emr-assets/hive/serdes/snowplow-log-deserializers-0.5.3.jar;
 {% endhighlight %}
 
-(Substitute the S3 bucket you use to store the deserializer JAR.) Now you can create the table:
+(The S3 address given above is for the version of the deserializer [hosted by us] [hosted-serde]. You may want to substitute the address to point to your own copy of the Hive serde.) Now you can create the table:
 
 {% highlight mysql %}
-CREATE EXTERNAL TABLE views_events 
+CREATE EXTERNAL TABLE events 
 ROW FORMAT 
   SERDE 'com.snowplowanalytics.snowplow.hadoop.hive.SnowPlowEventDeserializer'
-LOCATION 's3://{{LOGS-BUCKET-NAME}}/';
+LOCATION 's3://[[LOGS-BUCKET-NAME]]/';
 {% endhighlight %}
 
 You wll need to replace the 'LOGS-BUCKET-NAME' with the name of the S3 bucket where your Cloudfront logs are stored.
@@ -92,19 +90,24 @@ You wll need to replace the 'LOGS-BUCKET-NAME' with the name of the S3 bucket wh
 Hive now knows where your Cloudfront logs are stored, and it knows from the deserializer how to translate those individual logs into a tidy table. We can inspect the tidy table created prior to querying it:
 
 {% highlight mysql %}
-DESCRIBE views_events ;
+DESCRIBE events ;
 {% endhighlight %}
 
 Hive will respond by listing all the different fields:
 
 {% highlight mysql %}
-hive> DESCRIBE views_events ;
+hive> DESCRIBE events ;
 OK
+app_id	string	from deserializer
+platform	string	from deserializer
 dt	string	from deserializer
 tm	string	from deserializer
+event	string	from deserializer
+event_id	string	from deserializer
 txn_id	string	from deserializer
 user_id	string	from deserializer
 user_ipaddress	string	from deserializer
+user_fingerprint	string	from deserializer
 visit_id	int	from deserializer
 page_url	string	from deserializer
 page_title	string	from deserializer
@@ -119,6 +122,7 @@ ev_action	string	from deserializer
 ev_label	string	from deserializer
 ev_property	string	from deserializer
 ev_value	string	from deserializer
+useragent	string	from deserializer
 br_name	string	from deserializer
 br_family	string	from deserializer
 br_version	string	from deserializer
@@ -126,48 +130,79 @@ br_type	string	from deserializer
 br_renderengine	string	from deserializer
 br_lang	string	from deserializer
 br_features	array<string>	from deserializer
+br_features_pdf	tinyint	from deserializer
+br_features_flash	tinyint	from deserializer
+br_features_java	tinyint	from deserializer
+br_features_director	tinyint	from deserializer
+br_features_quicktime	tinyint	from deserializer
+br_features_realplayer	tinyint	from deserializer
+br_features_windowsmedia	tinyint	from deserializer
+br_features_gears	tinyint	from deserializer
+br_features_silverlight	tinyint	from deserializer
 br_cookies	boolean	from deserializer
+br_cookies_bt	tinyint	from deserializer
+br_colordepth	string	from deserializer
 os_name	string	from deserializer
 os_family	string	from deserializer
 os_manufacturer	string	from deserializer
+os_timezone	string	from deserializer
 dvce_type	string	from deserializer
 dvce_ismobile	boolean	from deserializer
+dvce_ismobile_bt	tinyint	from deserializer
 dvce_screenwidth	int	from deserializer
 dvce_screenheight	int	from deserializer
-Time taken: 1.425 seconds
+tr_orderid	string	from deserializer
+tr_affiliation	string	from deserializer
+tr_total	string	from deserializer
+tr_tax	string	from deserializer
+tr_shipping	string	from deserializer
+tr_city	string	from deserializer
+tr_state	string	from deserializer
+tr_country	string	from deserializer
+ti_orderid	string	from deserializer
+ti_sku	string	from deserializer
+ti_name	string	from deserializer
+ti_category	string	from deserializer
+ti_price	string	from deserializer
+ti_quantity	string	from deserializer
+v_tracker	string	from deserializer
+v_collector	string	from deserializer
+v_etl	string	from deserializer
+Time taken: 0.574 seconds
 {% endhighlight %}
 
-You as an analyst can now query the "views_events" table as you would any table in SQL. For example, to count the number of unique visitors by day, execute the following query:
+You as an analyst can now query the "events" table as you would any table in SQL. For example, to count the number of unique visitors by day, execute the following query:
 
 {% highlight mysql %}
 SELECT
 dt,
 COUNT(DISTINCT(user_id))
-FROM views_events
+FROM events
 GROUP BY dt;
 {% endhighlight %}
 
-<a name="optimised-hive" />
-### Querying the data in a format optimsied for Hive
+<a name="optimised-hive "><h3>Querying the data in a format optimsied for Hive</h3></a>
 
 Whilst it is possible to query the Cloudfront logs directly, this is inefficient for a number of reasons:
 
 1. When Hive uses custom deserializers to read custom data formats, it slows down dramatically
 2. The Cloudfront logs are not partitioned. That means that every time you run a query, Hive has to chunk through the complete data sets, which may run into Terabytes of data for a big website.
 
-As a result, SnowPlow offers a daily ETL process that takes identifies the new records in the Cloudfront logs and writes this data into another bucket on S3 into a partitioned format that Hive can read directly without the custom deserializer.
+As a result, SnowPlow offers a [daily ETL process] [emr-etl-runner] that takes identifies the new records in the raw logs and writes this data into another bucket on S3 into a partitioned format that Hive can read directly without the custom deserializer.
 
-Querying this table is very similar to querying the raw Cloudfront logs. The biggest difference notable to the analyst will be that results are returned much faster.
+In addition, we are developing the ETL process so that it enriches the data stored in the original logs: for example, by inferring the location of the user on the basis of the IP address, inferring keywords from the search engine referrer string and breaking up referrer strings into hosts, domains and queries.
+
+Querying this table is very similar to querying the raw logs. The fields are the same. The custom serde is not required when creating the table definition. The biggest difference notable to the analyst will be that results are returned much faster.
 
 To perform the queries, we need to start off by defining our table, and telling Hive where the data lives:
 
 {% highlight mysql %}
 CREATE EXTERNAL TABLE IF NOT EXISTS `events` (
-tm STRING,
-txn_id STRING,
-user_id STRING,
+tm string,
+txn_id string,
+user_id string,
 user_ipaddress string,
-visit_id INT,
+visit_id int,
 page_url string,
 page_title string,
 page_referrer string,
@@ -181,6 +216,20 @@ ev_action string,
 ev_label string,
 ev_property string,
 ev_value string,
+tr_orderid string,
+tr_affiliation string,
+tr_total string,
+tr_tax string,
+tr_shipping string,
+tr_city string,
+tr_state string,
+tr_country string,
+ti_orderid string,
+ti_sku string,
+ti_name string,
+ti_category string,
+ti_price string,
+ti_quantity string,
 br_name string,
 br_family string,
 br_version string,
@@ -195,9 +244,21 @@ os_manufacturer string,
 dvce_type string,
 dvce_ismobile boolean,
 dvce_screenwidth int,
-dvce_screenheight int)
+dvce_screenheight int,
+app_id string,
+platform string,
+event string,
+v_tracker string,
+v_collector string,
+v_etl string,
+event_id string,
+user_fingerprint string,
+useragent string,
+br_colordepth string,
+os_timezone string
+)
 PARTITIONED BY (dt STRING)
-LOCATION 's3://{{SNOWPLOW-DATA-BUCKET}}/' ;
+LOCATION 's3://[[EVENTS_TABLE_PATH]]/' ;
 {% endhighlight %}
 
 Some things to note when comparing the above CREATE TABLE statement with the one for Cloudfront earlier:
@@ -216,8 +277,7 @@ FROM events
 GROUP BY dt;
 {% endhighlight %}
 
-<a name="infobright" />
-## Infobright
+<a name="infobright"><h2>Infobright</h2></a>
 
 Whilst Hive has a number of features that make it well suited to performing analytics (especially horizontal scaling and direct integration to Amazon S3 via EMR), there are two disadvantages to using Hive:
 
@@ -270,3 +330,5 @@ Note that the query is identical to that executed in Hive. In general, queries i
 [microstrategy]: http://www.microstrategy.co.uk/
 [r]: http://www.r-project.org/
 [table-structure]: snowplow-table-structure.html
+[hosted-serde]: https://github.com/snowplow/snowplow/wiki/Hosted-assets
+[emr-etl-runner]: https://github.com/snowplow/snowplow/wiki/hive-etl-setup

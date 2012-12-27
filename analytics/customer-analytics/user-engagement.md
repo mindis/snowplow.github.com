@@ -15,8 +15,7 @@ weight: 5
 5. [Measuring the number of events per visit](#events-per-visit)
 6. [Weighting events by value](#weighted-events-per-visit)
 
-<a name="what" />
-## What is user engagement?
+ <a name="what" ><h2>What is user engagement?</h2></a>
 
 User engagement is a critical metric to understand for every business with an online component. What constitutes "successful engagement" depends very much on the specific business: if you are a content business, you should be interested in getting users to engage either frequently (e.g. every day for newspapers) and deeply (e.g. view several articles per session). For a search engine, successful engagement might look completely different however: a successful engagement might mean finding the right link in as short a time as possible and then disappearing from the site. In that case, shorter visitor duration might indicate a better user experience.
 
@@ -26,8 +25,7 @@ Because what constitutes "successful engagement" varies depending on the type of
 
 Note: for a more in-depth discussion of measuring user engagement, particularly with respect to performing cohort analyses, see [this post][user-engagement-keplar-blog-post] on the Keplar blog covering [different approaches to measuring user engagement][user-engagement-keplar-blog-post] on the [Keplar blog][keplar-blog].
 
-<a name="proxies" />
-## Different proxies for measuring user engagement
+ <a name="proxies"><h2>Different proxies for measuring user engagement</h2></a>
 
 ### Measuring engagement breadth i.e. how often a user visits a site
 
@@ -39,8 +37,7 @@ Note: for a more in-depth discussion of measuring user engagement, particularly 
 3. [Number of events per visit](#events-per-visit)
 4. [Weighting events by value](#weighted-events-per-visit)
 
-<a name="days-per-time-period" />
-### 1. Measuring the number of days per week / month that users visit the site
+ <a name="days-per-time-period"><h3>1. Measuring the number of days per week / month that users visit the site</h3></a>
 
 This is a key metric employed by the social network Facebook, amongst others.
 
@@ -89,8 +86,7 @@ GROUP BY yr, month, visits ;
 
 Note: as well as looking at how the distribution of users by engagement level changes over time, we might also want to look at how it changes for a fixed group of users. This is normally performed as part of a [cohort analysis][cohort-analysis].
 
-<a name="visits-per-time-period" />
-### 2. Number of visits by each user per day / week / month
+ <a name="visits-per-time-period"><h3>2. Number of visits by each user per day / week / month</h3></a>
 
 A similar metric is calculated by countint the number of visits that each user makes in a given time period. The difference here, is that if a user visits a site more than once a day, each individual visit contributes to the "engagement" value assigned to that user. When we look at the number of days per month a user visits a website, by contrast, we do not distinguish users who've visited once from users who've visited twice. 
 
@@ -127,8 +123,7 @@ FROM visits_by_user_by_month
 GROUP BY yr, mnth, visits ;
 {% endhighlight %}
 
-<a name="events-per-visit" />
-### 3. Number of events per visit
+ <a name="events-per-visit"><h3>3. Number of events per visit</h3></a>
 
 We can take the number of "events" that occur on each visit as a proxy for how "engaged" the user was during that visit. (With more events indicating a deeper level of engagement.) 
 
@@ -187,8 +182,7 @@ FROM events
 GROUP BY dt, engagement ;
 {% endhighlight %}
 
-<a name="weighted-events-per-visit" />
-### 4. Weighting events by value
+ <a name="weighted-events-per-visit"><h3>4. Weighting events by value</h3></a>
 
 TO WRITE
 

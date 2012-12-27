@@ -11,8 +11,7 @@ weight: 6
 1. [What is cohort analysis?](#what)
 2. [Steps to performing a cohort analysis](#steps)
 
-<a name="what" />
-## What is a cohort analysis?
+ <a name="what"><h2>What is a cohort analysis?</h2></a>
 
 A cohort analysis is a longitudal study that compares two or more groups of customers / users (cohorts) over a period of time. The term cohort analysis therefore encompasses a wide variety of analyses:
 
@@ -21,8 +20,7 @@ A cohort analysis is a longitudal study that compares two or more groups of cust
 
 For more detail on the variations possible with cohort analyses, see [this Keplar blog post] [varieties-of-cohort-analyses].
 
-<a name="steps" />
-## Steps to performing a cohort analysis
+ <a name="steps"><h2>Steps to performing a cohort analysis</h2></a>
 
 All cohort analyses can be performed with the following steps:
 
@@ -30,8 +28,7 @@ All cohort analyses can be performed with the following steps:
 2. [Metric definition](#metric-definition): write a query that calculates the required metric for each user
 3. [Combine the results](#combinetheresults) from the above two queries to calculate an aggregated metric for each cohort
 
-<a name="cohort-definition" />
-## 1. Cohort definition
+ <a name="cohort-definition"><h2>1. Cohort definition</h2></a>
 
 Regardless of the type of cohort analysis we want to perform, we start by creating a table that maps user_ids to cohorts:
 
@@ -125,8 +122,7 @@ By including the other marketing fields (`mkt_term`, `mkt_content`, `mkt_name`) 
 SnowPlow makes it possible to define cohorts based on a wide variety of criteria, including definitions obtained from data that exists outside of SnowPlow. (This data will need to be uploaded to SnowPlow before it can be used.) For more information, [get in touch] [get-in-touch]
 
 
-<a name="metric-definition" />
-## 2. Metric definitions
+ <a name="metric-definition"><h2>2. Metric definitions</h2></a>
 
 As a second step, we need to define a query that measure the _thing_ we want to compare between our cohorts. We therefore need to populate a table like the one below:
 
@@ -151,7 +147,7 @@ INSERT OVERWRITE TABLE metric_by_user
 SELECT
 user_id,
 CONCAT(YEAR(dt),"-",MONTH(dt)) AS time_period,
-COUNT(txn_id) AS metric_value
+COUNT(event_id) AS metric_value
 FROM events
 GROUP BY user_id, YEAR(dt), MONTH(dt) ;
 {% endhighlight %}
@@ -188,8 +184,7 @@ GROUP BY user_id,
 
 SnowPlow makes it possible to compare a large number of other metrics. For specific help / questions, [get in touch] [get-in-touch].
 
-<a name="combinetheresults" />
-## 3. Combining the results in the final cohort analysis
+ <a name="combinetheresults"><h2>3. Combining the results in the final cohort analysis</h2></a>
 
 To perform the actual cohort analysis, all we have to do is to `JOIN` our two tables `user_cohort_map` and `metric_by_user` to aggregate results by cohort by time period so that we can compare them alongside each other:
 

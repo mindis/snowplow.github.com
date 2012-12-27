@@ -30,7 +30,7 @@ Analysts can quickly zoom in on a user's complete engagement record, including e
 {% highlight mysql %}
 /* HiveQL / MySQL */
 SELECT * from events
-WHERE user_id = {{USER_ID}}
+WHERE user_id = '[[USER_ID]]'
 {% endhighlight %}
 
 ### 2b. Ability to track users over multiple customer journeys
@@ -52,9 +52,9 @@ On websites where users make multiple purchases, we need to divide the number of
 {% highlight mysql %}
 /* HiveQL / MySQL */
 SELECT user_id,
-COUNT(txn_id) AS number_of_purchases,
+COUNT(event_id) AS number_of_purchases,
 MAX(visit_id) AS number_of_visits,
-MAX(visit_id)/COUNT(txn_id) AS visits_to_purchases
+MAX(visit_id)/COUNT(event_id) AS visits_to_purchases
 FROM events 
 WHERE ev_action LIKE 'order-confirmation'
 GROUP BY user_id
@@ -69,9 +69,9 @@ AVG(visits_to_purchases)
 FROM (
 	SELECT user_id,
 	FROM events 
-	COUNT(txn_id) AS number_of_purchases,
+	COUNT(event_id) AS number_of_purchases,
 	MAX(visit_id) AS number_of_visits,
-	MAX(visit_id)/COUNT(txn_id) AS visits_to_purchases
+	MAX(visit_id)/COUNT(event_id) AS visits_to_purchases
 	WHERE ev_action LIKE 'order-confirmation'
 	GROUP BY user_id
 ) t

@@ -17,8 +17,7 @@ In this section, we walk through the process of integrating SnowPlow data with o
 3. [Uploading customer data into SnowPlow](#upload)
 4. [Joining customer data with SnowPlow](#join)
 
-<a name="why" />
-## 1. Why integrate web analytics data with other customer data sources?
+ <a name="why"><h2>1. Why integrate web analytics data with other customer data sources?</h2></a>
 
 To date many companies have become very good at using CRM, loyalty and sales data to understand, segment and serve their customer base. Typically, however, they have **not** used web analytics data to understand their customers, even though how users engage with brands and companies through their website and applications provides some of the most revealing data about who a person is, there motivation for engaging with a brand / product / service and how happy they are with that brand / product and service. To illustrate how revealing web analytics data can be, consider:
 
@@ -37,8 +36,7 @@ Potential sources of customer data to integrate with:
 * Marketing databases (e.g. email, direct mail)
 * Social media (e.g. Facebook, Twitter)
 
-<a name="ingredients" />
-## 2. Necessary ingredients for successful integration
+ <a name="ingredients"><h2>2. Necessary ingredients for successful integration</h2></a>
 
 Integrating any two data sources requires that:
 
@@ -50,8 +48,7 @@ Given the two above requirements, it becomes clear why web analytics data has no
 * Web analytics data volumes are typically enormous, making *moving* the data hard. (SnowPlow *fixes* this problem by enabling you to import your data into SnowPlow, rather than export your web analytics data out of it.)
 * Web analytics programs are typically bad at reliably identifying users. (SnowPlow *fixes* this problem by exposing a `user_id` and making it striaghtforward to map `user_id`s with `login_id`s from other systems as described in the [identifying-users](identifying-users.html) section.)
 
-<a name="upload" />
-## 3. Uploading data into SnowPlow
+ <a name="upload"><h2>3. Uploading data into SnowPlow</h2></a>
 
 In order two join two data sets, you need to be able to run a query across both of them. Typically, this means getting copies of them in the same system. There are three options:
 
@@ -114,9 +111,7 @@ SELECT * from {{table_name}} LIMIT 10;
 
 If you are using Infobright to store and query your SnowPlow data, uploading data into Infobright is easier: you can use any database administration tool that interfaces with MySQL (on which Infobright is based) to create a new table in Infobright and import the CSV in. If the data you are importing lives in another relational database, it may be possible to use a tool like [Navicat][navicat] to move the data directly between one database and the other, or use an ETL tool like [Jitterbit][jitterbit] to manage a regular transfer of data from one database to the other. 
 
-<a name="join" />
-
-Now that both your data sets are available in Hive or Infobright, you are in a position to run an analysis across both set of data.
+ <a name="join">Now that both your data sets are available in Hive or Infobright, you are in a position to run an analysis across both set of data.</a>
 
 To do so, however, you need to `join` the two data sets. This requires mapping users, as identified in SnowPlow by the `user_id`, with customers as identified by a `customer_id` in your second data set. This requires firing a SnowPlow event with the `customer_id` at some stage in the customer journey when the ID is available, so that it can be matched against the SnowPlow `user_id`. The most common way of achieving this is to fire the event at login events, as described in the [identifying users with SnowPlow][identifying-users] section of this Cookbook. Assuming this has been done, you can generate the mapping by executing the following SQL query:
 
@@ -126,7 +121,7 @@ SELECT
 user_id,
 ev_value AS customer_id
 FROM events
-WHERE ev_action LIKE 'login'
+WHERE ev_action fLIKE 'login'
 GROUP BY user_id, ev_value;
 {% endhighlight %}
 

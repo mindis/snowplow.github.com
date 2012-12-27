@@ -6,8 +6,9 @@ title: Basic recipes
 weight: 5
 ---
 
-<a name="top" />
-# Bread and butter web analytics queries
+
+<a name="top"><h1>Bread and butter web analytics queries</h1></a>
+
 
 The following queries return basic web analytics data that someone could expect from any standard web analytics package. These are *not* the queries that SnowPlow was designed to perform: we built SnowPlow to enable analysts to run queries on web analytics data that are **not** possible with other web analytics programs. These queries return the results that **all** web analytics queries return. However, running them can be useful for an analyst to validate SnowPlow has been setup correctly (by comparing the output against e.g. Google Analytics), and help her get familiar with writing queries in SnowPlow.
 
@@ -32,8 +33,7 @@ The following queries will work with both Hive and Infobright.
 17. [Technology: operating system](#os)
 18. [Technology: mobile](#mobile)
 
-<a name="counting-unique-visitors" />
-## 1. Number of unique visitors 
+ <a name="counting-unique-visitors"><h2>1. Number of unique visitors </h2></a>
 
 The number of unique visitors can be calculated by summing the number of distinct `user_id`s in a specified time period e.g. day. (Because each user is assigned a unique user_id, based on a lack of SnowPlow tracking cookies on their browser):
 
@@ -69,8 +69,7 @@ GROUP BY YEAR(dt), MONTH(dt) ;
 
 [Back to top](#top)
 
-<a name="counting-visits" />
-## 2. Number of visits
+ <a name="counting-visits"><h2>2. Number of visits</h2></a>
 
 Because each user might visit a site more than once, summing the number of `user_id`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, SnowPlow assigns that session with a `visit_id` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `user_id` with the `visit_id` and then count the number of distinct concatenated entry in the events table:
 
@@ -106,8 +105,7 @@ GROUP BY YEAR(dt), MONTH(dt) ;
 
 [Back to top](#top)
 
-<a name="counting-pageviews" />
-## 3. Number of page views
+ <a name="counting-pageviews"><h2>3. Number of page views</h2></a>
 
 Page views are one type of event that are stored in the SnowPlow events table. Their defining feature is that the `page_title` contain values (are not `NULL`). In the case of an *event* that is not a page view (e.g. an _add to basket_) these fields would all be `NULL`, and the event fields (`ev_category`, `ev_action`, `ev_label` etc.) would contain values. For details, see the [Introduction to the SnowPlow events table](https://github.com/snowplow/snowplow/blog/master/docs/07_snowplow_hive_tables_introduction.md).
 
@@ -116,9 +114,9 @@ To count the number of page views by day, then we simply execute the following q
 {% highlight mysql %}
 SELECT
 dt,
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
-WHERE page_title IS NOT NULL
+WHERE event = 'page_view'
 GROUP BY dt ;
 {% endhighlight %}
 
@@ -128,9 +126,9 @@ By week:
 SELECT
 YEAR(dt),
 WEEKOFYEAR(dt)
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
-WHERE page_title IS NOT NULL
+WHERE event = 'page_view'
 GROUP BY YEAR(dt), WEEKOFYEAR(dt) ;
 {% endhighlight %}
 
@@ -140,16 +138,15 @@ By month:
 SELECT
 YEAR(dt),
 MONTH(dt)
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
-WHERE page_title IS NOT NULL
+WHERE event = 'page_view'
 GROUP BY YEAR(dt), MONTH(dt) ;
 {% endhighlight %}
 
 [Back to top](#top)
 
-<a name="counting-events" />
-## 4. Number of events / transactions
+ <a name="counting-events"><h2>4. Number of events / transactions</h2></a>
 
 Although the number of page views is a standard metric in web analytics, this reflects the web's history as a set of hyperlinked documents rather than the modern reality of web applications that are comprise lots of AJAX events (that need not necessarily result in a page load.)
 
@@ -158,7 +155,7 @@ As a result, counting the total number of events (including page views but also 
 {% highlight mysql %}
 SELECT
 dt,
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 GROUP BY dt ;
 {% endhighlight %}
@@ -169,7 +166,7 @@ By week:
 SELECT
 YEAR(dt),
 WEEKOFYEAR(dt)
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 GROUP BY YEAR(dt), WEEKOFYEAR(dt) ;
 {% endhighlight %}
@@ -180,7 +177,7 @@ By month:
 SELECT
 YEAR(dt),
 MONTH(dt)
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 GROUP BY YEAR(dt), MONTH(dt) ;
 {% endhighlight %}
@@ -194,7 +191,7 @@ SELECT
 YEAR(dt),
 MONTH(dt),
 user_id,
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 GROUP BY YEAR(dt), MONTH(dt), user_id ;
 {% endhighlight %}
@@ -203,8 +200,7 @@ There is scope to taking a progressively more nuanced approach to measuring user
 
 [Back to top](#top)
 
-<a name="pages-per-visit" />
-## 5. Pages per visit
+ <a name="pages-per-visit"><h2>5. Pages per visit</h2></a>
 
 The number of pages per visit can be calculated by visit very straightforwardly:
 
@@ -238,7 +234,7 @@ SELECT
 dt,
 user_id,
 visit_id,
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 WHERE page_title IS NOT NULL
 GROUP BY dt, user_id, visit_id ;
@@ -260,7 +256,7 @@ FROM (
 	dt,
 	user_id,
 	visit_id,
-	COUNT(txn_id) AS pages
+	COUNT(event_id) AS pages
 	FROM events
 	WHERE page_title IS NOT NULL
 	GROUP BY dt, user_id, visit_id 
@@ -269,8 +265,7 @@ GROUP BY t.dt ;
 
 [Back to top](#top)
 
-<a name="bounce-rate" />
-## 6. Bounce rate
+ <a name="bounce-rate"><h2>6. Bounce rate</h2></a>
 
 First we need to look at all the website visits, and flag which of those visits are *bounces*: these are visits where there is only one page view. (So one "event" i.e. only one `txn_id`):
 
@@ -288,7 +283,7 @@ SELECT
 user_id,
 visit_id,
 MIN(dt),
-COUNT(txn_id),
+COUNT(event_id),
 IF(COUNT(txn_id) = 1, 1, 0)
 FROM events
 GROUP BY user_id, visit_id ;
@@ -332,10 +327,11 @@ FROM visits_with_bounce_info
 GROUP BY YEAR(dt), MONTHS(dt) ;
 {% endhighlight %}
 
+Note: a more nuanced and reliable approach to measuring bounce rate can be developed using the [page ping] [page-ping]  functionality. This is introduced in the [v0.6.5 blog post] [page-ping].
+
 [Back to top](#top)
 
-<a name="new-visits" />
-## 7. % New visits
+ <a name="new-visits"><h2>7. % New visits</h2></a>
 
 A new visit is easily identified as a visit where the visit_id = 1. Hence, to calculate the % of new visits, we need to sum all the visits where `visit_id` = 1 and divide by the total number of visits, in the time period.
 
@@ -381,8 +377,7 @@ FROM new_visits_by_day n JOIN visits_by_day v ON n.dt = v.dt;
 
 [Back to top](#top)
 
-<a name="duration" />
-## 8. Average visitor duration
+ <a name="duration"><h2>8. Average visitor duration</h2></a>
 
 To calculate this, 1st we need to calculate the duration of every visit:
 
@@ -442,8 +437,7 @@ GROUP BY YEAR(dt), MONTH(dt) ;
 
 [Back to top](#top)
 
-<a name="efficiency" />
-## 9. A note about efficiency
+ <a name="efficiency"><h2>9. A note about efficiency</h2></a>
 
 Hive and Hadoop more generally are very powerful tools to process large volumes of data. However, data processing is an expensive task, in the sense that every time you execute the query, you have to pay EMR fees to crunch through your data. As a result, where possible, it is advisable not to repeat the same analysis multiple times: for repeated analyses you should save the results of the analysis, and only perform subsequent analysis on new data.
 
@@ -473,8 +467,7 @@ At the moment, the analyst has to manually append the new data to the old. Going
 
 [Back to top](#top)
 
-<a name="language" />
-## 10. Demographics: language
+ <a name="language"><h2>10. Demographics: language</h2></a>
 
 For each event the browser language is stored in the `br_language` field. As a result, counting the number of visits in a time period by language is trivial:
 
@@ -483,22 +476,20 @@ SELECT
 br_language,
 COUNT(DISTINCT (CONCAT(user_id, visit_id))) AS visits
 FROM events
-WHERE {{ENTER-DESIRED-TIME-PERIOD}}
+WHERE [[ENTER-DESIRED-TIME-PERIOD]]
 GROUP BY br_language 
-ORDER BY COUNT(DISTINCT (CONCAT(user_id, visit_id))) DESC ;
+ORDER BY COUNT(DISTINCT (CONCAT(user_id,'-', visit_id))) DESC ;
 {% endhighlight %}
 
 [Back to top](#top)
 
-<a name="location" />
-## 11. Demographics: location
+ <a name="location"><h2>11. Demographics: location</h2></a>
 
 THIS NEEDS TO BE DONE IN CONJUNCTION WITH MAXIMIND DATABASE OR OTHER GEOIP DATABASE, BASED ON IP - TO WRITE
 
 [Back to top](#top)
 
-<a name="new-vs-returning" />
-## 12. Behaviour: new vs returning
+ <a name="new-vs-returning"><h2>2. Behaviour: new vs returning</h2></a>
 
 Within a given time period, we can compare the number of new visitors (for whom `visit_id` = 1) with returning visitors (for whom `visit_id` > 1). First we create a visits table, and differentiate new visits from returning visits
 
@@ -517,7 +508,7 @@ visit_id,
 IF((MAX(visit_id)=1),1,0),
 IF((MAX(visit_id)>1),1,0)
 FROM events
-WHERE {{INSERT-TIME-PERIOD-RESTRICTIONS}}
+WHERE [[INSERT-TIME-PERIOD-RESTRICTIONS]]
 GROUP BY user_id, visit_id ;
 {% endhighlight %}
 
@@ -535,8 +526,7 @@ FROM visits_with_new_vs_returning_info ;
 
 [Back to top](#top)
 
-<a name="frequency" />
-## 13. Behaviour: frequency
+ <a name="frequency"><h2>13. Behaviour: frequency</h2></a>
 
 We can look at the distribution of users by number of visits they have performed in a given time period. First, we count the number of visits each user has performed in the specific time period:
 
@@ -551,7 +541,7 @@ SELECT
 user_id,
 COUNT(DISTINCT (visit_id))
 FROM events
-WHERE {{INSERT-CONDITIONS-FOR-TIME-PERIOD-YOU-WANT-TO-EXAMINE}}
+WHERE [[INSERT-CONDITIONS-FOR-TIME-PERIOD-YOU-WANT-TO-EXAMINE]]
 GROUP BY user_id ;
 {% endhighlight %}
 
@@ -567,8 +557,7 @@ GROUP BY visit_count ;
 
 [Back to top](#top)
 
-<a name="recency" />
-## 14. Behaviour: recency
+ <a name="recency"><h2>14. Behaviour: recency</h2></a>
 
 We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame, and grab the timestamp for their last event for each:
 
@@ -601,8 +590,7 @@ GROUP BY days_from_today ;
 
 [Back to top](#top)
 
-<a name="engagement" />
-## 15. Behaviour: engagement
+ <a name="engagement"><h2>15. Behaviour: engagement</h2></a>
 
 Google Analytics provides two sets of metrics to indicate *engagement*. We think that both are weak (the duration of each visit and the number of page views per visit). Nonetheless, they are both easy to measure using SnowPlow. To start with the duration per visit, we simply execute the following query:
 
@@ -622,7 +610,7 @@ In the same way, we can look at the number of page views per visit:
 SELECT
 user_id,
 visit_id,
-COUNT(txn_id)
+COUNT(event_id)
 FROM events
 WHERE page_title IS NOT NULL
 GROUP BY user_id, visit_id ;
@@ -630,8 +618,7 @@ GROUP BY user_id, visit_id ;
 
 [Back to top](#top)
 
-<a name="browser" />
-## 16. Technology: browser
+ <a name="browser"><h2>16. Technology: browser</h2></a>
 
 Browser details are stored in the events table in the `br_name`, `br_family`, `br_version`, `br_type`, `br_renderingengine`, `br_features` and `br_cookies` fields.
 
@@ -642,7 +629,7 @@ SELECT
 br_name,
 COUNT( DISTINCT (CONCAT(user_id, visit_id)))
 FROM events
-WHERE {{ANY DATE CONDITIONS}}
+WHERE [[ANY DATE CONDITIONS]]
 GROUP BY br_name ;
 {% endhighlight %}
 
@@ -650,8 +637,7 @@ If you didn't want to distinguish between different versions of the same browser
 
 [Back to top](#top)
 
-<a name="os" />
-## 17. Technology: operating system
+ <a name="os"><h2>17. Technology: operating system</h2></a>
 
 Operating system details are stored in the events table in the `os_name`, `os_family` and `os_manufacturer` fields.
 
@@ -660,16 +646,15 @@ Looking at the distribution of visits by operating system is straightforward:
 {% highlight mysql %}
 	SELECT
 	os_name,
-	COUNT( DISTINCT (CONCAT(user_id, visit_id)))
+	COUNT( DISTINCT (CONCAT(user_id, '-', visit_id)))
 	FROM events
-	WHERE {{ANY DATE CONDITIONS}}
+	WHERE [[ANY DATE CONDITIONS]]
 	GROUP BY os_name ;
 {% endhighlight %}
 
 [Back to top](#top)
 
-<a name="mobile" />
-## 18. Technology: mobile
+ <a name="mobile"><h2>18. Technology: mobile</h2></a>
 
 Mobile technology details are stored in the 4 device/hardware fields: `dvce_type`, `dvce_ismobile`, `dvce_screenwidth`, `dvce_screenheight`.
 
@@ -678,9 +663,9 @@ To work out how the number of visits in a given time period splits between visit
 {% highlight mysql %}
 SELECT
 dvce_ismobile,
-COUNT( DISTINCT (CONCAT(user_id, visit_id)))
+COUNT( DISTINCT (CONCAT(user_id, '-', visit_id)))
 FROM events
-WHERE {{ANY DATE CONDITIONS}}
+WHERE [[ANY DATE CONDITIONS]]
 GROUP BY dvce_ismobile ;
 {% endhighlight %}
 
@@ -691,8 +676,11 @@ SELECT
 dvce_type,
 COUNT( DISTINCT (CONCAT(user_id, visit_id)))
 FROM events
-WHERE {{ANY DATE CONDITIONS}} AND dvce_ismobile = TRUE
+WHERE [[ANY DATE CONDITIONS]] AND dvce_ismobile = TRUE
 GROUP BY dvce_type ;
 {% endhighlight %}
 
 [Back to top](#top)
+
+
+[page-ping]: http://snowplowanalytics.com/blog/2012/12/26/snowplow-0.6.5-released/
