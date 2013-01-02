@@ -10,7 +10,7 @@ Happy New Year all! It's been three months since we [introduced our Attlib proje
 
 To recap: referer-parser is a simple library for extracting seach marketing attribution data from referer _(sic)_ URLs. You supply referer-parser with a referer URL; it then tells you whether the URL is from a search engine - and if so, which search engine it is, and what keywords the user supplied to arrive at your page.
 
-Huge thanks to [Don Spaulding] [donspaulding] @ [Mirus Research] [mirus-research] for contributing the [Python port] [python-impl] of referer-parser; we developed the [Java/Scala port] [java-scala-impl] in-house as this is going to be a key addition to our [SnowPlow ETL] [snowplow-etl] process in the coming months.
+Huge thanks to [Don Spaulding] [donspaulding] @ [Mirus Research] [mirus-research] for contributing the [Python port] [python-impl] of referer-parser; the [Java/Scala port] [java-scala-impl] was developed by us in-house and it will be a key addition to our [SnowPlow ETL] [snowplow-etl] process in the coming months.
 
 You can checkout the code on GitHub, in the [referer-parser repository] [repo], or read on below the fold for some code examples in the new languages:
 
@@ -35,8 +35,6 @@ print(r.uri)                # ParseResult(scheme='http', netloc='www.google.com'
 {% endhighlight %}
 
 For more information, please see the Python [README] [python-readme].
-
-To use th
 
 ## Scala
 
@@ -83,6 +81,8 @@ For more information, please see the Java/Scala [README] [java-scala-readme].
 That's it! If you have any problems with the new versions of referer-parser, please [raise an issue] [issues] or get in touch with us via [the usual channels] [talk-to-us].
 
 And do let us know if you find referer-parser useful!
+
+[attlib-post]: /blog/2012/10/11/attlib-0.0.1-released/
 
 [donspaulding]: https://github.com/donspaulding
 [mirus-research]: http://mirusresearch.com/
