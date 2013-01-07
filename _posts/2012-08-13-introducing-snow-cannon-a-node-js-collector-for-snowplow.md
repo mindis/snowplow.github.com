@@ -3,6 +3,7 @@ layout: blog-post
 shortenedlink: snowcannon
 title: SnowCannon - a node.js collector for SnowPlow
 author: Alex
+category: Releases
 ---
 
 We are hugely excited to introduce [SnowCannon] [snowcannon-on-github], a Node.js collector for SnowPlow, authored by [@shermozle] (http://twitter.com/shermozle).

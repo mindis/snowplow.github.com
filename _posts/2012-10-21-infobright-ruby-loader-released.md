@@ -3,6 +3,7 @@ layout: blog-post
 shortenedlink: infobright-ruby-loader-released
 title: Infobright Ruby Loader Released
 author: Alex
+category: Releases
 ---
 
 We're pleased to start the week with the release of a new Ruby gem, our [Infobright Ruby Loader] [irl-repo] (IRL).

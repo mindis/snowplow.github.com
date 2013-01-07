@@ -4,6 +4,7 @@ shortenedlink: How the role of Hive is changing in SnowPlow
 title: How we use Hive at SnowPlow, and how the role of Hive is changing. (Slides from our presentation to Hive London.)
 tags: snowplow ecommerce multi-site
 author: Yali
+category: Other
 ---
 
 Last night I gave a presentation to the clever folks at Hive London covering three things:

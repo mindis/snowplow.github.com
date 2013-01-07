@@ -4,6 +4,7 @@ shortenedlink: Transforming SnowPlow data so it can be interrogated in BI tools 
 title: Transforming SnowPlow data so that it can be interrogataed in BI / OLAP tools like Tableau, Qlikview and Pentaho
 tags: snowplow olap tableau pentaho qlikview microstrategy
 author: Yali
+category: Analytics
 ---
 
 Because SnowPlow does not ship with any sort of user interface, we get many enquiries from current and prospective users who would like to interrogate SnowPlow data with popular BI tools like Tableau or Qlikview.

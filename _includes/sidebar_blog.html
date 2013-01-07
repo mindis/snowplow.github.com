@@ -1,10 +1,23 @@
 <div id="sidebar">
 	<h1>Recent posts</h1>
 	<ul>
-		{% for post in site.posts %}
+		{% for post in site.posts limit:5 %}
 			<li><a href="{{ post.url }}">{{ post.title }}</a></li>
 		{% endfor %}
 	</ul>
+
+	{% for category in site.categories %}
+		<h1>{{category | first}}</h1>
+		<ul>
+		{% for posts in category offset:1 %}
+			{% for post in posts limit:5 %}
+				<li><a href="{{ post.url }}">{{ post.title }}</a></li>
+			{% endfor %}
+		{% endfor %}
+		</ul>		
+	{% endfor %}
+	
+
 	<h1>Useful links</h1>
 	<ul>
 		<li><a href="/blog/atom.xml">Atom feed</a></li>

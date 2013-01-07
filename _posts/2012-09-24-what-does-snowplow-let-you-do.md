@@ -4,6 +4,7 @@ shortenedlink: Why set your data free?
 title: Why set your data free?
 tags: snowplow data analysis
 author: Yali
+category: Other
 ---
 At Saturday's [Measure Camp] [measurecamp], I had the chance to introduce SnowPlow to a large number of some incredibly thoughtful and insightful people in the web analytics industry.
 

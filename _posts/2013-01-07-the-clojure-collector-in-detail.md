@@ -3,7 +3,7 @@ layout: blog-post
 shortenedlink: The Clojure Collector in detail
 title: Understanding the thinking behind the Clojure Collector, and mapping out its development going forwards
 tags: snowplow clojure collector
-series: Inside the Plow
+category: Inside the Plow
 author: yali
 ---
 
