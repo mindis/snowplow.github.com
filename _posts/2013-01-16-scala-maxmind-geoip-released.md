@@ -7,7 +7,7 @@ author: Alex
 category: Releases
 ---
 
-A short blog post this, to announce the release of [Scala MaxMind GeoIP] [scala-maxmind-geoip], our Scala wrapper for the MaxMind [Java Geo-IP] [java-lib] library.
+A short blog post this, to announce the release of [**Scala MaxMind GeoIP**] [scala-maxmind-geoip], our Scala wrapper for the MaxMind [Java Geo-IP] [java-lib] library.
 
 We have extracted Scala MaxMind GeoIP from our current (ongoing) work porting our ETL process from Apache Hive to [Scalding] [scalding]. We extracted this as a separate library for two main reasons:
 
