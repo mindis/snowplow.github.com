@@ -63,7 +63,7 @@ There is limited scope to speed up the current Hive-based ETL process. However, 
 
 <a name="scalding"><h2>Moving to Cascading / Scalding: how we plan to rearchitect the ETL process</h2></a>
 
-We intend to replace the current Hive-based ETL process with one based on the Scala library that runs on top of [Cascading] [cascading], known as [Scalding] [scalding].
+We intend to replace the current Hive-based ETL process with one based on the Scala library that runs on top of [Cascading] [cascading], known as [Scalding] [scalding-repo].
 
 Cascading is an application framework specifically designed to build robust data pipelines using Hadoop. We intend to use it to build the pipeline [sketched above] [pipeline].
 
@@ -106,7 +106,7 @@ We've been very lucky to have community members contribute an enormous number of
 [digital-element]: http://www.digitalelement.com/our_technology/our_technology.html
 [referer-parser]: https://github.com/snowplow/referer-parser 
 [cascading]: http://www.cascading.org/
-[scalding]: https://github.com/twitter/scalding
+[scalding-repo]: https://github.com/twitter/scalding
 [pipeline]: /static/pdf/snowplow-scalding-etl-specification.pdf
 [storm]: http://storm-project.net/
 [snowcannon]: /blog/2012/08/13/introducing-snow-cannon-a-node-js-collector-for-snowplow/
