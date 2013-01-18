@@ -1,0 +1,34 @@
+---
+layout: blog-post
+shortenedlink: Using OpenTag with SnowPlow
+title: Implementing SnowPlow with QuBit's OpenTag 
+tags: javascript tracker tag management
+author: Yali
+category: Other
+---
+
+In November last year, we tested SnowPlow with Google Tag Manager, and documented how to setup SnowPlow with GTM on the [SnowPlow setup guide] [setup-snowplow-with-gtm]. GTM was the first tag management tool we'd tested SnowPlow with and we were impressed on a number of fronts. (We documented our thoughts, at the time, on [this blog post] [gtm-blog-post].) Since then, we've recommended that **all** new SnowPlow users setup a tag management system, prior to integrating SnowPlow on their website, if they have not already done so. The benefits of doing so are well documented elsewhere. For SnowPlow users, there are two big benefits in particular, that we will flag:
+
+1. Going through the exercise of implementing a tag management solution forces companies to take a rigorous look at the data they pass from their website into the tag manager, especially when declaring the data explicitly using things like the `dataLayer` (in GTM) or the `Universal Variable` in OpenTag. This makes it easier for analysts, down the line, to understand _what_ data has been passed into their web analtyics system, and how that data has been generated: key bits of information that can often get lost months after web analytics platforms like SnowPlow have been implemented. In addition, it makes the analytics as a whole more robust, as the generation of data is decoupled from the generation of other elements of web pages, which means web developers can continue to improve site functionality, safe in the knowledge they wont break anything on the analytics side.
+2. A selfish reason, perhaps, but having our customers use a tag management platforms gives us the freedom to improve SnowPlow tracking tags where we see the opportunity, safe in the knowledge that we're not causing our clients too much difficulty to upgrade their tags.
+
+![[qubit-opentag-logo]]
+
+We are big proponents of tag management systems in general, there is a lot we like about QuBit's OpenTag in particular:
+
+1. **Open source**. You can view the [OpenTag.js] [opentag-js] on Github to get a handle on exactly how OpenTag works
+2. **Low cost hosted service**. QuBit offers free hosting for sites with less than 1M page views per month, and $99 per 10M page views thereafter
+3. **Easy-to-implement host-yourself option**. You can use OpenTag's web UI to configure all your tags for free and publish the results to a Javascript file that you can then host on your own CDN (e.g. Amazon Cloudfront). By not using Qubit to host the configured javascript file with all your different tags, you are not locked into QuBit as a vendor. In addition, the cost of managing your tags across large sites, content networks and ad networks is kept at a bare minimum.
+
+In order to make it easier for new SnowPlow users to implement OpenTag alongside SnowPlow, and existing OpenTag users to implement SnowPlow, we've documented how to setup SnowPlow in OpenTag on our [setup guide] [setup-snowplow-with-opentag].
+
+Keep plowing!
+
+
+
+
+[setup-snowplow-with-gtm]: https://github.com/snowplow/snowplow/wiki/Integrating-javascript-tags-with-Google-Tag-Manager
+[gtm-blog-post]: /blog/2012/11/16/integrating-snowplow-with-google-tag-manager/
+[setup-snowplow-with-opentag]: https://github.com/snowplow/snowplow/wiki/Integrating%20Javascript%20tags%20with%20QuBit%20OpenTag
+[qubit-opentag-logo]: /static/img/blog/2013/01/qubit-opentag.png
+[opentag-js]: https://github.com/QubitProducts/OpenTag/blob/master/OpenTag.js
