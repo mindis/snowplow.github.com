@@ -14,7 +14,7 @@ As of this weekend, the SnowPlow repository on GitHub now has over 200 stars! We
 
 Many thanks to everyone in the SnowPlow community and on GitHub for their support and interest!
 
-We thought it might be interesting to share the Red Dwarf heatmap of where our 202 GitHub stars are located across the world:
+We thought it might be interesting to share the [Red Dwarf heatmap] [red-dwarf] of where our 202 GitHub stars are located across the world:
 
 ![heatmap] [heatmap]
 
