@@ -84,7 +84,7 @@ Uploading data into S3 is reasonably straight forward: this can be done via the 
 
 Once your data is on S3, you need to tell Hive about it, so you can query it. To do that, you'll need to define a Hive table for it:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 /* HiveQL / MySQL pseudo-code */
 CREATE EXTERNAL TABLE {{table_name}}
 (
@@ -101,7 +101,7 @@ LOCATION 's3://LOCATION-BUCKET/LOCATION-PATH/';
 
 To check that your data has been successfully uploaded, you can run some sample queries within Hive e.g. to view the first 10 rows:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 /* HiveQL / MySQL */
 SELECT * from {{table_name}} LIMIT 10;
 {% endhighlight %}

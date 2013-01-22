@@ -43,7 +43,7 @@ This is a key metric employed by the social network Facebook, amongst others.
 
 To calculate it, we first calculate the figure per user_id per time period (e.g. month):
 
-{% highlight: mysql %}
+{% highlight mysql %}
 CREATE TABLE days_visited_per_user_per_month (
 user_id STRING,	
 yr INT,
@@ -63,7 +63,7 @@ GROUP BY user_id, YEAR(dt), month(dt) ;
 
 We can then look at the distribution of users by the number of days per month they have logged in, for any month in particular:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 SELECT
 visits,
 count(user_id)
@@ -74,7 +74,7 @@ GROUP BY visits ;
 
 We might also want to see how the distribution evolves by month:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 SELECT
 yr,
 mnth,
@@ -94,7 +94,7 @@ Which approach is better depends on the type of product / service you offer onli
 
 To calculate it, we first calculate the number of visits performed per user per time period. (In the below example we use a month as a time period):
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE visits_by_user_by_month (
 user_id STRING,
 yr INT,
@@ -113,7 +113,7 @@ GROUP BY user_id, YEAR(dt), MONTH(dt) ;
 
 Now we can look at the distribution of users, by numbers of visits per time period, in each time period:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 SELECT
 yr,
 mnth,
@@ -129,7 +129,7 @@ We can take the number of "events" that occur on each visit as a proxy for how "
 
 Counting the number of events per user per visit is straightforward:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE engagement_by_visit (
 user_id STRING,
 visit_id INT,
@@ -147,7 +147,7 @@ GROUP BY user_id, visit_id ;
 
 We can then look at the distribution of visits by engagement level:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 SELECT
 engagement,
 COUNT(*)
@@ -157,7 +157,7 @@ GROUP BY engagement ;
 
 If we want to see whether this metric is improving over time, we can repeat the above, but this time note the date of each visit, and aggregate by time period:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE engagement_by_visit (
 user_id STRING,
 visit_id INT,

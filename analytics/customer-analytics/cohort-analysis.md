@@ -32,7 +32,7 @@ All cohort analyses can be performed with the following steps:
 
 Regardless of the type of cohort analysis we want to perform, we start by creating a table that maps user_ids to cohorts:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE user_cohort_map (
 	cohort STRING,
 	user_id STRING
@@ -46,7 +46,7 @@ In this case we want to compare users who first visited us in January with those
 
 To do this, we need to lookup the date that a user first visited the site (i.e. when `visit_id`=1, check `dt`) and then group users by month:
 	
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE user_cohort_map
 SELECT
 SUBSTRING(MIN(dt), 1, 7) AS cohort,
@@ -64,7 +64,7 @@ For many SaaS providers, it is not when a user first visits the site that is rea
 
 In this case we use a variation of the above query:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE user_cohort_map
 SELECT
 MIN(SUBSTRING(dt, 1, 7)) AS cohort,
@@ -77,7 +77,7 @@ AND ev_action LIKE '<INSERT RELEVANT ACTION e.g. signup>' ;
 
 Alternatively we may want to define our cohorts based on the first date a user visited a specific page:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE user_cohort_map
 SELECT
 MIN(SUBSTRING(dt, 1, 7)) AS cohort,
@@ -93,7 +93,7 @@ This is important if we want to e.g. compare the lifetime value of customers acq
 
 In this case, we need to look again at the first time a user visited the site, see how they were referred to the site, and then classify them by cohort accordingly. If we were interested in compare users who'd found the site organically, vs those from CPC campaigns, vs those referred from 3rd party sites, for example, we'd look at the `mkt_medium` field:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE user_cohort_map
 SELECT
 mkt_medium AS cohort,
@@ -105,7 +105,7 @@ GROUP BY mkt_medium, user_id ;
 
 Alternatively, we might want to distinguish between CPC traffic from Google with other PPC sources. In this case we would use a combination of `mkt_source` and `mkt_medium` to define our cohorts:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE user_cohort_map
 SELECT
 CONCAT(mkt_source, " / ", mkt_medium) AS cohort,
@@ -126,7 +126,7 @@ SnowPlow makes it possible to define cohorts based on a wide variety of criteria
 
 As a second step, we need to define a query that measure the _thing_ we want to compare between our cohorts. We therefore need to populate a table like the one below:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE metric_by_user (
 user_id STRING,
 time_period STRING,
@@ -142,7 +142,7 @@ There are a [wide variety of ways to measure user engagement][user-engagement]. 
 
 To start with, we could look at the number of actions / events performed by each user each month:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 user_id,
@@ -154,7 +154,7 @@ GROUP BY user_id, YEAR(dt), MONTH(dt) ;
 
 Alternatively, we might want to just look at the average number of visits per month. (Maybe we're doing the analysis for a search or affiliate site, that aims to build a loyal base of repeat users who visit the site frequently but then get off it quickly onto other sites where they make purchases.)
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 user_id,
@@ -168,7 +168,7 @@ GROUP BY user_id, YEAR(dt), MONTH(dt) ;
 
 There are a [wide variety of ways to measure customer value and lifetime value][clv]. Here we give just one example - for a retailer that wants to compare purchase value per month:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 user_id,
@@ -188,7 +188,7 @@ SnowPlow makes it possible to compare a large number of other metrics. For speci
 
 To perform the actual cohort analysis, all we have to do is to `JOIN` our two tables `user_cohort_map` and `metric_by_user` to aggregate results by cohort by time period so that we can compare them alongside each other:
 
-{% highlight:mysql %}
+{% highlight mysql %}
 CREATE TABLE cohort_analysis_results (
 cohort STRING,
 time_period STRING,

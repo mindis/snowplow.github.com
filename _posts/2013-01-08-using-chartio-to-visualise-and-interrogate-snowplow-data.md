@@ -9,7 +9,7 @@ author: yali
 
 In the last couple of weeks, we have been experimenting with [ChartIO] [chartio] - a hosted BI tool for visualising data and creating dashboards. So far, we are very impressed - ChartIO is an excellent analytics tool to use to interrogate and visualise SnowPlow data. Given the number of requests we get from SnowPlow users to recommend tools to assist with analytics on SnowPlow data, we thought it well worth sharing why ChartIO is so good, and give some examples of analyses on SnowPlow data using ChartIO.
 
-![[chartio-pic-0]]
+![chartio-pic-0] [chartio-pic-0]
 
 In this post we cover:
 
@@ -45,15 +45,15 @@ For this tutorial we're going to use data from [Psychic Bazaar] [pbz], an online
 
 Lets start by looking out how engagement has changed over time on Psychic Bazaar. Let's create a new dashboard to explore this issue in particular. Log into ChartIO and click on the **+Dashboard** link on the left hand menu to create a new dashboard.
 
-![[chartio-pic-1]]
+![chartio-pic-1] [chartio-pic-1]
 
 Give the dashboard a suitable name and description and then click the relevant button to craete it. Now we need to add a chart to it. Click on the **+Chart** link on the right hand menu. The Chart Creator opens in **interactive mode**, with your database on the top left, a list of tables under it (including the SnowPlow events table) and under the table, a list of fields split by which ChartIO believes is a measure and dimension.
 
-![[chartio-pic-2]]
+![chartio-pic-2] [chartio-pic-2]
 
 In interactive mode, ChartIO lets you drag and drop measures into the **Measures**, **Dimensions** and **Filters** dialogue box to generate graphs. We're not going to do that, though, because we want to be explicit about how ChartIO uses SnowPlow data. So we're going to use **Query mode** by clicking on the **Query mode** hyperlink on the top left of the **Layer 1** box. This enables us to enter a SQL query directly. ChartIO will graph the results:
 
-![[chartio-pic-3]]
+![chartio-pic-3] [chartio-pic-3]
 
 Now we're ready to graph engagement levels over time. Let's start with our first measure of engagement: conversion levels. We want to look at what % of users who visit our site each month that perform a transaction. To do this, we first need to identify users who have performed a transaction each month, using the following query:
 
@@ -127,15 +127,15 @@ GROUP BY `month`
 
 Pop the above query in the ChartIO query box:
 
-![[chartio-pic-4]]
+![chartio-pic-4] [chartio-pic-4]
 
 and click the **Chart Query** button below. ChartIO will respond with a table of data. We can graph the data by clicking on any of the graph icons above the data table. Choosing the line graph, I get:
 
-![[chartio-pic-6]]
+![chartio-pic-6] [chartio-pic-6]
 
 We can then rename the graph (by clicking the **edit** hyperlink that appears when you hover over **Chart Title**) and save the graph to our dashboard by clicking **Save to Exploring engagement** button. ChartIO lets us resize and position the graph on the dashboard:
 
-![[chartio-pic-7]]
+![chartio-pic-7] [chartio-pic-7]
 
 Great! We can see conversion rates were reasonably stable between September and November of the year, but peaked at the end of the year at a height they were previously in June. The figure for September seems suspiciously high - we'll drill into this in more detail in a bit. Next we will plot our alternative measure of engagement over time: the number of pageviews per user per month, and see how that has changed over time.
 
@@ -232,15 +232,15 @@ ORDER BY `month`, bucket
 
 Create a new chart in ChartIO using the above query and graph it using the first bar chart icon. Give the graph a suitable name:
 
-![[chartio-pic-8]]
+![chartio-pic-8] [chartio-pic-8]
 
 This graph tells an interesting story. Overall, the number of unique visitors per month has grown pretty dramatically over time, peaking at about 1700 uniques in November. It is not so easy to tell how the distribution of users by engagement level has changed over time: this is easier if we change the graph to be a "percent bar":
 
-![[chartio-pic-9]]
+![chartio-pic-9] [chartio-pic-9]
 
 This graph suggests that engagement levels dropped in October, but climbed dramatically from then to December. Curiously, there was no drop in overall engagement level as user numbers increased on the site between August and October: that means that the new users acquired were "high quality" or "highly engaged". This is a useful graph: let's add it to our dashboard alongside the first graph we created:
 
-![[chartio-pic-10]]
+![chartio-pic-10] [chartio-pic-10]
 
 Just to put the two baseline graphs in context, let's add a third graph the tracks the number of unique users per month to our dashboard. Add a new chart using the following simple query:
 
@@ -255,7 +255,7 @@ ORDER BY `month`
 
 And pop it on the dashboard:
 
-![[chartio-pic-11]]
+![chartio-pic-11] [chartio-pic-11]
 
 Our baseline data tells us an interesting story, which from the dashboard, we're in a position to summarise:
 
@@ -382,7 +382,7 @@ GROUP BY paid_search
 
 Plotting the data in ChartIO we can see that users acquired from paid campaigns are much more likely to convert:
 
-![[chartio-pic-12]]
+![chartio-pic-12] [chartio-pic-12]
 
 This naturally leads to the question: has the number of users acquired from paid search increased over the time period? (Especially between November and December, when our increase in conversion rates is most noticeable?) We can find out by graphing the following query, which looks at the number of uniques by month divided by whether they were acquired by paid search or not:
 
@@ -406,7 +406,7 @@ GROUP BY `month`, paid_search
 
 Plotting the above graph shows that growth in paid search traffic accounts for some of the growth in traffic volumes between July and September. However, there was **no** increase in traffic from paid search terms between November and December, so this does **not** account for the rising conversion rate in December.
 
-![[chartio-pic-13]]
+![chartio-pic-13] [chartio-pic-13]
 
 #### Other factors that might account for the rise
 

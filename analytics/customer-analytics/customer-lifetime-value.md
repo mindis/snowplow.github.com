@@ -79,7 +79,7 @@ Let's start with the example of an online retailer, that has implemented SnowPlo
 
 Then to calculate the total revenue by customer over time, we'd simply execute the following query:
 
-{% highlight: mysql%}
+{% highlight mysql%}
 SELECT
 user_id,
 SUM(ev_value)
@@ -90,7 +90,7 @@ GROUP BY user_id
 
 If there are several different types of events where revenue is directly attributable (e.g. customer submits a lead form as well as buys a product), we simply add the additional event types to our `WHERE` clause:
 
-{% highlight: mysql%}
+{% highlight mysql%}
 SELECT
 user_id,
 SUM(ev_value)
@@ -116,7 +116,7 @@ For many online businesses, customers engage in multiple value-generating activi
 
 How you ascribe to actions like the ones listed above will be subject to a blog post in the future. (There are wide range of possible techniques: because SnowPlow gives you access to granular event-level detail, it enables you to use a wide range of techniques to analyse the associated value.) The important thing to understand from the perspective of this guide is that there is a value that you ascribe at the time you perform the analysis. When you perform the anaysis, you create a table with the different values:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 CREATE TABLE events_by_value (
 	ev_action STRING,
 	value FLOAT)
@@ -124,7 +124,7 @@ CREATE TABLE events_by_value (
 
 Populate the above table with each different type of event and the value you want to ascribe it. You can then add up the value of actions that indirectly drive revenue by joining the above table with the SnowPlow events table:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 SELECT
 e.user_id,
 SUM(v.value)
@@ -142,7 +142,7 @@ Like ascribing value to actions that only indirectly generate revenue, documenti
 
 Here, we assume that you have a process of segmenting your customers, and have a future value you assign to customers in each of those segments. In this circumstance, you will need to create a two tables in Hive / Infobright - the first records each segment and the future value ascribed to people in each segment:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 CREATE TABLE future_value_by_segment (
 	segment STRING,
 	value FLOAT )
@@ -150,7 +150,7 @@ CREATE TABLE future_value_by_segment (
 
 And another table that maps `user_id`s to each segment:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 CREATE TABLE user_ids_by_segment (
 	segment STRING,
 	user_id STRING
@@ -159,7 +159,7 @@ CREATE TABLE user_ids_by_segment (
 
 You would populate the above 2 tables and then execute a query like the following, to calculate estimated future value for each customer:
 
-{% highlight: mysql %}
+{% highlight mysql %}
 SELECT
 user_id,
 SUM(value) AS future_value
