@@ -44,7 +44,6 @@ weight: 2
 ### Cannot export data out of web analytics tools
 
 * Some analytics tools (e.g. [Google Analytics] [google-analytics]) do not provide access to underlying  customer-level and event-level data
-* Some web analytics tools (e.g. [MixPanel] [mixpanel]) do not give you access to **all** underlying data
 * Some web analytics tools charge enormous sums of money to give clients their own data. (E.g. [Omniture] [omniture])
 
 ## Unfettered access to their own web analytics data
