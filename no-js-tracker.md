@@ -27,7 +27,7 @@ permalink: no-js-tracker.html
 		<fieldset>
 			<h4>Application data</h4>
 			<p>The application ID is used within SnowPlow to distinguish event that relate to this application with others you are tracking with SnowPlow</p>
-			<label for="application" id="applicationId_label" >Application ID:</label>
+			<label for="application" id="applicationId_label" >Application ID:<strong>*</strong></label>
 			<input type="text" id="applicationId" name="applicationId" size="50" value="" class="text-input" />
 		</fieldset>
 		<fieldset>
@@ -36,7 +36,7 @@ permalink: no-js-tracker.html
 			<label>Is the page HTTP or HTTPS?</label>
 			<input type="radio" id="pageScheme" name="pageScheme" value="http" />HTTP
 			<input type="radio" id="pageScheme" name="pageScheme" value="https" />HTTPS</br>
-			<label for="pageTitle" id="pageTitle_label" >Page title:</label>
+			<label for="pageTitle" id="pageTitle_label" >Page title:<strong>*</strong></label>
 			<input type="text" id="pageTitle" name="pageTitle" size="50" value="" class="text-input" /><br />
 			<label for="pageUrl" id="pageUrl_label" >Page URL:</label>
 			<input type="text" id="pageUrl" name="pageUrl" size="50" value="" class="text-input" /><br />
@@ -49,13 +49,14 @@ permalink: no-js-tracker.html
 			<input type="radio" id="cloudfrontCollectorType" name="collectorType" value="cloudfront" />Cloudfront collector<br />
 			<input type="radio" id="otherCollectorType" name="collectorType" value="other" />Other collector (e.g. Clojure collector)<br />
 			<div id="cloudfront-collector-div">
-				<label for="cloudfront" id="cloudfrontSubdomain_label">Your Cloudfront subdomain:</label>
+				<label for="cloudfront" id="cloudfrontSubdomain_label">Your Cloudfront subdomain:<strong>*</strong></label>
 				<input type="text" id="cloudfrontSubdomain" name="cloudfrontSubdomain" size="50" value="" class="text-input" /><br />
 			</div>
 			<div id="other-collector-div">
-				<label for="selfHostedCollectorUrl" id="selfHostedCollectorUrl_label">Your self-hosted collector URL (e.g. if you are running the Clojure collector):</label>
+				<label for="selfHostedCollectorUrl" id="selfHostedCollectorUrl_label">Your self-hosted collector URL (e.g. if you are running the Clojure collector):<strong>*</strong></label>
 				<input type="text" id="selfHostedCollectorUrl" name="selfHostedCollectorUrl" size="50" value="" class="text-input" /><br />	
 			</div>
+			<p><strong>*</strong> indicates a required field</p>
 		</fieldset>
 		<input type="submit" name="submit" class="button" id="submit_btn" value="Generate No-JS tracking tag" />
 	</fieldset>
