@@ -82,7 +82,7 @@ The [No-Javascript tracker] [no-js-wizard] works with **both** the [Cloudfront c
 When the [No-JS tracker] [no-js-wizard] is used with the Clojure collector, the **only** data captured is:
 
 1. The name / value pairs stored on the query string i.e. the `event type`, `page_url` and `page_title`
-2. The data captured as standard by the Cloudfront collector i.e. the `useragent` string and the date / time of the event
+2. The data captured as standard by the Cloudfront collector i.e. the `useragent` string and the `date` / `time` of the event
 
 This limits the scope of the analysis that can be performed with the data: if for example we're using the No-JS tracker to track views of a README page on a Github repo, we can see how many times the page was viewed but **not** how many unique users viewed the page, because no `user_id` has been set or stored.
 
@@ -94,7 +94,7 @@ However, you need to make sure that you are allowed to drop a cookie on a user, 
 
 The [No-JS tracker] [no-js-wizard] is only our second tracker: to fulfil our vision of supporting event-data collection across many more platforms, we need to launch a wide range of new trackers. 
 
-We are getting close to launching an [Arduino tracker] [arduino] for SnowPlow, which will enable data collection from physical events into SnowPlow. As you might expect, mobile trackers (especially for Android and iOS) are high priorities on the development roadmap, alongside other software trackers (e.g. Windows 8). It will take a lot of work (and trackers) to fulfil our vision of enabling data collection across any platform in SnowPlow, but we are getting there steadily.
+We are getting close to launching an [Arduino tracker] [arduino] for SnowPlow, which will enable data collection from physical events into SnowPlow. As you might expect, mobile trackers (especially for Android and iOS) are high priorities oadmap, alongside other software trackers (e.g. Windows 8). It will take a lot of work (and trackers) to fulfil our vision of enabling data collection across any platform in SnowPlow, but we are getting there steadily.
 
 
 [no-js-wizard]: /no-js-tracker.html
