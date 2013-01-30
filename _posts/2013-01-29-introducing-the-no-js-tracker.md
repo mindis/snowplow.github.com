@@ -79,7 +79,7 @@ The [No-Javascript tracker] [no-js-wizard] works with **both** the [Cloudfront c
 1. What user data is captured
 2. Which services you should use the [No-JS tracker] [no-js-wizard] with
 
-When the [No-JS tracker] [no-js-wizard] is used with the Clojure collector, the **only** data captured is:
+When the [No-JS tracker] [no-js-wizard] is used with the Cloudfront collector, the **only** data captured is:
 
 1. The name / value pairs stored on the query string i.e. the `event type`, `page_url` and `page_title`
 2. The data captured as standard by the Cloudfront collector i.e. the `useragent` string and the `date` / `time` of the event
