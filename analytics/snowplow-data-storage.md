@@ -8,311 +8,45 @@ weight: 3
 
 # Understanding how your SnowPlow data is stored
 
-SnowPlow data is warehoused using either:
+Currently, SnowPlow supports storing your data in two locations: [Amazon S3] (#s3) and [Infobright] (#infobright) columnar database. We are working to support [a growing range of data storage options] (#other) - this is because where your data lives has important implications for the type of analysis tools you can use to process that data. The more storage locations we make it easy for you to pipe your SnowPlow data, the more analysis tools you will be able to plug into that data. Many SnowPlow uses already store data on _both_ S3 _and_ Infobright, to exploit tools that work well with both storage solutions. (More on this [further down the page](#more).)
 
-1. [Apache Hive] [apachehive]
-2. [Infobright] [infobright]
+Understanding how your SnowPlow data is stored and formatted will better position you to analyse that data using a broad range of tools.
 
-In both cases, the SnowPlow data is stored in a single table with a simple structure (documented [here][table-structure]).
+<h2><a name="s3">Storage in Amazon S3</a></h2>
 
-If the data is warehoused using Hive, it physically lives in Amazon S3. When you fire up Elastic Mapreduce, you define a table for the data and point it at the relevant location in S3, where the physical data lives.
+![s3-logo] [s3-logo]
 
-In the case of Infobright, the data lives in a table on your Infobright instance, where it is queried just like any table in a database.
+Storing your SnowPlow data in Amazon S3 has a number of benefits:
 
-<a name="apachehive "><h2>Apache Hive</h2></a>
+* It is incredibly scalable: S3 can store as much data as you can throw at it
+* You can process data stored in S3 directly using Amazon Elastic Mapreduce: making it easy to use tools like [Hive] [hive], [Pig] [pig], [Mahout] [mahout] and [HBase] [hbase] to process your data. 
 
-[Apache Hive] [hive] is a datawarehousing platform developed by the techies at Facebook and built on top of Hadoop. It lets analysts run SQL-like queries against large volumes of data stored in flat files. (The syntax is especially close to MySQL, in particular.) From a SnowPlow analytics perspective, the important things to understand about Hive are:
+Data is currently stored in S3 in flat-file, `ctrl-a` delimited format, which makes it easy to query using any of the above tools. A table definition can be found [here] [hive-table-def]. Remember: each event is represented by a single line of data.
 
-1. Hive has been incorporated by the clever folks at Amazon into their [Elastic Mapreduce][emr] service. This makes it easy to setup a Hive cluster and use it to analyse data stored in [S3] [s3] directly
-2. Because Hive is built to process large volumes of data stored in flatfiles, it is perfect for querying the the Cloudfront logs. Through a [custom deserializer] [serde] developed by the SnowPlow team, Hive can read the Cloudfront logs directly and make the data stored in them available as a table so that analysts can query on one of more of the fields stored in them. (The structure of the table is documented [here] [table-structure].)
-3. Writing queries in Hive is straightforward for anyone with knowledge of SQL and the SnowPlow [data structure] [table-structure]
-4. Hive is incredibly scalable. It was built by the folks at Facebook to enable analysts there to comb over **all** Facebook's Petabytes of user data. Hive scales linearly: to speed up querying of big data sets, you simply throw additional servers at the query. Amazon [Elastic Mapreduce] [emr] makes it  easy to setup clusters of as many servers as you'd like in minutes, and add additional servers to your analytics cluster as you need them
+Going forwards, our intention is to change the format of data stored in S3 to use [Avro] [avro]. This will better enable us to grow out the range of event-specific and platform-specific fields.
 
-Using Hive, it is possible to run analyses against your raw Cloudfront logs directly, as described [below] (#analyse-cloudfront-logs-directly). More often, though, analysts choose to transfer the data into a format that enables faster querying in Hive, as described [here] (#optimised-hive).
+For a guide to getting started using Hive to query your data in S3, see the [getting started][getting-started-with-hive] section on the [setup guide][setup-guide].
 
-<a name="analyse-cloudfront-logs-directly "><h2>Querying Cloudfront logs directly in Hive</h2></a>
+<h2><a name="infobright">Storage in Infobright</a></h2>
 
-Querying the Cloudfront log data directly in Hive is straightforward. First, from the terminal, navigate to the directory with your [Elastic Mapreduce command line tools] [emr-cli] and launch a Hive interactive session:
+![infobright logo] [infobright-logo]
 
-	./elastic-mapreduce --create --alive --hive-interactive
+Storing your SnowPlow data in Infobright has a number of advantages:
 
-This command instructs Elastic Mapreduce to fire up an analytics cluster including both Hadoop and Hive. (It will include the default number of servers, which is two. More can be added by specifying additional arguments.) The command line tools will respond with a jobflow ID e.g.:
+* Rapid querying. Infobright's columnar oriented database is optimized for fast querying across very large data sets (scaling up to terabytes)
+* Fixed costs. Whereas Amazon S3 and EMR costs scale with data and query volumes, once you've paid for your Infobright instance, the costs are fixed, however much you use that instance. 
+* Easily plug in a wide-range of analysis tool via the MySQL JDBC interface: any analysis tool that works with MySQL should be able to work with Infobright, which is nearly all of them, including all the major business intelligence and OLAP solutions.
 
-	Created job flow j-EHXD14TNGXI8
+Data is stored in Infobright as a single 'fat table'. The structure mirrors the flat file structure of the data stored in Amazon S3, with some minor differences related to data formats that Hive supports and Infobright does not (e.g. arrays). For more details see the [data structure] [table-structure] page.
 
-Give Amazon a few minutes to get your cluster up and running, then SSH in by typing:
+<a name="more"><p>As should hopefully be clear, there are benefits to storing your SnowPlow data in **both** S3 and Infobright: Infobright to support OLAP analysis, and S3 to support machine learning (via Mahout).</p></a>
 
-	./elastic-mapreduce --ssh --jobflow j-EHXD14TNGXI8
+<h2><a name="other">Other storage options on the roadmap</a></h2>
 
-Once the cluster has been setup, you should be SSHed in, and see something like this:
+We are working to incorporate [Amazon Redshift] [redshift] as an alternative columnar database to Infobright, and [SkyDB] [skydb] to enable specialist analysis of behavioral / event data.
 
-	ssh -o ServerAliveInterval=10 -o StrictHostKeyChecking=no -i /home/alex/.emr/pbz-hive-nasqueron.pem hadoop@ec2-176-34-64-73.eu-west-1.compute.amazonaws.com 
-	Warning: Permanently added 'ec2-176-34-64-73.eu-west-1.compute.amazonaws.com,176.34.64.73' (RSA) to the list of known hosts.
-	Linux (none) 2.6.35.11-83.9.amzn1.i686 #1 SMP Sat Feb 19 23:41:56 UTC 2011 i686
-	--------------------------------------------------------------------------------
 
-	Welcome to Amazon Elastic MapReduce running Hadoop and Debian/Squeeze.
-	 
-	Hadoop is installed in /home/hadoop. Log files are in /mnt/var/log/hadoop. Check
-	/mnt/var/log/hadoop/steps for diagnosing step failures.
-
-	The Hadoop UI can be accessed via the following commands: 
-
-	  JobTracker    lynx http://localhost:9100/
-	  NameNode      lynx http://localhost:9101/
-	 
-	--------------------------------------------------------------------------------
-	hadoop@ip-10-234-109-57:~$ 
-
-You are in the cluster. Launch Hive by typing:
-
-{% highlight mysql %}
-hive
-{% endhighlight %}
-
-We now need to create a table in Hive based on the Cloudfront logs. To do that, we first need to let Hive know where the SnowPlow deserializer is, so that Hive can read the raw log files. To do that, execute the following command:
-
-{% highlight mysql %}
-ADD JAR s3://snowplow-emr-assets/hive/serdes/snowplow-log-deserializers-0.5.3.jar;
-{% endhighlight %}
-
-(The S3 address given above is for the version of the deserializer [hosted by us] [hosted-serde]. You may want to substitute the address to point to your own copy of the Hive serde.) Now you can create the table:
-
-{% highlight mysql %}
-CREATE EXTERNAL TABLE events 
-ROW FORMAT 
-  SERDE 'com.snowplowanalytics.snowplow.hadoop.hive.SnowPlowEventDeserializer'
-LOCATION 's3://[[LOGS-BUCKET-NAME]]/';
-{% endhighlight %}
-
-You wll need to replace the 'LOGS-BUCKET-NAME' with the name of the S3 bucket where your Cloudfront logs are stored.
-
-Hive now knows where your Cloudfront logs are stored, and it knows from the deserializer how to translate those individual logs into a tidy table. We can inspect the tidy table created prior to querying it:
-
-{% highlight mysql %}
-DESCRIBE events ;
-{% endhighlight %}
-
-Hive will respond by listing all the different fields:
-
-{% highlight mysql %}
-hive> DESCRIBE events ;
-OK
-app_id	string	from deserializer
-platform	string	from deserializer
-dt	string	from deserializer
-tm	string	from deserializer
-event	string	from deserializer
-event_id	string	from deserializer
-txn_id	string	from deserializer
-user_id	string	from deserializer
-user_ipaddress	string	from deserializer
-user_fingerprint	string	from deserializer
-visit_id	int	from deserializer
-page_url	string	from deserializer
-page_title	string	from deserializer
-page_referrer	string	from deserializer
-mkt_medium	string	from deserializer
-mkt_source	string	from deserializer
-mkt_term	string	from deserializer
-mkt_content	string	from deserializer
-mkt_campaign	string	from deserializer
-ev_category	string	from deserializer
-ev_action	string	from deserializer
-ev_label	string	from deserializer
-ev_property	string	from deserializer
-ev_value	string	from deserializer
-useragent	string	from deserializer
-br_name	string	from deserializer
-br_family	string	from deserializer
-br_version	string	from deserializer
-br_type	string	from deserializer
-br_renderengine	string	from deserializer
-br_lang	string	from deserializer
-br_features	array<string>	from deserializer
-br_features_pdf	tinyint	from deserializer
-br_features_flash	tinyint	from deserializer
-br_features_java	tinyint	from deserializer
-br_features_director	tinyint	from deserializer
-br_features_quicktime	tinyint	from deserializer
-br_features_realplayer	tinyint	from deserializer
-br_features_windowsmedia	tinyint	from deserializer
-br_features_gears	tinyint	from deserializer
-br_features_silverlight	tinyint	from deserializer
-br_cookies	boolean	from deserializer
-br_cookies_bt	tinyint	from deserializer
-br_colordepth	string	from deserializer
-os_name	string	from deserializer
-os_family	string	from deserializer
-os_manufacturer	string	from deserializer
-os_timezone	string	from deserializer
-dvce_type	string	from deserializer
-dvce_ismobile	boolean	from deserializer
-dvce_ismobile_bt	tinyint	from deserializer
-dvce_screenwidth	int	from deserializer
-dvce_screenheight	int	from deserializer
-tr_orderid	string	from deserializer
-tr_affiliation	string	from deserializer
-tr_total	string	from deserializer
-tr_tax	string	from deserializer
-tr_shipping	string	from deserializer
-tr_city	string	from deserializer
-tr_state	string	from deserializer
-tr_country	string	from deserializer
-ti_orderid	string	from deserializer
-ti_sku	string	from deserializer
-ti_name	string	from deserializer
-ti_category	string	from deserializer
-ti_price	string	from deserializer
-ti_quantity	string	from deserializer
-v_tracker	string	from deserializer
-v_collector	string	from deserializer
-v_etl	string	from deserializer
-Time taken: 0.574 seconds
-{% endhighlight %}
-
-You as an analyst can now query the "events" table as you would any table in SQL. For example, to count the number of unique visitors by day, execute the following query:
-
-{% highlight mysql %}
-SELECT
-dt,
-COUNT(DISTINCT(user_id))
-FROM events
-GROUP BY dt;
-{% endhighlight %}
-
-<a name="optimised-hive "><h3>Querying the data in a format optimsied for Hive</h3></a>
-
-Whilst it is possible to query the Cloudfront logs directly, this is inefficient for a number of reasons:
-
-1. When Hive uses custom deserializers to read custom data formats, it slows down dramatically
-2. The Cloudfront logs are not partitioned. That means that every time you run a query, Hive has to chunk through the complete data sets, which may run into Terabytes of data for a big website.
-
-As a result, SnowPlow offers a [daily ETL process] [emr-etl-runner] that takes identifies the new records in the raw logs and writes this data into another bucket on S3 into a partitioned format that Hive can read directly without the custom deserializer.
-
-In addition, we are developing the ETL process so that it enriches the data stored in the original logs: for example, by inferring the location of the user on the basis of the IP address, inferring keywords from the search engine referrer string and breaking up referrer strings into hosts, domains and queries.
-
-Querying this table is very similar to querying the raw logs. The fields are the same. The custom serde is not required when creating the table definition. The biggest difference notable to the analyst will be that results are returned much faster.
-
-To perform the queries, we need to start off by defining our table, and telling Hive where the data lives:
-
-{% highlight mysql %}
-CREATE EXTERNAL TABLE IF NOT EXISTS `events` (
-tm string,
-txn_id string,
-user_id string,
-user_ipaddress string,
-visit_id int,
-page_url string,
-page_title string,
-page_referrer string,
-mkt_source string,
-mkt_medium string,
-mkt_term string,
-mkt_content string,
-mkt_campaign string,
-ev_category string,
-ev_action string,
-ev_label string,
-ev_property string,
-ev_value string,
-tr_orderid string,
-tr_affiliation string,
-tr_total string,
-tr_tax string,
-tr_shipping string,
-tr_city string,
-tr_state string,
-tr_country string,
-ti_orderid string,
-ti_sku string,
-ti_name string,
-ti_category string,
-ti_price string,
-ti_quantity string,
-br_name string,
-br_family string,
-br_version string,
-br_type string,
-br_renderengine string,
-br_lang string,
-br_features array<string>,
-br_cookies boolean,
-os_name string,
-os_family string,
-os_manufacturer string,
-dvce_type string,
-dvce_ismobile boolean,
-dvce_screenwidth int,
-dvce_screenheight int,
-app_id string,
-platform string,
-event string,
-v_tracker string,
-v_collector string,
-v_etl string,
-event_id string,
-user_fingerprint string,
-useragent string,
-br_colordepth string,
-os_timezone string
-)
-PARTITIONED BY (dt STRING)
-LOCATION 's3://[[EVENTS_TABLE_PATH]]/' ;
-{% endhighlight %}
-
-Some things to note when comparing the above CREATE TABLE statement with the one for Cloudfront earlier:
-
-1. We have to specify every field in the table. When we created a table for the raw Cloudfront logs, this wasn't necessary, as it was performed implicitly by the deserializer used.
-2. We have not had to specify a deserializer or table format: the default Hive settings are used
-3. The data is partitioned by date. This means that if we only want to query data in a particular time period, we do **not** need to process the complete data set, only the data for the relevant time period.
-
-Once the table is setup, querying it is exactly like querying the raw logs table, however. For example, to calculate the number of uniques by day, enter:
-
-{% highlight mysql %}
-SELECT
-dt,
-COUNT(DISTINCT(user_id))
-FROM events
-GROUP BY dt;
-{% endhighlight %}
-
-<a name="infobright"><h2>Infobright</h2></a>
-
-Whilst Hive has a number of features that make it well suited to performing analytics (especially horizontal scaling and direct integration to Amazon S3 via EMR), there are two disadvantages to using Hive:
-
-1. Analysis is not instant. Even with a large cluster, chunking through large volumes of data in Hive typically takes minutes. Whilst that is fast, it is not fast enough for *train of thought analytics*
-2. Amazon charges for [emr] based on the number of servers used and the number of hours they are run. This can make analysts reluctant to run big jobs. 
-3. Because it is **not** a standard RDBMS database, it is not trivial to integrate Hive with standard analytics tools including [R] [r] or BI tools like [Tableau] [tableau] or [Microstrategy] [microstrategy]
-
-Enter [Infobright] [infobright-website]. Infobright is an open source analytics columnar database that is optimised around enabling analysts to run ad hoc queries against large data sets very quickly. Most of the query functionality available in MySQL (on which Infobright is based) is available in Infobright, making writing queries easy. Infobright scales to Terabytes of data, which is enough for all but the largest websites / networks, who will have to stick with Hive. Further, because it is based on MySQL, it integrates easily with any BI tool built to work with MySQL, which is pretty much all of them.
-
-Connecting to your data stored in Infobright is straightforward. If you're connecting via the command-line, you'll need to SSH onto the server running your Infobright instance, and then connect to Infobright:
-
-{% highlight mysql %}
-mysql-ib -u {{USERNAME}} -p
-{% endhighlight %}
-
-Substitute your username for 'USERNAME' and enter your password when prompted. Once in Infobright, you can connect to the SnowPlow database:
-
-{% highlight mysql %}
-USE snowplow;
-{% endhighlight %}
-
-In the SnowPlow database is the events table. You can query it as normal, so, for example, to find out the number of unique visitors by day:
-
-{% highlight mysql %}
-SELECT dt, 
-COUNT(DISTINCT(user_id))
-FROM events
-GROUP BY dt;
-{% endhighlight %}
-
-Note that the query is identical to that executed in Hive. In general, queries in the two datawarehousing platforms are very similar.
-
-## Understand how SnowPlow data is warehoused in Hive / Infobright?
-
-[Learn more][table-structure] about how data is structured in Hive / Infobright
+[Learn more][table-structure] about how data is structured.
 
 
 [apachehive]: #apachehive
@@ -332,3 +66,15 @@ Note that the query is identical to that executed in Hive. In general, queries i
 [table-structure]: snowplow-table-structure.html
 [hosted-serde]: https://github.com/snowplow/snowplow/wiki/Hosted-assets
 [emr-etl-runner]: https://github.com/snowplow/snowplow/wiki/hive-etl-setup
+[hive]: http://hive.apache.org/
+[pig]: http://pig.apache.org/
+[mahout]: http://mahout.apache.org/
+[hbase]: http://hbase.apache.org/
+[hive-table-def]: https://github.com/snowplow/snowplow/blob/master/4-storage/hive-storage/hive-format-table-def.q
+[getting-started-with-hive]: https://github.com/snowplow/snowplow/wiki/Running-Hive-using-the-command-line-tools
+[setup-guide]: https://github.com/snowplow/snowplow/wiki/SnowPlow%20setup%20guide
+[s3-logo]: /static/img/amazon_s3_logo.jpg
+[redshift]: http://aws.amazon.com/redshift/
+[skydb]: http://skydb.io/
+[infobright-logo]: /static/img/infobright_logo.JPG
+[avro]: http://avro.apache.org/
