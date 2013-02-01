@@ -9,11 +9,10 @@ weight: 1
 
 ## What is SnowPlow?
 
-SnowPlow is a web analytics platform with a difference:
+SnowPlow is an open source web analytics platform puts your granular web data in your hands, so you can perform the widest range of analytics on it.
 
-* You tag your website with javascript tags, just like any other web analytics product
-* **All** your data (incl. individual customer-level and event-level data data) is stored on your own Amazon S3 account and / or Infobright database, where you can query it directly
-* Because you have **all** your data on your own servers, you have the widest possible scope to perform whatever analysis you require with the data
+* **All your data** (incl. individual customer-level and event-level data data) is stored on your own Amazon S3 account and / or Infobright database
+* Because you have all your data on your own servers, you have the widest possible scope to perform **whatever analysis you require** with the data
 
 What will you do with your web analytics data? [Get started with SnowPlow today] [get-started]
 
@@ -21,10 +20,9 @@ What will you do with your web analytics data? [Get started with SnowPlow today]
 
 * [Why we built SnowPlow] [why-snowplow]. What is wrong with the approach taken by traditional web analytics products, and how SnowPlow fixes it
 * [SnowPlow USPs] [snowplow-usps]. What makes SnowPlow different?
-* [SnowPlow technical architecture] [technical-architecture]. How does SnowPlow work, to deliver you **all** your data?
-* [Analysing your data with SnowPlow] [intro-to-snowplow-analysis]. An overview of how to query your data using Apache Hive
 * [Get started with SnowPlow] [get-started]. How to get up and running with SnowPlow, today
-* The [SnowPlow roadmap] [roadmap]
+
+
 
 [why-snowplow]: why-snowplow.html
 [snowplow-usps]: snowplow-usps.html

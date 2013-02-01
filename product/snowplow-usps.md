@@ -14,9 +14,7 @@ weight: 3
 * **Robust and scalable**. Built atop of Amazon's cloud infrastructure, SnowPlow scales to capturing and processing billions of events per day
 * **Cost effective**. Because SnowPlow is open source, users are not committed to investing large sums in license or monthly SaaS fees
 
-[Learn more about the SnowPlow technology] [technical-architecture]	
-
 [Try SnowPlow today] [get-started]
 
-[technical-architecture]: technical-architecture.html
+
 [get-started]: get-started.html
