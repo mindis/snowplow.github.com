@@ -5,37 +5,25 @@ title: SnowPlow Analytics - your web analytics data in your hands
 permalink: index.html
 ---
 
-<div class="shortcolumn">
-	<h2>Your web data in your hands</h2>
-	<p>Direct access to every line of your web analytics data</p>
-	<ul>
-		<li><strong>Drill down</strong> to <strong>individual customers</strong> and <strong>individual events</strong> on their journeys</li>
-		<li>Zoom out to <strong>compare</strong> the <strong>behaviours between user cohorts</strong></li>
-		<li><strong>Segment your audience</strong> by behaviour</li>
-		<li>Develop and power <strong>recommendation and personalisation engines</strong> based on user behaviour</li>
-	</ul>
+<!--Slider-->
+<div id="wrapper">
+    <div class="slider-wrapper theme-default">
+        <div id="slider" class="nivoSlider">
+            <img src="/static/img/slider/slide1.png" data-thumb="/static/img/slider/slide1.png" alt="" />
+            <img src="/static/img/slider/slide2.png" data-thumb="/static/img/slider/slide2.png" alt="" />
+            <img src="/static/img/slider/slide3.png" data-thumb="/static/img/slider/slide3.png" alt="" />
+        </div>
+    </div>
+    <script type="text/javascript">
+		$(window).load(function() {
+	    	$('#slider').nivoSlider();
+	});
+	</script>
 </div>
 
-<div class="shortcolumn">
-	<h2>The widest range of analytics</h2>
-	<p>Perform <strong><i>any</i></strong> analytics, incl:</p>
-	<ul>
-		<li><a href="/analytics/customer-analytics/overview.html">Customer analytics</a> e.g. cohort analysis, customer lifetime value, attribution</li>
-		<li><a href="/analytics/platform-analytics/overview.html">Platform analytics</a> e.g. event stream analysis, flexible funnels</li>
-		<li><a href="/analytics/catalogue-analytics/overview.html">Catalogue analytics</a> Compare the performance of products and media</li>
-		<li>Use your favorite tools incl: <a href="http://www.r-project.org/">R</a>, <a href="http://www.tableausoftware.com/">Tableau</a> and <a href="http://mahout.apache.org/">Mahout</a></li>
-	</ul>
-	<p>Explore the <a href="http://hive.apache.org/">Analytics Cookbook</a> for more.</p>
-</div>
-
-<div class="shortcolumn">
-	<h2>Powerful, scalable, robust</h2>
-	<ul>
-		<li><strong>Hadoop powered</strong> web analytics</li>
-		<li>Scales to <strong>billions of events</strong> (rows of data) per day</li>
-		<li>Data can be stored in <strong>Amazon S3</strong> or <strong>Infobright Community Edition</strong></li>
-		<li>Data can be analysed using <a href="http://hive.apache.org/">Apache Hive</a> and a range of other Hadoop and non-Hadoop tools</li>
-	</ul>
+<div id="buttons">
+	<div class="big-button" id="left-button"><a href="/product/index.html">Learn more</a></div>
+	<div class="big-button" id="right-button"><a href="https://github.com/snowplow/snowplow/wiki/Setting-up-SnowPlow">Setup SnowPlow today</a></div>
 </div>
 
 <div class="column">
