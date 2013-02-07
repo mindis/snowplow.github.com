@@ -18,8 +18,8 @@ Learn more about our approach to analytics projects below:
 5. [Prices](#prices)
 6. [Learn more](#learn-more)
 
-<a name="context" />
-## Context 
+
+<a name="context"><h2>1. Context</h2></a>
 
 The profliferation of data (especially customer data) means there are more opportunities to use it to make the right platform development and marketing decisions.
 
@@ -30,8 +30,7 @@ However, there are often barriers to using data to drive decision making:
 * **Analytic skills shortage**. Even with the relevant technical expertise, significant analytic work is required to turn web analytics and other customer data into a meaningful picture of a customer-base, and then use that knowledge to inform decision making. That analytic process encompasses refining commercial decisions down to specific questions that can be tested with data, identifying the relevant data sources before designing and executing the analyses
  
 
-<a name="approach" />
-## Our approach
+<a name="approach"><h2>2. Our approach</h2></a>
 
 1. Work with the client to **refine the business decision / question** into a subset of discrete questions that can be addressed in a data-driven way
 2. In parallel with the above, **audit all available data sources**
@@ -39,17 +38,15 @@ However, there are often barriers to using data to drive decision making:
 4. **Pull the analyses together** into a coherent powerpoint deck that addresses the business question head on
 5. **Present and iterate the findings with the client**, drawing on client knowledge of their customer-base not captured in the data to colour the analyses
 
-<a name="output" />
-## Project output
+
+<a name="output"><h2>3. Project output</h2></a>
 
 The primary output of any analytics project is a Powerpoint deck that directly addresses the business question posed, and weaves the different analyses performed into a coherent narrative in support of a specific recommendation for the client.
 
 Some illustrateive analyses from past projects are shown below, to give a flavour of the analyses we produce.
 
 
-
-<a name="examples" />
-## Examples of our work
+<a name="examples"><h2>4. Examples</h2></a>
 
 ### Example consumer analytics: engagement levels over time
 
@@ -82,8 +79,7 @@ The analysis revealed a number of commercially significant findings:
 
 Note: the above graph was produced using two data sets exported out of Google Analytics and joined together. (Ecomm sales data and page view data.) A better two metrics to plot on the X-axis and Y-axis would be "unique users who viewed page" and "unique users who bought the product". This is possible with SnowPlow data, but not with data exported from GA.
 
-<a name="prices" />
-## Prices
+<a name="prices"><h2>5. Prices</h2></a>
 
 Analytics projects are done for clients on a fixed fee basis, where the fee will be project-specific. Our estimate of the fixed fee will be based on an estimate of the man-days required to complete the project, which is a function of:
 
@@ -92,8 +88,8 @@ Analytics projects are done for clients on a fixed fee basis, where the fee will
 
 Man-days are charged out based on our [rate card] [rate-card]. However, once these have been estimated, they are fixed. 
 
-<a name="learn-more" />
-## Learn more
+
+<a name="learn-more"><h2>Learn more</h2></a>
 
 [Get in touch] [get-in-touch] with the SnowPlow team to discuss your project. Find out about our other professional services, including [report design and implementation] [reporting], [SnowPlow implementations] [implementation] and [custom development] [custom-dev].
 

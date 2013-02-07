@@ -11,6 +11,10 @@ SnowPlow is open source: as long as you have an [Amazon Web Services] [aws] acco
 
 A [step-by-step guide to setting up SnowPlow] [setup-guide] can be found on our [wiki] [setup-guide].
 
+
+<p style="text-align:center;"><a href="https://github.com/snowplow/snowplow/wiki/SnowPlow-setup-guide"><img src="/static/img/setup-guide.png" width="120" /></a></p>
+
+
 ## Help and support
 
 For help and support getting up and running with SnowPlow, see our [professional services] [pro-services] details, or [get in touch] [contact-us].
