@@ -12,18 +12,21 @@ permalink: index.html
             <img src="/static/img/slider/slide1.png" data-thumb="/static/img/slider/slide1.png" alt="" />
             <img src="/static/img/slider/slide2.png" data-thumb="/static/img/slider/slide2.png" alt="" />
             <img src="/static/img/slider/slide3.png" data-thumb="/static/img/slider/slide3.png" alt="" />
+            <a href="/product/get-started.html"><img src="/static/img/slider/slide4.png" data-thumb="/static/img/slider/slide4.png" alt="" /></a>
         </div>
     </div>
     <script type="text/javascript">
 		$(window).load(function() {
-	    	$('#slider').nivoSlider();
+	    	$('#slider').nivoSlider({
+	    		pauseTime: 4500
+	    	});
 	});
 	</script>
 </div>
 
 <div id="buttons">
 	<div class="big-button" id="left-button"><a href="/product/index.html">Learn more</a></div>
-	<div class="big-button" id="right-button"><a href="https://github.com/snowplow/snowplow/wiki/Setting-up-SnowPlow">Setup SnowPlow today</a></div>
+	<div class="big-button" id="right-button"><a href="/product/get-started.html">Setup SnowPlow today</a></div>
 </div>
 
 <div class="column">

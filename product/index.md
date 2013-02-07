@@ -5,29 +5,24 @@ title: Overview
 weight: 1
 ---
 
-# An overview of SnowPlow
+# What is SnowPlow?
 
-## What is SnowPlow?
+SnowPlow is the most powerful, flexible, scalable web analytics platform in the world. 
 
-SnowPlow is an open source web analytics platform puts your granular web data in your hands, so you can perform the widest range of analytics on it.
+* Direct access to all your customer-level and event-level data
+* Data is structured in an easy-to-query format
+* Data stored on your own Amazon account and / or Infobright instance
 
-* **All your data** (incl. individual customer-level and event-level data data) is stored on your own Amazon S3 account and / or Infobright database
-* Because you have all your data on your own servers, you have the widest possible scope to perform **whatever analysis you require** with the data
+Open source
 
-What will you do with your web analytics data? [Get started with SnowPlow today] [get-started]
+* No vendor lock-in
+* Developed by a growing community passionate about data
 
-## Learn more about SnowPlow:
+SnowPlow lets you [do more with your data] [do-more-with-your-data]. Find out [what] [do-more-with-your-data]. 
 
-* [Why we built SnowPlow] [why-snowplow]. What is wrong with the approach taken by traditional web analytics products, and how SnowPlow fixes it
-* [SnowPlow USPs] [snowplow-usps]. What makes SnowPlow different?
-* [Get started with SnowPlow] [get-started]. How to get up and running with SnowPlow, today
+[Get started with SnowPlow today] [get-started].
 
 
 
-[why-snowplow]: why-snowplow.html
-[snowplow-usps]: snowplow-usps.html
-[technical-architecture]: technical-architecture.html
-[intro-to-snowplow-analysis]: analysing-data-with-snowplow.html
-[roadmap]: roadmap.html
+[do-more-with-your-data]: do-more-with-your-data.html
 [get-started]: get-started.html
-[learn-more]: learn-more.html
