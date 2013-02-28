@@ -11,7 +11,7 @@ Whilst we work wherever possible on a **fixed fee** basis, the fixed fees we quo
 
 | Resource                | Day rate (2012)\*| Effective hourly rate\*|
 |:------------------------|-----------------:|-----------------------:|
-| **Analyst Resourcex**   |                  |                        |
+| **Analyst Resources**   |                  |                        |
 | Analytics Director      | £1,200           | £150                   |
 | Senior Analyst          | £900             | £113                   |
 | Junior Analyst          | £550             | £63                    |
