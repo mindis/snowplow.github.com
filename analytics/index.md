@@ -21,11 +21,11 @@ Learn about how SnowPlow data is
 
 ## Performing analysis in SnowPlow
 
-1. [Basic recipes][basic-recipes]
-2. [Customer analytics][customer-analytics]
-3. [Platform analytics][platform-analytics]
-4. [Catalogue analytics][catalogue-analytics]
-5. [Tools and techniques][tools-and-techniques]
+1. [Basic recipes][basic-recipes]. Simple web analytics to get started with SnowPlow data.
+2. [Customer analytics][customer-analytics]. Understand your customers and users. 
+3. [Platform analytics][platform-analytics]. Understand how updates to your application change user behaviour and grow value.
+4. [Catalogue analytics][catalogue-analytics]. Understand the different ways content on your website and products in your catalogue drive user behaviour and value. 
+5. [Tools and techniques][tools-and-techniques]. Useful techniques to employ with SnowPlow data across a range of analyses.
 
 [production]: snowplow-data-production.html
 [stored]: snowplow-data-storage.html
