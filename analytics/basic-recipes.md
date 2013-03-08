@@ -22,16 +22,15 @@ The following queries will work with both Hive and Infobright.
 6. [Bounce rate](#bounce-rate)
 7. [% New visits](#new-visits)
 8. [Average visitor duration](#duration)
-9. [Repeating queries: a note about efficiency](#efficiency)
-10. [Demographics: language](#language)
-11. [Demographics: location](#location)
-12. [Behaviour: new vs returning](#new-vs-returning)
-13. [Behaviour: frequency](#frequency)
-14. [Behaviour: recency](#recency)
-15. [Behaviour: engagement](#engagement)
-16. [Technology: browser](#browser)
-17. [Technology: operating system](#os)
-18. [Technology: mobile](#mobile)
+9. [Demographics: language](#language)
+10. [Demographics: location](#location)
+11. [Behaviour: new vs returning](#new-vs-returning)
+12. [Behaviour: frequency](#frequency)
+13. [Behaviour: recency](#recency)
+14. [Behaviour: engagement](#engagement)
+15. [Technology: browser](#browser)
+16. [Technology: operating system](#os)
+17. [Technology: mobile](#mobile)
 
  <a name="counting-unique-visitors"><h2>1. Number of unique visitors </h2></a>
 
@@ -163,7 +162,7 @@ The number of pages per visit can be calculated by visit very straightforwardly:
 SELECT
 CONCAT(domain_userid,"-",domain_sessionidx) AS `session`,
 count(distinct(event_id)) AS page_views
-FROM `events_008_cf`
+FROM `events_008`
 WHERE `event` = 'page_view'
 GROUP BY `session`;
 {% endhighlight %}
@@ -272,182 +271,146 @@ In ChartIO:
 To calculate this, 1st we need to calculate the duration of every visit:
 
 {% highlight mysql %}
-CREATE TABLE visits (
-domain_userid STRING,
-domain_sessionidx STRING,
-collector_dt STRING,
-start_time STRING,
-end_time STRING,
-duration DOUBLE
-) ;
-
-INSERT OVERWRITE TABLE visits
 SELECT
-domain_userid,
-domain_sessionidx,
-MIN(collector_dt),
-MIN(CONCAT(collector_dt," ",collector_tm)),
-MAX(CONCAT(collector_dt," ",collector_tm)),
-UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm)))
-FROM events
-GROUP BY domain_userid, domain_sessionidx ;
+MIN(collector_dt) AS `date`,
+CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
+MIN(CONCAT(collector_dt, " ", collector_tm))  AS start_time,
+MAX(CONCAT(collector_dt, " ", collector_tm)) AS finish_time,
+UNIX_TIMESTAMP(MAX(CONCAT(collector_dt, " ", collector_tm))) - UNIX_TIMESTAMP(MIN(CONCAT(collector_dt, " ", collector_tm))) AS duration
+FROM `events_008`
+GROUP BY `session`;
 {% endhighlight %}
 
 Then we simply average visit durations over the time period we're interested e.g. by day:
 
 {% highlight mysql %}
 SELECT
-collector_dt,
-AVG(duration)
-FROM visits
-GROUP BY collector_dt ;
+`date`,
+AVG(`duration`) AS average_visit_duration
+FROM (
+	SELECT
+	MIN(collector_dt) AS `date`,
+	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
+	MIN(CONCAT(collector_dt, " ", collector_tm))  AS start_time,
+	MAX(CONCAT(collector_dt, " ", collector_tm)) AS finish_time,
+	UNIX_TIMESTAMP(MAX(CONCAT(collector_dt, " ", collector_tm))) - UNIX_TIMESTAMP(MIN(CONCAT(collector_dt, " ", collector_tm))) AS duration
+	FROM `events_008`
+	GROUP BY `session` )v
+GROUP BY `date`
+ORDER BY `date`;
 {% endhighlight %}
 
-Or by week:
+In ChartIO:
 
-{% highlight mysql %}
-SELECT 
-YEAR(collector_dt),
-WEEKOFYEAR(collector_dt),
-AVG(duration)
-FROM visits
-GROUP BY YEAR(collector_dt), WEEKOFYEAR(collector_dt) ;
-{% endhighlight %}
-
-Or by month:
-
-{% highlight mysql %}
-SELECT 
-YEAR(collector_dt),
-WEEKOFYEAR(collector_dt),
-AVG(duration)
-FROM visits
-GROUP BY YEAR(collector_dt), MONTH(collector_dt) ;
-{% endhighlight %}
+![average-duration-by-month][average-duration-by-month]
 
 [Back to top](#top)
 
- <a name="efficiency"><h2>9. A note about efficiency</h2></a>
+<a name="language"><h2>9. Demographics: language</h2></a>
 
-Hive and Hadoop more generally are very powerful tools to process large volumes of data. However, data processing is an expensive task, in the sense that every time you execute the query, you have to pay EMR fees to crunch through your data. As a result, where possible, it is advisable not to repeat the same analysis multiple times: for repeated analyses you should save the results of the analysis, and only perform subsequent analysis on new data.
-
-To take the example of logging the number of unique visitors by day: we could run a query to fetch calculate this data up to and included yesterday:
+For each event the browser language is stored in the `br_language` field. As a result, counting the number of visitors in a time period by language is trivial:
 
 {% highlight mysql %}
-SELECT 
-collector_dt,
-COUNT(DISTINCT (domain_userid))
-FROM events
-WHERE collector_dt < CURDATE()
-GROUP BY collector_dt ;
+SELECT
+br_lang,
+COUNT(DISTINCT(domain_userid)) AS visits
+FROM `events_008_cf`
+WHERE collector_dt>'2012-12-31'
+GROUP BY br_lang
+ORDER By visits DESC
 {% endhighlight %}
 
-We would then save this data in a suitable database / Excel spreadsheet, and add to it by querying just *new* data e.g.
+Note that rather than dividing the visits by language, it may make more sense to divide 
 
-{% highlight mysql %}
-SELECT 
-collector_dt,
-COUNT(DISTINCT (domain_userid))
-FROM events
-WHERE collector_dt > '{{NEW DATES}}'
-GROUP BY collector_dt ;
-{% endhighlight %}
+In ChartIO:
 
-At the moment, the analyst has to manually append the new data to the old. Going forwards, we will build out the SnowPlow functionality so that it is straightforward to build ETL processes to migrate useful cuts of data into analytics databases for further analysis, where Hadoop / Hive is not required for that additional analysis.
+![visitors-by-language-chartio][visitors-by-language-chartio]
 
 [Back to top](#top)
 
- <a name="language"><h2>10. Demographics: language</h2></a>
-
-For each event the browser language is stored in the `br_language` field. As a result, counting the number of visits in a time period by language is trivial:
-
-{% highlight mysql %}
-SELECT 
-br_language,
-COUNT(DISTINCT (CONCAT(domain_userid, domain_sessionidx))) AS visits
-FROM events
-WHERE [[ENTER-DESIRED-TIME-PERIOD]]
-GROUP BY br_language 
-ORDER BY COUNT(DISTINCT (CONCAT(domain_userid,'-', domain_sessionidx))) DESC ;
-{% endhighlight %}
-
-[Back to top](#top)
-
- <a name="location"><h2>11. Demographics: location</h2></a>
+<a name="location"><h2>10. Demographics: location</h2></a>
 
 THIS NEEDS TO BE DONE IN CONJUNCTION WITH MAXIMIND DATABASE OR OTHER GEOIP DATABASE, BASED ON IP - TO WRITE
 
 [Back to top](#top)
 
- <a name="new-vs-returning"><h2>2. Behaviour: new vs returning</h2></a>
+ <a name="new-vs-returning"><h2>11. Behaviour: new vs returning</h2></a>
 
-Within a given time period, we can compare the number of new visitors (for whom `domain_sessionidx` = 1) with returning visitors (for whom `domain_sessionidx` > 1). First we create a visits table, and differentiate new visits from returning visits
-
-{% highlight mysql %}
-CREATE TABLE visits_with_new_vs_returning_info (
-domain_userid STRING,
-domain_sessionidx STRING,
-new TINYINT,
-returning TINYINT
-) ;
-
-INSERT OVERWRITE TABLE visits_with_new_vs_returning_info
-SELECT
-domain_userid,
-domain_sessionidx,
-IF((MAX(domain_sessionidx)=1),1,0),
-IF((MAX(domain_sessionidx)>1),1,0)
-FROM events
-WHERE [[INSERT-TIME-PERIOD-RESTRICTIONS]]
-GROUP BY domain_userid, domain_sessionidx ;
-{% endhighlight %}
-
-Now we can sum over the table to calculate the number of new visits vs returning visits
+Within a given time period, we can compare the number of new visitors (for whom `domain_sessionidx` = 1) with returning visitors (for whom `domain_sessionidx` > 1): 
 
 {% highlight mysql %}
 SELECT
-COUNT(domain_sessionidx) AS total_visits,
-SUM(new) AS new_visitors,
-SUM(returning) AS returning_visitors,
-SUM(new)/COUNT(domain_sessionidx) AS fraction_new,
-SUM(returning)/COUNT(domain_sessionidx) AS fraction_returning
-FROM visits_with_new_vs_returning_info ;
+MIN(collector_dt) AS `date`,
+CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
+IF(domain_sessionidx = 1, 1, 0)  AS new_visitor,
+IF(domain_sessionidx >1, 1,0) AS returning_visitor
+FROM `events_008_cf`
+GROUP BY `session`
 {% endhighlight %}
+
+Then we can aggregate them by time period, to get the total new vs returning e.g. by day:
+
+{% highlight mysql %}
+SELECT
+`date`,
+SUM(new_visitor) AS new_visits,
+SUM(returning_visitor) AS returning_visits
+FROM (
+	SELECT
+	MIN(collector_dt) AS `date`,
+	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
+	IF(domain_sessionidx = 1, 1, 0)  AS new_visitor,
+	IF(domain_sessionidx >1, 1,0) AS returning_visitor
+	FROM `events_008_cf`
+	GROUP BY `session` ) v
+GROUP BY `date`
+ORDER BY `date`
+{% endhighlight %}
+
+In ChartIO we would plot this by creating two layers: one for "new visits" and the other for "returning visits". The combined graph would then look like:
+
+![new-vs-returning-visits-by-day][new-vs-returning-visits-by-day]
 
 [Back to top](#top)
 
- <a name="frequency"><h2>13. Behaviour: frequency</h2></a>
+ <a name="frequency"><h2>12. Behaviour: frequency</h2></a>
 
 We can look at the distribution of users by number of visits they have performed in a given time period. First, we count the number of visits each user has performed in the specific time period:
 
 {% highlight mysql %}
-CREATE TABLE users_by_frequency (
-domain_userid STRING,
-visit_count INT
-) ;
-
-INSERT OVERWRITE TABLE users_by_frequency 
 SELECT
 domain_userid,
-COUNT(DISTINCT (domain_sessionidx))
-FROM events
-WHERE [[INSERT-CONDITIONS-FOR-TIME-PERIOD-YOU-WANT-TO-EXAMINE]]
-GROUP BY domain_userid ;
+count(distinct(domain_sessionidx)) AS visits
+FROM `events_008_cf`
+WHERE collector_dt>'2012-12-31'
+GROUP BY domain_userid;
 {% endhighlight %}
 
-Now we need to categorise each user by the number of visits performed in the time period, and sum the number of users in each category:
+Now we aggregate that data set by the number of visits in the time period:
 
 {% highlight mysql %}
 SELECT
-visit_count,
-COUNT(domain_userid)
-FROM users_by_frequency
-GROUP BY visit_count ;	
+`visits`,
+COUNT(DISTINCT(domain_userid))
+FROM (
+	SELECT
+	domain_userid,
+	count(distinct(domain_sessionidx)) AS visits
+	FROM `events_008_cf`
+	WHERE collector_dt>'2012-12-31'
+	GROUP BY domain_userid ) v
+GROUP BY `visits`
+ORDER BY `visits`; 
 {% endhighlight %}
+
+In ChartIO:
+
+![distribution-of-visitors-by-number-of-visits][distribution-of-visitors-by-number-of-visits]
+
 
 [Back to top](#top)
 
- <a name="recency"><h2>14. Behaviour: recency</h2></a>
+ <a name="recency"><h2>13. Behaviour: recency</h2></a>
 
 We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame, and grab the timestamp for their last event for each:
 
@@ -480,7 +443,7 @@ GROUP BY days_from_today ;
 
 [Back to top](#top)
 
- <a name="engagement"><h2>15. Behaviour: engagement</h2></a>
+ <a name="engagement"><h2>14. Behaviour: engagement</h2></a>
 
 Google Analytics provides two sets of metrics to indicate *engagement*. We think that both are weak (the duration of each visit and the number of page views per visit). Nonetheless, they are both easy to measure using SnowPlow. To start with the duration per visit, we simply execute the following query:
 
@@ -508,7 +471,7 @@ GROUP BY domain_userid, domain_sessionidx ;
 
 [Back to top](#top)
 
- <a name="browser"><h2>16. Technology: browser</h2></a>
+ <a name="browser"><h2>15. Technology: browser</h2></a>
 
 Browser details are stored in the events table in the `br_name`, `br_family`, `br_version`, `br_type`, `br_renderingengine`, `br_features` and `br_cookies` fields.
 
@@ -527,7 +490,7 @@ If you didn't want to distinguish between different versions of the same browser
 
 [Back to top](#top)
 
- <a name="os"><h2>17. Technology: operating system</h2></a>
+ <a name="os"><h2>16. Technology: operating system</h2></a>
 
 Operating system details are stored in the events table in the `os_name`, `os_family` and `os_manufacturer` fields.
 
@@ -544,7 +507,7 @@ Looking at the distribution of visits by operating system is straightforward:
 
 [Back to top](#top)
 
- <a name="mobile"><h2>18. Technology: mobile</h2></a>
+ <a name="mobile"><h2>17. Technology: mobile</h2></a>
 
 Mobile technology details are stored in the 4 device/hardware fields: `dvce_type`, `dvce_ismobile`, `dvce_screenwidth`, `dvce_screenheight`.
 
@@ -582,3 +545,7 @@ GROUP BY dvce_type ;
 [avg-pvs-per-visit-per-week-chartio]: /static/img/analytics/basic-recipes/avg-pvs-per-visit-per-week.png
 [fraction-of-visits-per-day-that-bounce]: /static/img/analytics/basic-recipes/fraction-of-visits-per-day-that-bounce-chartio.png
 [fraction-of-visits-per-day-where-the-visitor-is-new]: /static/img/analytics/basic-recipes/fraction-of-visits-per-day-where-the-visitor-is-new-chartio.png
+[average-duration-by-month]: /static/img/analytics/basic-recipes/average-visit-duration-by-month-chartio.png
+[visitors-by-language-chartio]: /static/img/analytics/basic-recipes/visitors-by-language-chartio.png
+[new-vs-returning-visits-by-day]: /static/img/analytics/basic-recipes/new-vs-returning-visits-by-day.png
+[distribution-of-visitors-by-number-of-visits]: /static/img/analytics/basic-recipes/distribution-of-visitors-by-number-of-visits-chartio.png
