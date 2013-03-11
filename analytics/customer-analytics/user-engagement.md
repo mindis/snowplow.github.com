@@ -41,11 +41,12 @@ Note: for a more in-depth discussion of measuring user engagement, particularly 
 
 This is a key metric employed by the social network Facebook, amongst others.
 
-To calculate it, we first calculate the figure per user_id per time period (e.g. month):
+To calculate it, we first calculate the figure per domain_userid per time period (e.g. month):
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 CREATE TABLE days_visited_per_user_per_month (
-user_id STRING,	
+domain_userid STRING,	
 yr INT,
 mnth INT,
 visits INT
@@ -53,20 +54,21 @@ visits INT
 
 INSERT OVERWRITE TABLE days_visited_per_user_per_month 
 SELECT
-user_id,
-YEAR(dt),
+domain_userid,
+YEAR(collectordt),
 MONTH(dt),
-COUNT(DISTINCT (visit_id) )
+COUNT(DISTINCT (domain_sessionidx) )
 FROM events
-GROUP BY user_id, YEAR(dt), month(dt) ;
+GROUP BY domain_userid, YEAR(dt), month(dt) ;
 {% endhighlight %}
 
 We can then look at the distribution of users by the number of days per month they have logged in, for any month in particular:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 SELECT
 visits,
-count(user_id)
+count(domain_userid)
 FROM days_visited_per_month
 WHERE yr=12 AND mnth=5
 GROUP BY visits ;
@@ -75,11 +77,12 @@ GROUP BY visits ;
 We might also want to see how the distribution evolves by month:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 SELECT
 yr,
 mnth,
 visits,
-count(user_id)
+count(domain_userid)
 FROM days_visited_per_month
 GROUP BY yr, month, visits ;
 {% endhighlight %}
@@ -96,7 +99,7 @@ To calculate it, we first calculate the number of visits performed per user per 
 
 {% highlight mysql %}
 CREATE TABLE visits_by_user_by_month (
-user_id STRING,
+domain_userid STRING,
 yr INT,
 mnth INT,
 visits INT
@@ -104,11 +107,11 @@ visits INT
 
 INSERT OVERWRITE TABLE visits_by_user_by_month
 SELECT
-user_id,
+domain_userid,
 YEAR(dt),
 MONTH(dt),
-COUNT( DISTINCT( visit_id ))
-GROUP BY user_id, YEAR(dt), MONTH(dt) ;
+COUNT( DISTINCT( domain_sessionidx ))
+GROUP BY domain_userid, YEAR(dt), MONTH(dt) ;
 {% endhighlight %}
 
 Now we can look at the distribution of users, by numbers of visits per time period, in each time period:
@@ -118,12 +121,12 @@ SELECT
 yr,
 mnth,
 visits,
-COUNT(user_id)
+COUNT(domain_userid)
 FROM visits_by_user_by_month
 GROUP BY yr, mnth, visits ;
 {% endhighlight %}
 
- <a name="events-per-visit"><h3>3. Number of events per visit</h3></a>
+<a name="events-per-visit"><h3>3. Number of events per visit</h3></a>
 
 We can take the number of "events" that occur on each visit as a proxy for how "engaged" the user was during that visit. (With more events indicating a deeper level of engagement.) 
 
@@ -131,18 +134,18 @@ Counting the number of events per user per visit is straightforward:
 
 {% highlight mysql %}
 CREATE TABLE engagement_by_visit (
-user_id STRING,
-visit_id INT,
+domain_userid STRING,
+domain_sessionidx INT,
 engagement INT
 ) ;
 
 INSERT OVERWRITE TABLE engagement_by_visit
 SELECT
-user_id,
-visit_id,
+domain_userid,
+domain_sessionidx,
 COUNT(txn_id)
 FROM events
-GROUP BY user_id, visit_id ;
+GROUP BY domain_userid, domain_sessionidx ;
 {% endhighlight %}
 
 We can then look at the distribution of visits by engagement level:
@@ -159,20 +162,20 @@ If we want to see whether this metric is improving over time, we can repeat the 
 
 {% highlight mysql %}
 CREATE TABLE engagement_by_visit (
-user_id STRING,
-visit_id INT,
+domain_userid STRING,
+domain_sessionidx INT,
 dt STRING,
 engagement INT
 ) ;
 
 INSERT OVERWRITE TABLE engagement_by_visit
 SELECT
-user_id,
-visit_id,
+domain_userid,
+domain_sessionidx,
 MIN(dt),
 COUNT(txn_id)
 FROM events
-GROUP BY user_id, visit_id ;	
+GROUP BY domain_userid, domain_sessionidx ;	
 
 SELECT
 dt,
@@ -182,7 +185,7 @@ FROM events
 GROUP BY dt, engagement ;
 {% endhighlight %}
 
- <a name="weighted-events-per-visit"><h3>4. Weighting events by value</h3></a>
+<a name="weighted-events-per-visit"><h3>4. Weighting events by value</h3></a>
 
 TO WRITE
 

@@ -10,10 +10,11 @@ weight: 4
 
 1. [What is customer lifetime value?](#what-is-customer-lifetime-value)
 2. [Why is calculating customer lifetime value so important?](#why-is-it-important)
-3. [Why traditional web analytics tools suck at customer lifetime value](#why-competitors-suck)
-4. [Calculating customer lifetime value with SnowPlow](#calculating-clv)
+3. [Where is customer lifetime value used?](#where)
+4. [Why traditional web analytics tools suck at customer lifetime value](#why-competitors-suck)
+5. [Calculating customer lifetime value with SnowPlow](#calculating-clv)
 
- <a name="what-is-customer-lifetime-value"><h2>What is customer lifetime value?</h2></a>
+ <a name="what-is-customer-lifetime-value"><h2>1. What is customer lifetime value?</h2></a>
 
 The idea behind **customer lifetime value*** (CLV) is simple: it is the total amount of value derived by a business from a customer over the customer's complete *lifetime* engaging with the business / product / company. Calculating and maximizing a customer's lifetime value contrasts with other approaches to increasing value e.g.:
 
@@ -21,9 +22,12 @@ The idea behind **customer lifetime value*** (CLV) is simple: it is the total am
 2. Optimizing **occupancy**: where we optimize the revenue / profit per room or per seat rather than per customer.
 3. Optimizing **sell-through rates**: where we optimize either the fraction of something that is sold (where we do not control the total volume available e.g. ad inventory), or the volume produced to maximize profit (e.g. physical CDs: the more we cut the more we can sell, but the more are likely to remain unsold and therefore a net cost to the business)
 
- <a name="why-is-it-important"><h2>Why is customer lifetime value important?</h2></a>
+<a name="why-is-it-important"><h2>2. Why is customer lifetime value important?</h2></a>
 
 Maximizing customer lifetime value is generally the most sustainable way to drive value growth for any consumer-facing business, because: 
+
+1. **For many businesses, a minority of customers account for the majority of profit**. The best customers might be brand loyal, not "shop around", rich or have other features that mean they behave differently from the majority of customers.
+2. **For many businesses, acquisition costs keep rising**. As a result, it is often more cost effective to spend money retaining existing customer rather than acquiring new customers. In addition, when acquiring new customers, the amount that should be spent varies widely depending on the type of customer acquired.
 
 1. It forces the business to take a long term approach to value creation rather than e.g. short term promotions that maximize revenue on a particular shopping trip, or particular product line, at the expense of eroding brand value.
 2. It emphasizes customer loyalty, which has repeatedly been shown to be an intangible asset that successful companies can monetize over long periods of time.
@@ -31,18 +35,25 @@ Maximizing customer lifetime value is generally the most sustainable way to driv
 
 Maximizing customer lifetime value is only possible if you can measure it (and therefore track improvements over time). So measuring customer lifetime value is critical to driving long term growth for consumer-facing businesses.
 
- <a name="why-competitors-suck"><h2>Why traditional web analytics tools suck at customer lifetime value</h2></a>
+<a name="where"><h2>3. Where is customer lifetime value used?</h2></a>
+
+Customer lifetime value is used to support a range of business functions. Two, however, stand out in particular:
+
+1. **Drive acquisition strategy**. Tailor spend per channel based on the expected customer lifetime value of customers acquired from those channels.
+2. **Drive customer relationship management** (i.e. grow loyalty, reduce churn). Personalise marketing, communication and promotions to the existing customer base to maximize their loyalty and customer value. (For example, tailor spend to cultivate loyalty in the most valuable customers.)
+
+<a name="why-competitors-suck"><h2>4. Why traditional web analytics tools suck at customer lifetime value</h2></a>
 
 Traditionally, web analytics tools have sucked at enabling analysts to calculate customer lifetime value:
 
 1. They don't make it easy to capture value outside of transaction-based businesses e.g. ecommerce
-2. They don't make it easy (or often possible) to slice all historical data by customer
+2. They don't make it easy (or often possible) to slice all historical data by customer. (Because they typically only expose session-level data.)
 3. They don't integrate with other systems used in other channels, to enable a holistic view of customer behaviour and value across online and offline channels
 4. They don't provide the granular data required to build sophisticated models to forecast customer value going forwards
 
 Fortunately, SnowPlow addresses the above limitations, enabling analysts to calculate customer lifetime value as detailed below.
 
- <a name="calculating-clv"><h2>Calculating customer lifetime value with SnowPlow</h2></a>
+<a name="calculating-clv"><h2>5. Calculating customer lifetime value with SnowPlow</h2></a>
 
 There are diffent levels of sophistication to calculate customer lifetime value. The diagram below illustrates some different approaches:
 
@@ -66,7 +77,7 @@ In all cases, however, SnowPlow provides a solid foundation for doing the custom
 3. [Including indirect value as well as direct revenue / profit](#indirect)
 4. [Include expected future value](#future-value)
 
- <a name="direct-historical-revenue-by-customer"><h3>1. Summing historical revenue by customer over time</h3></a>
+<a name="direct-historical-revenue-by-customer"><h3>5.1 Summing historical revenue by customer over time</h3></a>
 
 SnowPlow makes it easy to sum the amount of direct revenue attributable to each customer over their entire user history.
 
@@ -100,11 +111,11 @@ OR ev_action LIKE 'submit-lead-form'
 GROUP BY user_id
 {% endhighlight %}
 
- <a name="cross-channel"><h3>2. Including all revenue per customer across multiple channels</h3></a>
+<a name="cross-channel"><h3>5.2 Including all revenue per customer across multiple channels</h3></a>
 
 Many businesses monetize customers on multiple channels, not just web. To sum revenues across all those channels, you will need to join  your web analytics data with your offline sales data on a per-customer basis. Details of how to do this is documented [here][joining-snowplow-data].
 
- <a name="indirect"><h3>3. Including indirect value as well as direct revenue / profit</h3></a>
+<a name="indirect"><h3>5.3 Including indirect value as well as direct revenue / profit</h3></a>
 
 For many online businesses, customers engage in multiple value-generating activities that only generates revenue indirectly. To give some examples:
 
@@ -114,7 +125,7 @@ For many online businesses, customers engage in multiple value-generating activi
 4. Signing up for email marketing
 5. Signing up to a new freemium service
 
-How you ascribe to actions like the ones listed above will be subject to a blog post in the future. (There are wide range of possible techniques: because SnowPlow gives you access to granular event-level detail, it enables you to use a wide range of techniques to analyse the associated value.) The important thing to understand from the perspective of this guide is that there is a value that you ascribe at the time you perform the analysis. When you perform the anaysis, you create a table with the different values:
+How you ascribe value to actions like the ones listed above will be subject to a blog post in the future. (There are wide range of possible techniques: because SnowPlow gives you access to granular event-level detail, it enables you to use a wide range of techniques to analyse the associated value.) The important thing to understand from the perspective of this guide is that there is a value that you ascribe at the time you perform the analysis. When you perform the anaysis, you create a table with the different values:
 
 {% highlight mysql %}
 CREATE TABLE events_by_value (
@@ -136,11 +147,11 @@ GROUP BY user_id
 
 You would then sum the indirect value by `user_id` generated by the above query with the direct revenue attributable to each user calculated in the [previous section](#direct-historical-revenue-by-customer)
 
- <a name="future-value "><h3>4. Include expected future value</h3></a>
+<a name="future-value "><h3>5.4 Include expected future value</h3></a>
 
 Like ascribing value to actions that only indirectly generate revenue, documenting all the different approaches to estimating future value from each customer is beyond the scope of this guide, it's something we will cover in a blog post in due course.
 
-Here, we assume that you have a process of segmenting your customers, and have a future value you assign to customers in each of those segments. In this circumstance, you will need to create a two tables in Hive / Infobright - the first records each segment and the future value ascribed to people in each segment:
+Here, we assume that you have a process of segmenting your customers, and have a future value you assign to customers in each of those segments. In this circumstance, you will need to create a two tables in SnowPLow - the first records each segment and the future value ascribed to people in each segment:
 
 {% highlight mysql %}
 CREATE TABLE future_value_by_segment (
