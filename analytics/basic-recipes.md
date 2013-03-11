@@ -37,6 +37,7 @@ The following queries will work with both Hive and Infobright.
 The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period e.g. day. (Because each user is assigned a unique domain_userid, based on a lack of SnowPlow tracking cookies on their browser):
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 collector_dt AS date,
 COUNT(DISTINCT(domain_userid)) AS uniques
@@ -48,6 +49,7 @@ ORDER BY collector_dt;
 Or by week:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 YEAR(collector_dt) AS `year`,
 WEEKOFYEAR(collector_dt) AS `week`,
@@ -60,6 +62,7 @@ ORDER BY `year`, `week`
 Or by month:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 YEAR(collector_dt) AS `year`,
 MONTH(collector_dt) AS `month`,
@@ -80,6 +83,7 @@ In ChartIO:
 Because each user might visit a site more than once, summing the number of `domain_userid`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, SnowPlow assigns that session with a `domain_sessionidx` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `domain_userid` with the `domain_sessionidx` and then count the number of distinct concatenated entry in the events table:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 collector_dt AS `date`,
 COUNT( DISTINCT( CONCAT( domain_userid,"-",domain_sessionidx ))) AS `visits`
@@ -101,6 +105,7 @@ Page views are one type of event that are stored in the SnowPlow events table. T
 To count the number of page views by day, then we simply execute the following query:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 collector_dt,
 COUNT( DISTINCT( event_id )) AS page_views
@@ -123,6 +128,7 @@ Although the number of page views is a standard metric in web analytics, this re
 As a result, counting the total number of events (including page views but also other AJAX events) is actually a more meaningful thing to do than to count the number of page views, as we have done above. We recommend setting up SnowPlow so that *all* events / actions that a user takes are tracked. Hence, running the below queries should return a total sum of events on the site by time period:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 collector_dt AS `date`,
 COUNT(DISTINCT(event_id)) AS `events`
@@ -141,6 +147,7 @@ As well as looking at page views by time period, we can also look by user e.g. b
 For example, to examine the engagement by user by month, we execute the following query:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 YEAR(collector_dt) AS `year`,
 MONTH(collector_dt) AS `month`,
@@ -159,6 +166,7 @@ There is scope to taking a progressively more nuanced approach to measuring user
 The number of pages per visit can be calculated by visit very straightforwardly:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 CONCAT(domain_userid,"-",domain_sessionidx) AS `session`,
 count(distinct(event_id)) AS page_views
@@ -170,6 +178,7 @@ GROUP BY `session`;
 To calculate the average page views per week we group the results of the above query by week and then average over the results:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 DATE_FORMAT(date,  '%Y-%v') AS `week`,
 AVG(page_views) AS `average_pageviews`
@@ -195,6 +204,7 @@ In ChartIO:
 First we need to look at all the website visits, and flag which of those visits are *bounces*: these are visits where there is only one page view i.e. `COUNT( DISTINCT ( event_id )) = 1`:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 MIN(collector_dt) AS `date`,
 CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
@@ -207,6 +217,7 @@ GROUP BY `session`
 Then we need to calculate the fraction of visits by time period that are *bounces* e.g. by day:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 date,
 sum(bounce)/count(session) as fraction_of_visits_that_bounce
@@ -235,6 +246,7 @@ A new visit is easily identified as a visit where the domain_sessionidx = 1. Hen
 First, we create a table with every visit stored, and identify which visits were "new":
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 MIN(collector_dt) AS `date`,
 CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
@@ -246,6 +258,7 @@ GROUP BY `session`
 Then we aggregate the visits over our desired time period, and calculate the fraction of them that are new:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 date,
 sum(new_visit)/count(session) as fraction_of_visits_that_are_new
@@ -271,6 +284,7 @@ In ChartIO:
 To calculate this, 1st we need to calculate the duration of every visit:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 MIN(collector_dt) AS `date`,
 CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
@@ -284,6 +298,7 @@ GROUP BY `session`;
 Then we simply average visit durations over the time period we're interested e.g. by day:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 `date`,
 AVG(`duration`) AS average_visit_duration
@@ -311,6 +326,7 @@ In ChartIO:
 For each event the browser language is stored in the `br_language` field. As a result, counting the number of visitors in a time period by language is trivial:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 br_lang,
 COUNT(DISTINCT(domain_userid)) AS visits
@@ -339,6 +355,7 @@ THIS NEEDS TO BE DONE IN CONJUNCTION WITH MAXIMIND DATABASE OR OTHER GEOIP DATAB
 Within a given time period, we can compare the number of new visitors (for whom `domain_sessionidx` = 1) with returning visitors (for whom `domain_sessionidx` > 1): 
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 MIN(collector_dt) AS `date`,
 CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
@@ -351,6 +368,7 @@ GROUP BY `session`
 Then we can aggregate them by time period, to get the total new vs returning e.g. by day:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 `date`,
 SUM(new_visitor) AS new_visits,
@@ -378,6 +396,7 @@ In ChartIO we would plot this by creating two layers: one for "new visits" and t
 We can look at the distribution of users by number of visits they have performed in a given time period. First, we count the number of visits each user has performed in the specific time period:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 domain_userid,
 count(distinct(domain_sessionidx)) AS visits
@@ -389,6 +408,7 @@ GROUP BY domain_userid;
 Now we aggregate that data set by the number of visits in the time period:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 `visits`,
 COUNT(DISTINCT(domain_userid))
@@ -414,6 +434,7 @@ In ChartIO:
 We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 domain_userid,
 domain_sessionidx AS current_visit,
@@ -426,6 +447,7 @@ GROUP BY domain_userid, domain_sessionidx
 We can then look up the date of each session by joining the above results with the results of a query that identifies the date by session:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 domain_userid,
 domain_sessionidx,
@@ -437,6 +459,7 @@ GROUP BY domain_userid, domain_sessionidx
 The combined query then looks like this:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 v.domain_userid, 
 v.current_visit,
@@ -477,6 +500,7 @@ AND v.previous_visit = previous.domain_sessionidx
 We can then aggregate the results by the number of days difference, to produce a frequency table:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 difference,
 count(*) as frequency
@@ -537,6 +561,7 @@ Google Analytics provides two sets of metrics to indicate *engagement*:
 Both of these are flakey and unsophisticated measures of engagement. Nevertheless, they are easy to report on in SnowPlow. To plot visit duration, we execute the following query: 
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 domain_userid,
 domain_sessionidx,
@@ -549,6 +574,7 @@ GROUP BY domain_userid, domain_sessionidx ;
 We then need to classify each visit into a finite set of buckets based on their duration:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 v.domain_userid,
 v.domain_sessionidx,
@@ -574,6 +600,7 @@ FROM (
 Then aggregate the results for each bucket, so we have frequency by bucket:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 duration,
 COUNT(*) as frequency
@@ -609,6 +636,7 @@ We can then plot the results in ChartIO:
 We can also look at the number of page views per visit
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 domain_userid,
 domain_sessionidx,
@@ -622,6 +650,7 @@ GROUP BY domain_userid, domain_sessionidx ;
 Then aggregate sessions by page depth into a frequency table:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT
 page_depth,
 COUNT(*) AS frequency
@@ -652,6 +681,7 @@ Browser details are stored in the events table in the `br_name`, `br_family`, `b
 Looking at the distribution of visits by browser is straightforward:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 br_name,
 COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
@@ -675,6 +705,7 @@ Operating system details are stored in the events table in the `os_name`, `os_fa
 Looking at the distribution of visits by operating system is straightforward:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 os_name,
 COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
@@ -695,6 +726,7 @@ Again, we can plot the results in ChartIO:
 To work out how the number of visits in a given time period splits between visitors on mobile and those not, simply execute the following query:
 
 {% highlight mysql %}
+/* HiveQL / MySQL */
 SELECT 
 IF(dvce_ismobile=1, 'mobile', 'desktop') AS device_type,
 COUNT(DISTINCT(CONCAT(domain_userid, "-", domain_sessionidx))) as frequency
