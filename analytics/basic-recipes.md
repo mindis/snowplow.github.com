@@ -407,67 +407,241 @@ In ChartIO:
 
 ![distribution-of-visitors-by-number-of-visits][distribution-of-visitors-by-number-of-visits]
 
-
 [Back to top](#top)
 
  <a name="recency"><h2>13. Behaviour: recency</h2></a>
 
-We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame, and grab the timestamp for their last event for each:
+We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame:
 
 {% highlight mysql %}
-CREATE TABLE users_by_recency (
-domain_userid STRING,
-last_action_timestamp STRING,
-days_from_today BIGINT
-) ;
-
-INSERT OVERWRITE TABLE users_by_recency
 SELECT
 domain_userid,
-MAX(CONCAT(collector_dt, " ", collector_tm)) AS last_action_timestamp,
-CEILING((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(MAX(CONCAT(collector_dt, " ", collector_tm))))/(60*60*24)) AS days_from_today
-FROM events
-WHERE collector_dt>'{{ENTER-START-DATE}}'
-GROUP BY domain_userid ;
+domain_sessionidx AS current_visit,
+IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
+FROM `events_008_cf`
+WHERE collector_dt>'2012-12-31'
+GROUP BY domain_userid, domain_sessionidx
 {% endhighlight %}
 
-Now we categorise the users by the number of days since they last visited, and sum the number in each category:
+We can then look up the date of each session by joining the above results with the results of a query that identifies the date by session:
 
 {% highlight mysql %}
-SELECT 
-days_from_today,
-COUNT( domain_userid )
-FROM users_by_recency
-GROUP BY days_from_today ;
+SELECT
+domain_userid,
+domain_sessionidx,
+MIN(collector_dt)
+FROM `events_008_cf`
+GROUP BY domain_userid, domain_sessionidx
 {% endhighlight %}
+
+The combined query then looks like this:
+
+{% highlight mysql %}
+SELECT
+v.domain_userid, 
+v.current_visit,
+current.`date` AS `current_date`,
+previous.`date` AS `previous_date`,
+DATEDIFF(current.`date`, previous.`date`) AS difference
+FROM (
+	SELECT
+	domain_userid,
+	domain_sessionidx AS current_visit,
+	IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
+	FROM `events_008_cf`
+	WHERE collector_dt>'2012-12-31'
+	GROUP BY domain_userid, domain_sessionidx
+	HAVING previous_visit IS NOT NULL) v
+JOIN (
+	SELECT
+	domain_userid,
+	domain_sessionidx,
+	MIN(collector_dt) AS `date`
+	FROM `events_008_cf`
+	GROUP BY domain_userid, domain_sessionidx
+) current
+ON v.domain_userid = current.domain_userid
+AND v.current_visit = current.domain_sessionidx
+JOIN (
+	SELECT
+	domain_userid,
+	domain_sessionidx,
+	MIN(collector_dt) AS `date`
+	FROM `events_008_cf`
+	GROUP BY domain_userid, domain_sessionidx
+) previous
+ON v.domain_userid = previous.domain_userid
+AND v.previous_visit = previous.domain_sessionidx
+{% endhighlight %}
+
+We can then aggregate the results by the number of days difference, to produce a frequency table:
+
+{% highlight mysql %}
+SELECT
+difference,
+count(*) as frequency
+FROM (
+	SELECT
+	v.domain_userid, 
+	v.current_visit,
+	current.`date` AS `current_date`,
+	previous.`date` AS `previous_date`,
+	DATEDIFF(current.`date`, previous.`date`) AS difference
+	FROM (
+		SELECT
+		domain_userid,
+		domain_sessionidx AS current_visit,
+		IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
+		FROM `events_008_cf`
+		WHERE collector_dt>'2012-12-31'
+		GROUP BY domain_userid, domain_sessionidx
+		HAVING previous_visit IS NOT NULL) v
+	JOIN (
+		SELECT
+		domain_userid,
+		domain_sessionidx,
+		MIN(collector_dt) AS `date`
+		FROM `events_008_cf`
+		GROUP BY domain_userid, domain_sessionidx
+	) current
+	ON v.domain_userid = current.domain_userid
+	AND v.current_visit = current.domain_sessionidx
+	JOIN (
+		SELECT
+		domain_userid,
+		domain_sessionidx,
+		MIN(collector_dt) AS `date`
+		FROM `events_008_cf`
+		GROUP BY domain_userid, domain_sessionidx
+	) previous
+	ON v.domain_userid = previous.domain_userid
+	AND v.previous_visit = previous.domain_sessionidx
+) r
+GROUP BY difference
+ORDER BY difference
+{% endhighlight %}
+
+And plot the results in ChartIO:
+
+![days-since-last-visit-in-chartio][days-since-last-visit-in-chartio]
 
 [Back to top](#top)
 
  <a name="engagement"><h2>14. Behaviour: engagement</h2></a>
 
-Google Analytics provides two sets of metrics to indicate *engagement*. We think that both are weak (the duration of each visit and the number of page views per visit). Nonetheless, they are both easy to measure using SnowPlow. To start with the duration per visit, we simply execute the following query:
+Google Analytics provides two sets of metrics to indicate *engagement*:
+
+1. Visit duration
+2. Page depth (i.e. number of pages visited per session)
+
+Both of these are flakey and unsophisticated measures of engagement. Nevertheless, they are easy to report on in SnowPlow. To plot visit duration, we execute the following query: 
 
 {% highlight mysql %}
 SELECT
 domain_userid,
 domain_sessionidx,
 UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
-FROM events
-WHERE {{ANY-TIME-PERIOD-LIMITATIONS}}
+FROM events_008_cf
+WHERE collector_dt > '2012-12-31'
 GROUP BY domain_userid, domain_sessionidx ;
 {% endhighlight %}
 
-In the same way, we can look at the number of page views per visit:
+We then need to classify each visit into a finite set of buckets based on their duration:
+
+{% highlight mysql %}
+SELECT 
+v.domain_userid,
+v.domain_sessionidx,
+CASE 
+	WHEN duration > 1800 THEN 'g. 1801+ seconds'
+	WHEN duration > 600 THEN 'f. 601-1800 seconds'
+	WHEN duration > 180 THEN 'e. 181-600 seconds'
+	WHEN duration > 60 THEN 'd. 61 - 180 seconds'
+	WHEN duration > 30 THEN 'c. 31-60 seconds'
+	WHEN duration > 10 THEN 'b. 11-30 seconds'
+	ELSE 'a. 0-10 seconds'
+	END AS duration
+FROM (
+	SELECT
+	domain_userid,
+	domain_sessionidx,
+	UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
+	FROM events_008_cf
+	WHERE collector_dt > '2012-12-31'
+	GROUP BY domain_userid, domain_sessionidx ) v;
+{% endhighlight %}
+
+Then aggregate the results for each bucket, so we have frequency by bucket:
+
+{% highlight mysql %}
+SELECT
+duration,
+COUNT(*) as frequency
+FROM (
+	SELECT 
+	v.domain_userid,
+	v.domain_sessionidx,
+	CASE 
+		WHEN duration > 1800 THEN 'g. 1801+ seconds'
+		WHEN duration > 600 THEN 'f. 601-1800 seconds'
+		WHEN duration > 180 THEN 'e. 181-600 seconds'
+		WHEN duration > 60 THEN 'd. 61 - 180 seconds'
+		WHEN duration > 30 THEN 'c. 31-60 seconds'
+		WHEN duration > 10 THEN 'b. 11-30 seconds'
+		ELSE 'a. 0-10 seconds'
+		END AS duration
+	FROM (
+		SELECT
+		domain_userid,
+		domain_sessionidx,
+		UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
+		FROM events_008_cf
+		WHERE collector_dt > '2012-12-31'
+		GROUP BY domain_userid, domain_sessionidx ) v ) r
+GROUP BY duration
+ORDER BY duration;
+{% endhighlight %}
+
+We can then plot the results in ChartIO:
+
+![visits-by-duration-chartio][visits-by-duration-chartio]
+
+We can also look at the number of page views per visit
 
 {% highlight mysql %}
 SELECT
 domain_userid,
 domain_sessionidx,
-COUNT(event_id)
-FROM events
-WHERE page_title IS NOT NULL
+COUNT(event_id) AS page_depth
+FROM events_008_cf
+WHERE event = 'page_view'
+AND collector_dt > CURDATE() - 31
 GROUP BY domain_userid, domain_sessionidx ;
 {% endhighlight %}
+
+Then aggregate sessions by page depth into a frequency table:
+
+{% highlight mysql %}
+SELECT
+page_depth,
+COUNT(*) AS frequency
+FROM (
+	SELECT
+	domain_userid,
+	domain_sessionidx,
+	COUNT(event_id)  AS page_depth
+	FROM events_008_cf
+	WHERE event = 'page_view'
+	AND collector_dt > CURDATE() - 31
+	GROUP BY domain_userid, domain_sessionidx ) v
+GROUP BY page_depth
+ORDER BY page_depth;
+{% endhighlight %}
+
+And plot the results in ChartIO:
+
+![visits-in-the-last-month-by-page-depth][visits-in-the-last-month-by-page-depth]
+
 
 [Back to top](#top)
 
@@ -480,13 +654,17 @@ Looking at the distribution of visits by browser is straightforward:
 {% highlight mysql %}
 SELECT 
 br_name,
-COUNT( DISTINCT (CONCAT(domain_userid, domain_sessionidx)))
-FROM events
-WHERE [[ANY DATE CONDITIONS]]
-GROUP BY br_name ;
+COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
+FROM `events_008_cf`
+WHERE collector_dt>CURDATE() - 31
+GROUP BY br_name
+ORDER BY frequency DESC
 {% endhighlight %}
 
-If you didn't want to distinguish between different versions of the same browser in the results, replace `br_name` in the query with `br_family`.
+Plotting the results in ChartIO:
+
+![visits-by-browser-type][visits-by-browser-type]
+
 
 [Back to top](#top)
 
@@ -497,41 +675,36 @@ Operating system details are stored in the events table in the `os_name`, `os_fa
 Looking at the distribution of visits by operating system is straightforward:
 
 {% highlight mysql %}
-	SELECT
-	os_name,
-	COUNT( DISTINCT (CONCAT(domain_userid, '-', domain_sessionidx)))
-	FROM events
-	WHERE [[ANY DATE CONDITIONS]]
-	GROUP BY os_name ;
+SELECT 
+os_name,
+COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
+FROM `events_008_cf`
+WHERE collector_dt>CURDATE() - 31
+GROUP BY os_name
+ORDER BY frequency DESC
 {% endhighlight %}
+
+Again, we can plot the results in ChartIO:
+
+![visits-by-operating-system][visits-by-operating-system]
 
 [Back to top](#top)
 
  <a name="mobile"><h2>17. Technology: mobile</h2></a>
 
-Mobile technology details are stored in the 4 device/hardware fields: `dvce_type`, `dvce_ismobile`, `dvce_screenwidth`, `dvce_screenheight`.
-
 To work out how the number of visits in a given time period splits between visitors on mobile and those not, simply execute the following query:
 
 {% highlight mysql %}
-SELECT
-dvce_ismobile,
-COUNT( DISTINCT (CONCAT(domain_userid, '-', domain_sessionidx)))
-FROM events
-WHERE [[ANY DATE CONDITIONS]]
-GROUP BY dvce_ismobile ;
+SELECT 
+IF(dvce_ismobile=1, 'mobile', 'desktop') AS device_type,
+COUNT(DISTINCT(CONCAT(domain_userid, "-", domain_sessionidx))) as frequency
+FROM `events_008_cf`
+GROUP BY dvce_ismobile;
 {% endhighlight %}
 
-To break down the number of visits from mobile users by device type execute the following query:
+Plotting the results in ChartIO:
 
-{% highlight mysql %}
-SELECT
-dvce_type,
-COUNT( DISTINCT (CONCAT(domain_userid, domain_sessionidx)))
-FROM events
-WHERE [[ANY DATE CONDITIONS]] AND dvce_ismobile = TRUE
-GROUP BY dvce_type ;
-{% endhighlight %}
+![split-in-visits-by-mobile-vs-desktop][split-in-visits-by-mobile-vs-desktop]
 
 [Back to top](#top)
 
@@ -549,3 +722,9 @@ GROUP BY dvce_type ;
 [visitors-by-language-chartio]: /static/img/analytics/basic-recipes/visitors-by-language-chartio.png
 [new-vs-returning-visits-by-day]: /static/img/analytics/basic-recipes/new-vs-returning-visits-by-day.png
 [distribution-of-visitors-by-number-of-visits]: /static/img/analytics/basic-recipes/distribution-of-visitors-by-number-of-visits-chartio.png
+[days-since-last-visit-in-chartio]: /static/img/analytics/basic-recipes/days-since-last-visit-in-2013-chartio.png
+[visits-by-duration-chartio]: /static/img/analytics/basic-recipes/visits-by-duration-chartio.png
+[visits-in-the-last-month-by-page-depth]: /static/img/analytics/basic-recipes/visits-in-the-last-month-by-page-depth-chartio.png
+[visits-by-browser-type]: /static/img/analytics/basic-recipes/visits-by-browser-type-chartio.png
+[visits-by-operating-system]: /static/img/analytics/basic-recipes/visits-by-operating-system.png
+[split-in-visits-by-mobile-vs-desktop]: /static/img/analytics/basic-recipes/split-in-visits-by-mobile-vs-desktop.png
