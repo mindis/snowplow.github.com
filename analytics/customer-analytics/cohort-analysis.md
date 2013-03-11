@@ -148,6 +148,7 @@ There are a [wide variety of ways to measure user engagement][user-engagement]. 
 To start with, we could look at the number of actions / events performed by each user each month:
 
 {% highlight mysql %}
+/* Hive / Infobright */
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 domain_userid,
@@ -160,6 +161,7 @@ GROUP BY domain_userid, YEAR(collector_dt), MONTH(collector_dt) ;
 Alternatively, we might want to just look at the average number of visits per month. (Maybe we're doing the analysis for a search or affiliate site, that aims to build a loyal base of repeat users who visit the site frequently but then get off it quickly onto other sites where they make purchases.)
 
 {% highlight mysql %}
+/* Hive / Infobright */
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 domain_userid,
@@ -174,6 +176,7 @@ GROUP BY domain_userid, YEAR(collector_dt), MONTH(collector_dt) ;
 There are a [wide variety of ways to measure customer value and lifetime value][clv]. Here we give just one example - for a retailer that wants to compare purchase value per month:
 
 {% highlight mysql %}
+/* Hive / Infobright */
 INSERT OVERWRITE TABLE metric_by_user
 SELECT
 domain_userid,
@@ -194,6 +197,7 @@ SnowPlow makes it possible to compare a large number of other metrics. For speci
 To perform the actual cohort analysis, all we have to do is to `JOIN` our two tables `user_cohort_map` and `metric_by_user` to aggregate results by cohort by time period so that we can compare them alongside each other:
 
 {% highlight mysql %}
+/* Hive / Infobright */
 CREATE TABLE cohort_analysis_results (
 cohort STRING,
 time_period STRING,

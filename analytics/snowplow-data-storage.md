@@ -8,7 +8,7 @@ weight: 3
 
 # Understanding how your SnowPlow data is stored
 
-Currently, SnowPlow supports storing your data in two locations: [Amazon S3] (#s3) and [Infobright] (#infobright) columnar database. We are working to support [a growing range of data storage options] (#other) - this is because where your data lives has important implications for the type of analysis tools you can use to process that data. The more storage locations we make it easy for you to pipe your SnowPlow data, the more analysis tools you will be able to plug into that data. Many SnowPlow uses already store data on _both_ S3 _and_ Infobright, to exploit tools that work well with both storage solutions. (More on this [further down the page](#more).)
+Currently, SnowPlow supports storing your data in two locations: [Amazon S3] (#s3) and [Redshift] (#redshift) and [Infobright] (#infobright) columnar database. We are working to support [a growing range of data storage options] (#other) - this is because where your data lives has important implications for the type of analysis tools you can use to process that data. The more storage locations we make it easy for you to pipe your SnowPlow data, the more analysis tools you will be able to plug into that data. Many SnowPlow uses already store data on _both_ S3 _and_ Infobright, to exploit tools that work well with both storage solutions. (More on this [further down the page](#more).)
 
 Understanding how your SnowPlow data is stored and formatted will better position you to analyse that data using a broad range of tools.
 
@@ -25,7 +25,22 @@ Data is currently stored in S3 in flat-file, `ctrl-a` delimited format, which ma
 
 Going forwards, our intention is to change the format of data stored in S3 to use [Avro] [avro]. This will better enable us to grow out the range of event-specific and platform-specific fields.
 
-For a guide to getting started using Hive to query your data in S3, see the [getting started][getting-started-with-hive] section on the [setup guide][setup-guide].
+For a guide to getting started using Hive to query your data in S3, see the [getting started] [getting-started-with-hive] section on the [setup guide] [setup-guide].
+
+<h2><a name="redshift">Storage in Redshift</a></h2>
+
+![redshift-logo] [redshift-logo]
+
+Storing your SnowPlow data in Amazon Redshift has a number of benefits:
+
+* Amazon Redshift is a fully-managed service (unlike Infobright Community edition)
+* Amazon Redshift scales up to handle Petabytes of data
+* Redshift clusters can be scaled up over time: Amazon makes it easy to add nodes
+* A wide range of analytics tools can be plugged directly into Redshift via well-supported PostgreSQL JDBC and ODBC drivers. (E.g. it already works with [ChartIO] [chartio]. A dedicated connector is being built for [Tableau] [tableau].)
+* Redshift supports a broad set of SQL functionality
+* Redshift is highly cost effective: costing as little as $1000 per TB per year
+
+Data is stored in Redshfit as a single 'fat table'. The structure mirrors the flat file structur of the data stored in Amazon S3, with some minor differences related to data formats that Hive supports and Redshift does not.
 
 <h2><a name="infobright">Storage in Infobright</a></h2>
 
@@ -43,7 +58,7 @@ Data is stored in Infobright as a single 'fat table'. The structure mirrors the 
 
 <h2><a name="other">Other storage options on the roadmap</a></h2>
 
-We are working to incorporate [Amazon Redshift] [redshift] as an alternative columnar database to Infobright, and [SkyDB] [skydb] to enable specialist analysis of behavioral / event data.
+We plan to incorporate [SkyDB] [skydb] to enable specialist analysis of behavioral / event data.
 
 
 [Learn more][table-structure] about how data is structured.
@@ -78,3 +93,6 @@ We are working to incorporate [Amazon Redshift] [redshift] as an alternative col
 [skydb]: http://skydb.io/
 [infobright-logo]: /static/img/infobright_logo.JPG
 [avro]: http://avro.apache.org/
+[redshift-logo]: /static/img/amazon-redshift.png
+[chartio]: http://chartio.com/
+[tableau]: http://www.tableausoftware.com/

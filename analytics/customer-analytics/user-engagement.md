@@ -25,7 +25,7 @@ Because what constitutes "successful engagement" varies depending on the type of
 
 Note: for a more in-depth discussion of measuring user engagement, particularly with respect to performing cohort analyses, see [this post][user-engagement-keplar-blog-post] on the Keplar blog covering [different approaches to measuring user engagement][user-engagement-keplar-blog-post] on the [Keplar blog][keplar-blog].
 
- <a name="proxies"><h2>Different proxies for measuring user engagement</h2></a>
+<a name="proxies"><h2>Different proxies for measuring user engagement</h2></a>
 
 ### Measuring engagement breadth i.e. how often a user visits a site
 
@@ -89,7 +89,7 @@ GROUP BY yr, month, visits ;
 
 Note: as well as looking at how the distribution of users by engagement level changes over time, we might also want to look at how it changes for a fixed group of users. This is normally performed as part of a [cohort analysis][cohort-analysis].
 
- <a name="visits-per-time-period"><h3>2. Number of visits by each user per day / week / month</h3></a>
+<a name="visits-per-time-period"><h3>2. Number of visits by each user per day / week / month</h3></a>
 
 A similar metric is calculated by countint the number of visits that each user makes in a given time period. The difference here, is that if a user visits a site more than once a day, each individual visit contributes to the "engagement" value assigned to that user. When we look at the number of days per month a user visits a website, by contrast, we do not distinguish users who've visited once from users who've visited twice. 
 
@@ -98,6 +98,7 @@ Which approach is better depends on the type of product / service you offer onli
 To calculate it, we first calculate the number of visits performed per user per time period. (In the below example we use a month as a time period):
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 CREATE TABLE visits_by_user_by_month (
 domain_userid STRING,
 yr INT,
@@ -117,6 +118,7 @@ GROUP BY domain_userid, YEAR(dt), MONTH(dt) ;
 Now we can look at the distribution of users, by numbers of visits per time period, in each time period:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 SELECT
 yr,
 mnth,
@@ -133,6 +135,7 @@ We can take the number of "events" that occur on each visit as a proxy for how "
 Counting the number of events per user per visit is straightforward:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 CREATE TABLE engagement_by_visit (
 domain_userid STRING,
 domain_sessionidx INT,
@@ -151,6 +154,7 @@ GROUP BY domain_userid, domain_sessionidx ;
 We can then look at the distribution of visits by engagement level:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 SELECT
 engagement,
 COUNT(*)
@@ -161,6 +165,7 @@ GROUP BY engagement ;
 If we want to see whether this metric is improving over time, we can repeat the above, but this time note the date of each visit, and aggregate by time period:
 
 {% highlight mysql %}
+/* HiveQL / Infobright */
 CREATE TABLE engagement_by_visit (
 domain_userid STRING,
 domain_sessionidx INT,
