@@ -1,7 +1,7 @@
 ---
 layout: section
 category: contact
-title: Founders
+title: Team
 weight: 2
 ---
 

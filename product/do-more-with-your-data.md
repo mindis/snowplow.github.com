@@ -13,9 +13,9 @@ weight: 2
 
 Granular data means you can drill down and slice your data by customers, articles (e.g. on news sites), videos (e.g. on media sites), ads (e.g. on ad networks) and applications versions, so you can perform:
 
-* Customer analytics
-* Product analytics
-* Catalogue analytics
+* [Customer analytics] [customer-analytics]
+* [Catalogue analytics] [catalogue-analytics]
+* [Platform analytics] [platform-analytics]
 
 ### Every type of analysis, using *any* analysis tool
 
@@ -44,3 +44,6 @@ Granular data means you can join e.g. customer-data at an individual customer le
 [r]: http://www.r-project.org/
 [spss]: http://www-01.ibm.com/software/uk/analytics/spss/
 [get-started]: /product/get-started.html
+[customer-analytics]: /analytics/customer-analytics/overview.html
+[catalogue-analytics]: /catalogue-analytics/overview.html
+[platform-analytics]: /analytics/platform-analytics/overview.html

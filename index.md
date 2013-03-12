@@ -53,7 +53,7 @@ permalink: index.html
 
 <div class="column">
 	<h2>SnowPlow on Twitter</h2>
-	<a class="twitter-timeline" width="266" height="200" href="https://twitter.com/SnowPlowData" data-widget-id="266927205374885888">Tweets by @SnowPlowData</a>
+	<a class="twitter-timeline" width="266" height="350" href="https://twitter.com/SnowPlowData" data-widget-id="266927205374885888">Tweets by @SnowPlowData</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 </div>

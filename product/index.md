@@ -11,7 +11,8 @@ SnowPlow is the most powerful, flexible, scalable web analytics platform in the 
 
 * Direct access to all your customer-level and event-level data
 * Data is structured in an easy-to-query format
-* Data stored on your own Amazon account and / or Infobright instance
+* Data stored on your own Amazon account (S3 and Infobright) 
+* Enterprise-strength. Scales to 100Ms of events per day
 
 Open source
 

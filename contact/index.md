@@ -7,6 +7,13 @@ weight: 1
 
 # Get in touch
 
+* Want to get up and running with SnowPlow?  
+* Want to learn how you can use SnowPlow are your company?  
+* Want to get more out of your SnowPlow data?  
+
+Then get in touch!  
+
+
 |               |                                      |
 |--------------:|:-------------------------------------|
 | **Email**     | [contact@snowplowanalytics.com](mailto:contact@snowplowanalytics.com) |

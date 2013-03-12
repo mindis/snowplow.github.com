@@ -7,7 +7,10 @@ weight: 3
 
 # Get started with SnowPlow today
 
-SnowPlow is open source: as long as you have an [Amazon Web Services] [aws] account, you can [download the source code] [github-repo] and get up and running today. Nothing to sign, nothing to pay, nothing to hold you back. 
+There are two places you can go to get started with SnowPlow today:
+
+* [Get in touch][contact-us] with the SnowPlow team. We can setup and host SnowPlow for you
+* [Download the source code and get started yourself] [github-repo]. SnowPlow is open source. Review our [setup guide] [setup-guide] to learn what is involved in getting SnowPlow up and running yourself
 
 A [step-by-step guide to setting up SnowPlow] [setup-guide] can be found on our [wiki] [setup-guide].
 
