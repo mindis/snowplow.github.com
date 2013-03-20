@@ -33,9 +33,7 @@ Elasticity v2 was a major rewrite focusing wholly on option (3) above.  You crea
 
 Elasticity v3... who knows?  First and foremost, I work on features that Sharethrough requires. We're in a steady state with EMR at the moment and now I'm hoping the community has some suggestions :)
 
-Thanks for making it this far!
-
-**And if anything I touched on sounds interesting, Sharethrough is hiring and we're relo-friendly! Check us out at [Sharethrough Engineering] [sharethrough-engineering].**
+Thanks for making it this far! **And if anything I touched on sounds interesting, Sharethrough is hiring and we're relo-friendly! Check us out at [Sharethrough Engineering] [sharethrough-engineering].**
 
 [rob-slifka-twitter]: https://twitter.com/robslifka
 [sharethrough]: http://www.sharethrough.com
