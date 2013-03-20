@@ -31,7 +31,7 @@ Elasticity v3... who knows?  First and foremost, I work on features that Shareth
 
 Thanks for making it this far!
 
-**And if anything I touched on sounds interesting, Sharethrough is hiring and we're relo-friendly! Check us out at [http://www.sharethrough.com/engineering] [sharethrough-engineering].**
+**And if anything I touched on sounds interesting, Sharethrough is hiring and we're relo-friendly! Check us out at [Sharethrough Engineering] [sharethrough-engineering].**
 
 [rob-slifka-twitter]: https://twitter.com/robslifka
 [sharethrough]: http://www.sharethrough.com
