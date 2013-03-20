@@ -23,6 +23,16 @@ Our ads report a significant amount of information around user behaviour which w
 
 If you’re unfamiliar with AWS service interaction and evolution, it often follows this pattern (using EMR as an example):
 
+1. Use the AWS UI to become familiar with EMR.  Manually step through the creation of Job Flows, choose your job type, asset location, cluster configuration options, etc.
+2.  (Optionally) Graduate to the AWS CLI once you see a pattern in your interaction.  You’re in active development and moving more quickly than before.  You’ve decided on Pig, your assets and clusters are stored and predicted consistently, etc.
+3. Use an Amazon or 3rd-party API to integrate the tool into your workflow so you don’t have to copy the command line tools around your infrastructure.
+
+Amazon’s tools are developer services, not meant for absolutely streamlined consumption; some legwork is required.  The AWS CLI is a thin wrapper around the EMR REST API meaning there are numerous and frequently mutually exclusive options.  If you chose to use the CLI, you’ll spend a significant amount of time learning how to use the command line tools by reading the developer API guide.  Why isn’t there a programmatic way to work with EMR that follows the same mental model as that which is exposed via the UI and doesn’t require you to understand the EMR REST API?
+
+That’s where Elasticity comes in.
+
+As an API author you can choose to represent the EMR model directly or layer your own model on top of it.  As a point of reference, this is a partial list of EMR REST API calls: AddInstanceGroups, AddJobFlowSteps, DescribeJobFlows, etc.
+
 1. One way to provide access to EMR might be via Ruby methods that wrap each of these calls, something like [this] [emr.rb].  And by providing only this, you as a developer would be required to understand the EMR API documentation to use Elasticity - still not much better than using the CLI tools
 2. Another option might be for Elasticity to say, "Forget about job flows!  I'm going to give you a 'Session' and each step of your job flow is a 'Batch Processing Function'"… and you’d be properly confused, having to map between your understanding of EMR and what Elasticity exposes
 3. Elasticity went with a third option - mirroring what was offered in the AWS EMR UI: **Elasticity is a Ruby gem for working with EMR that requires you only understand the EMR user's manual, not the EMR developer’s manual.**
