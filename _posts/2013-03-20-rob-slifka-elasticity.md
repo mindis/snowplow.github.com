@@ -7,7 +7,11 @@ author: Alex
 category: Inside the Plow
 ---
 
-_The SnowPlow platform is built standing on the shoulders of a whole host of different open source frameworks, libraries and tools. Without the amazing ongoing work by these individuals, companies and not-for-profits, the SnowPlow project literally could not exist. As part of our "Inside the Plow" series, we will also be showcasing some of these core components of the SnowPlow stack, and talking to their creators. To kick us off, we are delighted to have [Rob Slifka] [robslifka-twitter], VP of [Engineering] [sharethrough-engineering] at [Sharethrough] [sharethrough] in San Francisco, talking to us about his [Elasticity] [elasticity] project. For those who aren't aware: Elasticity is a Ruby library which we use as part of our [EmrEtlRunner] [emr-etl-runner], to make it easy to automate the SnowPlow ETL Job on Amazon Elastic MapReduce. The Elasticity library is a great piece of tech - and indeed was a major factor in us deciding to write EmrEtlRunner in Ruby. With the introductions done, let's hand over to Rob to tell us a bit about himself, Elasticity and what he's working on next:_
+_The SnowPlow platform is built standing on the shoulders of a whole host of different open source frameworks, libraries and tools. Without the amazing ongoing work by these individuals, companies and not-for-profits, the SnowPlow project literally could not exist._
+
+_As part of our "Inside the Plow" series, we will also be showcasing some of these core components of the SnowPlow stack, and talking to their creators. To kick us off, we are delighted to have [Rob Slifka] [robslifka-twitter], VP of [Engineering] [sharethrough-engineering] at [Sharethrough] [sharethrough] in San Francisco, talking to us about his [Elasticity] [elasticity] project. For those who aren't aware: Elasticity is a Ruby library which we use as part of our [EmrEtlRunner] [emr-etl-runner], to make it easy to automate the SnowPlow ETL Job on Amazon Elastic MapReduce. The Elasticity library is a great piece of tech - and indeed was a major factor in us deciding to write EmrEtlRunner in Ruby._
+
+_With the introductions done, let's hand over to Rob to tell us a bit about himself, Elasticity and what he's working on next:_
 
 ![rob-slifka-img][rob-slifka-img]
 
