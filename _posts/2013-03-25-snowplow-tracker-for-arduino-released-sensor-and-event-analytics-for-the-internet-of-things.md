@@ -7,7 +7,7 @@ author: Alex
 category: Releases
 ---
 
-Today we are releasing our first non-Web tracker for SnowPlow: an event tracker for the [Arduino] [arduino] open-source electronics prototyping platform. The [SnowPlow Arduino Tracker] [snowplow-arduino-tracker] lets you track sensor and event-stream information from one or more IP-connected Arduino boards.
+Today we are releasing our first non-Web tracker for SnowPlow - an event tracker for the [Arduino] [arduino] open-source electronics prototyping platform. The [SnowPlow Arduino Tracker] [snowplow-arduino-tracker] lets you track sensor and event-stream information from one or more IP-connected Arduino boards.
 
 We chose this as our first non-Web tracker because we're hugely excited about the potential of sophisticated analytics for the [Internet of Things] [iot], following in the footsteps of great projects like [Cosm] [cosm] and [Exosite] [exosite]. And of course, SnowPlow's extremely-scalable architecture is a great fit for the huge volumes of events and sensor readings which machines are able to generate - you could say that we are already "machine-scale"!
 
