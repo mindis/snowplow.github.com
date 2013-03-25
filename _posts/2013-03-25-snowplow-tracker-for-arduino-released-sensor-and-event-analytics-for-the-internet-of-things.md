@@ -1,7 +1,7 @@
 ---
 layout: blog-post
 shortenedlink: SnowPlow Arduino Tracker released
-title: SnowPlow Arduino Tracker released: sensor and event analytics for the internet of things
+title: SnowPlow Arduino Tracker released - sensor and event analytics for the internet of things
 tags: snowplow arduino tracker internet-of-things
 author: Alex
 category: Releases
@@ -21,13 +21,13 @@ In fact Alex has gone ahead and written a sample Arduino sketch to track tempera
 
 Want to find out more? To get started using our event tracker for Arduino, check out:
 
-* Our [Arduino Tracker Technical Documentation] [tech-docs]
-* Our [Arduino Tracker Setup Guide] [setup-guide]
+* Our [Technical Documentation] [tech-docs]
+* Our [Setup Guide] [setup-guide]
 
 Happy making!
 
 [arduino]: http://www.arduino.cc/
-[snowplow-arduino-tracker]: 
+[snowplow-arduino-tracker]: https://github.com/snowplow/snowplow-arduino-tracker
 
 [iot]: http://www.forbes.com/sites/ericsavitz/2013/01/14/ces-2013-the-break-out-year-for-the-internet-of-things/
 
