@@ -11,6 +11,8 @@ Today we are releasing our first non-Web tracker for SnowPlow - an event tracker
 
 We chose this as our first non-Web tracker because we're hugely excited about the potential of sophisticated analytics for the [Internet of Things] [iot], following in the footsteps of great projects like [Cosm] [cosm] and [Exosite] [exosite]. And of course, SnowPlow's extremely-scalable architecture is a great fit for the huge volumes of events and sensor readings which machines are able to generate - you could say that we are already "machine-scale"!
 
+![arduino-photo] [arduino-photo]
+
 As far as we know, this is the first time an event analytics platform has released a dedicated tracker for the maker community; we can't wait to see what the Arduino and SnowPlow communities will use it for! Some ideas we had were:
 
 1. Deploying a set of SnowPlow-connected Arduinos to monitor the environment (temperature, humidity, light levels etc) in your home
@@ -34,6 +36,8 @@ Happy making!
 
 [cosm]: https://cosm.com/
 [exosite]: http://exosite.com/
+
+[arduino-photo]: /static/img/blog/2013/03/arduino-board-photo.jpg
 
 [arduino-rfid]: http://arduino.cc/blog/category/wireless/rfid/
 [3g-gps]: http://www.cooking-hacks.com/index.php/documentation/tutorials/arduino-3g-gprs-gsm-gps
