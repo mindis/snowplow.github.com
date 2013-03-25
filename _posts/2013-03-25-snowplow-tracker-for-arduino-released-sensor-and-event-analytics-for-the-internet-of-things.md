@@ -21,8 +21,9 @@ In fact Alex has gone ahead and written a sample Arduino sketch to track tempera
 
 Want to find out more? To get started using our event tracker for Arduino, check out:
 
-* Our [Technical Documentation] [tech-docs]
-* Our [Setup Guide] [setup-guide]
+* The [GitHub repository] [repo]
+* The [Technical Documentation] [tech-docs]
+* The [Setup Guide] [setup-guide]
 
 Happy making!
 
@@ -39,5 +40,6 @@ Happy making!
 
 [arduino-temp-tracker]: https://github.com/alexanderdean/arduino-temp-tracker
 
+[repo]: https://github.com/snowplow/snowplow-arduino-tracker
 [tech-docs]: https://github.com/snowplow/snowplow/wiki/Arduino-Tracker
 [setup-guide]: https://github.com/snowplow/snowplow/wiki/Arduino-Tracker-Setup
