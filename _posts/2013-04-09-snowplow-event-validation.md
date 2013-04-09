@@ -17,7 +17,7 @@ Why is Snowplow so unusual in aiming for high-fidelity analytics? Most often, an
 
 To deliver on the goal of high-fidelity analytics, then, we're trying to steer Snowplow around these three common pitfalls as best we can.
 
-We have talked in detail on our website and wiki about how we avoid #1, Premature aggregation, and no doubt we will blog more about our ideas to combat #3, Being over-opinionated, in the future. For the rest of this blog post, though, we will look at our solution to pitfall #2, **Ignoring bad news**.
+We have talked in detail on our website and wiki about how we avoid #1, Premature aggregation, and no doubt we will blog more about our ideas to combat #3, Being over-opinionated, in the future. For the rest of this blog post, though, we will look at our solution to **pitfall #2, Ignoring bad news**.
 
 Read on below the fold to find out more!
 
