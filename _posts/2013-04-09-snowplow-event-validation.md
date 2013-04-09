@@ -7,7 +7,7 @@ author: Alex
 category: Releases
 ---
 
-A key goal of the Snowplow project is enabling **high-fidelity** product and marketing analytics for our community of users. What do we mean by high-fidelity analytics? Simply put, high-fidelity web analytics entails Snowplow faithfully recording _all_ customer-generated events in a rich, granular, non-lossy and unopinionated way; warehousing this high-fidelity data gives Snowplow users a hugely valuable asset which they can analyse and explore to understand their customers' behaviour and come to the right business (and ultimately operational) decisions.
+A key goal of the Snowplow project is enabling **high-fidelity** product and marketing analytics for our community of users. What do we mean by high-fidelity analytics? Simply put, high-fidelity web analytics means Snowplow faithfully recording _all_ customer-generated events in a rich, granular, non-lossy and unopinionated way; warehousing this high-fidelity data gives Snowplow users a hugely valuable asset which they can analyse and explore to understand their customers' behaviour and come to the right business (and ultimately operational) decisions.
 
 Why is Snowplow so unusual in aiming for high-fidelity analytics? Most often, analytics vendors sacrifice the goal of high-fidelity data at the altar of these three compromises:
 
