@@ -7,23 +7,29 @@ author: Alex
 category: Releases
 ---
 
-A key goal of the Snowplow project is enabling **high-fidelity product and marketing analytics** for our community of users.
+A key goal of the Snowplow project is enabling **high-fidelity analytics** for businesses running Snowplow.
 
-What do we mean by high-fidelity analytics? Simply put, high-fidelity web analytics means Snowplow faithfully recording _all_ customer-generated events in a rich, granular, non-lossy and unopinionated way; warehousing this high-fidelity data gives Snowplow users a hugely valuable asset which they can analyse and explore to understand their customers' behaviour and come to the right business (and ultimately operational) decisions.
+What do we mean by high-fidelity analytics? Simply put, high-fidelity analytics means Snowplow faithfully recording _all_ customer events in a rich, granular, non-lossy and unopinionated way. 
+
+This data is incredibly valuable: it enables companies to better understand their customers and develop and tailor products and services to them. Ensuring that the data is high fidelity is essential to ensuring that any operational and strategic decision making that's made on the basis of that data is sound. Guaranteeing data fidelity is not a sexy topic. But it's an important one. 
+
+Surprisingly, ensuring your data is high fidelity is **not** something that is enforced by other analytics products.
 
 ![high-fidelity] [high-fidelity]
 
 Why is Snowplow so unusual in aiming for high-fidelity analytics? Most often, analytics vendors sacrifice the goal of high-fidelity data at the altar of these three compromises:
 
 1. **Premature aggregation** - when the data store gets too large, or the reports take too long to generate, it's tempting to perform the  aggregation and roll-up of the raw event data earlier, sometimes even at the point of collection. Of course this offers a huge potential performance boost to the tool, but at the cost of a huge degree of customer data fidelity
-2. **Ignoring bad news** - the nature of behavioural analytics means that often incomplete, corrupted or plain wrong data is sent in to the analytics tool by the event trackers. Handling bad event data is complicated (let's go shopping!) - but instead of dealing with the complexity, most analytics packages just throw the bad data away silently; this is why tag audit companies like [ObservePoint] [observepoint] exist
-3. **Being over-opinionated** - customer analytics is full of challenging questions which need answering before you can analyse the data: do I track users by their first-party cookie, third-party cookie, business ID and/or IP address? Do I use the server clock, or the user's clock to log the event time? When does a user session start and end? Because these questions can be difficult to answer, most analytics tools don't ask them: instead they take an opinionated view of the "right answer" and silently enforce that view through their event collection, storage and analysis
+2. **Ignoring bad news** - the nature of event data means that often incomplete, corrupted or plain wrong data is sent in to the analytics tool by the event trackers. Handling bad event data is complicated (let's go shopping!). Instead of dealing with the complexity, most analytics packages just throw the bad data away silently; this is why tag audit companies like [ObservePoint] [observepoint] exist
+3. **Being over-opinionated** - customer analytics is full of challenging questions which need answering before you can analyse the data: do I track users by their first-party cookie, third-party cookie, business ID and/or IP address? Do I use the server clock, or the user's clock to log the event time? When does a user session start and end? Because these questions can be difficult to answer, most analytics tools don't ask them: instead they take an opinionated view of the "right answer" and silently enforce that view through their event collection, storage and analysis. By the time users realize that the logic enforced is one that does not work for their business, they are already tied to that vendor and the imperfect data set they have created with that vendor to date.
 
 To deliver on the goal of high-fidelity analytics, then, we're trying to steer Snowplow around these three common pitfalls as best we can.
 
-We have talked in detail on our website and wiki about avoiding pitfall #1, Premature aggregation, and we will blog more about our ideas to combat #3, Being over-opinionated, in the future. For the rest of this blog post, though, we will look at our solution to pitfall #2, Ignoring bad news: namely, **event validation**.
+We have talked in detail on our website and wiki about avoiding pitfall #1, Premature aggregation. In short: we do **no** aggregation - Snowplow users have access to granular, event level data, so that they can work out how best they should aggregate it for each type of analysis they wish to perform.
 
-Read on below the fold to find out more!
+We will blog more about our ideas to combat #3, Being over-opinionated, in the future. 
+
+For the rest of this blog post, though, we will look at our solution to pitfall #2, Ignoring bad news: namely, **event validation**.
 
 <!--more-->
 
@@ -50,11 +56,20 @@ By way of example, here are a couple of [custom structured events] [struct-event
 
 These validation errors occurred because the ecommerce site incorrectly tried to log customer address information in the `value` field of a custom structured event; the `value` field only supports numeric values (and is stored in Redshift in a float field). When we saw these validation errors, we notified the site and they corrected their Google Tag Manager implementation.
 
-Currently these bad rows are simply stored for inspection in the Bad Rows bucket in S3, while Snowplow carries on with the raw event processing. This lets the Snowplow user tackle the tagging/data quality issues offline, without disrupting the loading of all their high-fidelity, now-validated event data into Redshift.
+Currently these bad rows are simply stored for inspection in the Bad Rows bucket in S3, while Snowplow carries on with the raw event processing. This lets the Snowplow user tackle the tagging/data quality issues offline, without disrupting the loading of all their high-fidelity, now-validated event data into Redshift. It leaves open the possibility that the user can fix and reprocess the bad rows.
 
 In the future we could look into ways of sending alerts when bad rows are generated, or even look into ways of automatically fixing bad rows and submitting them for re-processing.
 
-That completes our brief look at event validation - we hope you like it! For us at Snowplow, event validation is a key part of our quest for high-fidelity event analytics - so expect to hear more from us on this topic soon!
+This is straight forward stuff - but compare it with the approach taken by other web analytics vendors. If a Google Analytics user sends incorrectly configured data into GA, for example, one of two things happens:
+
+1. GA silently ignores the data
+2. GA accommodates the data, so that it corrupts reports produced in GA
+
+For the GA user, spotting the error is impossible in either case. Not only has a data point been lost, but potentially an erroneous data point has been introduced, one that will be very hard to debug given that users can never inspect the underlying data.
+
+This becomes more of a problem as we move to a Unviersal Analytics world: one in which companies feed GA with **all** their customer event data from a variety of systems. Ensuring that the system is fed with perfect data will only get harder, whilst dealing with situations where erroneous data has been pushed in will remain impossible.
+
+That completes our brief look at event validation. We hope it is clear why this is such an important topic. For us at Snowplow, event validation is a key part of our quest for high-fidelity event analytics - so expect to hear more from us on this topic soon!
 
 [high-fidelity]: /static/img/blog/2013/04/high-fidelity-2000.jpg
 [observepoint]: http://www.observepoint.com/
