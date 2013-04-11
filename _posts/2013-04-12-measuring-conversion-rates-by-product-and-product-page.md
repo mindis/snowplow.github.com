@@ -7,7 +7,7 @@ author: Yali
 category: Analytics
 ---
 
-We built Snowplow to enable businesses to execute the widest range of analytics on their web event data. One area of analysis we are particularly excited about is catalogue analytics. Today, we've published the first recipes in the [catalogue analytics] [catalogue-analytics] section of the [Snowplow Analytics Cookbook] [cookbook].
+We built Snowplow to enable businesses to execute the widest range of analytics on their web event data. One area of analysis we are particularly excited about is catalogue analytics. Today, we've published the [first recipes] [recipes] in the [catalogue analytics] [catalogue-analytics] section of the [Snowplow Analytics Cookbook] [cookbook]. These cover [how to measure and compare the performance of different product pages on a retailer site] [recipes], using plots like the one below:
 
 ![Example-catalogue-analytics] [example-scatter-plot]
 
@@ -31,12 +31,14 @@ Understanding how well different items in that catalogue "perform" is key to ena
 
 <a name="today"><h3>What recipes have been published today?</h3></a>
 
-Today, we published a set of recipes to enable businesses to compare the performance of product pages. The analysis described is especially relevant to online retailers - it makes it easy to identify:
+Today, we published a [set of recipes to enable businesses to compare the performance of product pages] [recipes]. The analysis described is especially relevant to online retailers - it makes it easy to identify:
 
 1. Which products are good candidates for increased marketing spend, because they are highly converting pages but with low traffic levels
 2. Which product pages are underperforming: maybe because the products on them are not competitively priced, or because the content or images are weak
 3. Which products are star performers: attracting large volumes of traffic and converting those users effectively
 4. Which products are dogs: they do not attract traffic, nor do they convert
+
+You can check out the recipes [here] [recipes].
 
 <a name="tomorrow"><h3>What catalogue analytics recipes can we expect published in the next few weeks and months?</h3></a> 
 
@@ -52,3 +54,4 @@ If there are other examples of catalogue analyses you would like us to include -
 [example-scatter-plot]: /static/img/analytics/catalogue-analytics/product-page-performance/scatter-plot.jpg
 [catalogue-analytics]: /analytics/catalogue-analytics/overview.html
 [cookbook]: /analytics/index.html
+[recipes]: /analytics/catalogue-analytics/measuring-and-comparing-product-page-performance.html
