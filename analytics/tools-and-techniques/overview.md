@@ -8,7 +8,7 @@ weight: 1
 
 # Tools and techniques
 
-Rather than focus on specific types of business analysis, this section describes general purpose analytic techniques that can be used across many types of end-user analysis, including custom, catalogue and platform analytics.
+Rather than focus on specific types of business analysis, this section describes general purpose analytic techniques that can be used across many types of end-user analysis, including custom, catalog and platform analytics.
 
 ### 1. [Converting SnowPlow data into a format suitable for OLAP reporting tools e.g. Tableau, Qlikview] [convert-data-to-format-for-olap]
 

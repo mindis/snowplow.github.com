@@ -1,7 +1,7 @@
 ---
 layout: section
 category: analytics
-analytics_category: catalogue
+analytics_category: catalog
 title: Product page performance
 weight: 2
 ---
@@ -38,7 +38,7 @@ GROUP BY page_urlpath
 ORDER BY unique_visitors DESC;
 {% endhighlight %}
 
-Note that the query above is specific to a particular retailer: Psychic Bazaar. You will need to modify your version of the query so that results are only shown for product pages (rather than catalogue pages, home pages etc), by modifying the `WHERE` clause. You may also want to limit the query to a specific period of time, by adding a set of date conditions (using `collecor_dt`) to the `WHERE` clause.
+Note that the query above is specific to a particular retailer: Psychic Bazaar. You will need to modify your version of the query so that results are only shown for product pages (rather than catalog pages, home pages etc), by modifying the `WHERE` clause. You may also want to limit the query to a specific period of time, by adding a set of date conditions (using `collecor_dt`) to the `WHERE` clause.
 
 The results of the above query look something like this:
 
@@ -183,7 +183,7 @@ We are now in a position to identify why the plot is so **actionable**. For exam
 
 ![expl4] [img5]
 
-In our plot above that means checking the product page for the *Gateway Oracle Cards* and the *Celtic Ogham Set* for example. In contrast, products located in the top left of the plot are very highly converting, but low trafficked pages. We should drive more traffic to these pages, either by positioning those products more prominently on catalogue pages, for example, or by spending marketing dollars driving more traffic to those pages specifically. Again, that investment should result in a significant uplift in sales, given how highly converting those products are.
+In our plot above that means checking the product page for the *Gateway Oracle Cards* and the *Celtic Ogham Set* for example. In contrast, products located in the top left of the plot are very highly converting, but low trafficked pages. We should drive more traffic to these pages, either by positioning those products more prominently on catalog pages, for example, or by spending marketing dollars driving more traffic to those pages specifically. Again, that investment should result in a significant uplift in sales, given how highly converting those products are.
 
 ![expl5] [img6]
 
@@ -310,20 +310,20 @@ On the other hand, a low conversion rate for people in bucket two suggests:
 * The images are not attractive
 * There are other, more attractive products on offer, either within the website or on competitor sites
 
-In addition, a relatively high conversion rate for users in bucket 3 suggests that we have a "hero" product in the catalogue: one that people buy even though they haven't come to the website to make a purchase. This is a product we should be marketing the hell out of.
+In addition, a relatively high conversion rate for users in bucket 3 suggests that we have a "hero" product in the catalog: one that people buy even though they haven't come to the website to make a purchase. This is a product we should be marketing the hell out of.
 
 Back to [top](#top).
 
 
 [pbz]: http://www.psychicbazaar.com/
 [struct-event]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#wiki-custom-structured-events
-[img1]: /static/img/analytics/catalogue-analytics/product-page-performance/top-product-page-by-fraction-of-uniques-that-add-to-basket.jpg
-[scatter-plot]: /static/img/analytics/catalogue-analytics/product-page-performance/scatter-plot.jpg
-[img2]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide1.JPG
-[img3]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide2.JPG
-[img4]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide3.JPG
-[img5]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide4.JPG
-[img6]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide5.JPG
-[img7]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide6.JPG
-[img8]: /static/img/analytics/catalogue-analytics/product-page-performance/Slide7.JPG
+[img1]: /static/img/analytics/catalog-analytics/product-page-performance/top-product-page-by-fraction-of-uniques-that-add-to-basket.jpg
+[scatter-plot]: /static/img/analytics/catalog-analytics/product-page-performance/scatter-plot.jpg
+[img2]: /static/img/analytics/catalog-analytics/product-page-performance/Slide1.JPG
+[img3]: /static/img/analytics/catalog-analytics/product-page-performance/Slide2.JPG
+[img4]: /static/img/analytics/catalog-analytics/product-page-performance/Slide3.JPG
+[img5]: /static/img/analytics/catalog-analytics/product-page-performance/Slide4.JPG
+[img6]: /static/img/analytics/catalog-analytics/product-page-performance/Slide5.JPG
+[img7]: /static/img/analytics/catalog-analytics/product-page-performance/Slide6.JPG
+[img8]: /static/img/analytics/catalog-analytics/product-page-performance/Slide7.JPG
 [customer-analytics]: /analytics/customer-analytics/overview.html
