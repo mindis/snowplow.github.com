@@ -150,13 +150,15 @@ We can plot the results to compare products between pages:
 
 ![add-to-basket-rate-by-product-page] [img1]
 
+The above plot is interesting: it makes it easy to compare conversion rates between products and product pages. In the next section we will evolve our analysis using a scatter plot to visualize the product page performance.
+
 Back to [top](#top).
 
 <a name="visualising"><h3>Visualising the data in an actionable scatter-plot</h3></a>
 
-The above plot is interesting: it makes it easy to compare conversion rates between products and product pages.
+In this section, we are going to build a scatter plot which compares the number of uniques that view each product with the number of uniques that add the product to basket, with the size of each dot being the number of uniques that buy the product.
 
-A more useful way to plot the above data, however, is on a scatter plot that compares the number of uniques that view each product with the number of uniques that add the product to basket and the number of uniques that buy the product, as shown below: 
+Here is a preview of the scatter plot we will generate: 
 
 ![scatter-plot] [scatter-plot]
 
@@ -172,14 +174,13 @@ The position on the top-bottom axis indicates the number of unique users who hav
 
 ![expl2] [img3]
 
-We can tell how well converting a product page is by looking at the height of its position on the graph, relative to its distance from the left axis. Products that are positioned high up, but over to the left, are added to basket a lot, even if they do not attract many visitors. They are therefore highly converting product pages.
+We can tell how well-converting a product page is by looking at the height of its position on the graph, relative to its distance from the left axis. Products that are positioned high up, but over to the left, are added to basket a lot, even if they do not attract many visitors. They are therefore highly converting product pages.
 
 ![expl3] [img4]
 
-
 #### Why is the scatter plot so actionable?
 
-We are now in a position to identify why the plot is so **actionable**. For example, any products located in the lower right corner are highly trafficked but low converting: any effort spent fixing those product pages (e.g. by checking the copy, updating the product images or lowering the price) should be rewarded with a significant sales uplift, given the number of people visiting those pages:
+Let's look at why the plot is so **actionable**. To take one example: any products located in the lower right corner are highly trafficked but low converting - any effort spent fixing those product pages (e.g. by checking the copy, updating the product images or lowering the price) should be rewarded with a significant sales uplift, given the number of people visiting those pages:
 
 ![expl4] [img5]
 
@@ -191,7 +192,7 @@ Products in the top right are already performing well - this analysis suggests t
 
 ![expl6] [img7]
 
-Similarly, products in the lower left corner are performing poorly - but it is not clear whether this is because they have low traffic levels and /or are poor at driving conversions. We should invest in improving the performance of these pages, but the return on that investment is likely to be smaller (or harder to achieve) than the two segments identified above.
+Similarly, products in the lower left corner are performing poorly - but it is not clear whether this is because they have low traffic levels and /or are poor at driving conversions. We should invest in improving the performance of these pages, but the return on that investment is likely to be smaller (or harder to achieve) than the two opportunities identified above.
 
 ![expl7] [img8]
 
@@ -282,7 +283,7 @@ Back to [top](#top).
 
 <a name="sophisticated-approaches"><h3>3. More sophisticated approaches to measuring product page performance</h3></a>
 
-The above approach to measuring product performance assumes that all the users who land on a product page are just as likely to add the product to their basket, and as a result, any difference in conversion rates between product pages is to do with how good that product page is. 
+The above approach to measuring product performance assumes that all the users who land on a product page are just as likely to add the product to their basket, and as a result, any difference in conversion rates between product pages relates to how good that product page is. 
 
 That assumption is nearly always false: a user who visits a website specifically to buy a product is much more likely to convert that one who is browsing, but open to being upsold. When we perform the above analysis on a large data set, that might not matter because the *average* likelihood to purchase prior to viewing the page might be similar. But it might not be.
 
@@ -292,28 +293,27 @@ Therefore, if we wish to take a more sophisticated approach to measuring product
 2. Those who have come to the website to buy *something*
 3. Those who are on the website for another reason
 
-There are a variety of ways of identifying which of the above buckets a user is in. For example, if they have come from a search engine where they have entered the product name directly, that suggests they belong in bucket one. Similarly, if they perform an internal search for the product, or the product page is their landing page, they probably belong in bucket 1.
+There are a variety of ways of identifying which of the above buckets a user is in. For example, if they have come from a search engine where they have entered the product name directly, that suggests they belong in bucket one. Similarly, if they perform an internal search for the product, or the product page is their landing page, they probably belong in Bucket One above.
 
-Identifying if the user is in the market to buy *something* or not is a bit tricker. If they are systematically viewing a range of products, then the chances are that they belong in bucket two. If they have come to the website to enter a competition or read a blog post, on the other hand, they probably belong in bucket three.
+Identifying if the user is in the market to buy *something* or not is a bit tricker. If they are systematically viewing a range of products, then the chances are that they belong in Bucket Two. If they have come to the website to enter a competition or read a blog post, on the other hand, they probably belong in bucket three.
 
 *Note: there are more rigorous ways of identifying which bucket a user belong in e.g. using machine learning to identify behaviours that are indicative of a user belonging in each bucket. We will be covering these in a future set of recipes in the [customer analytics] [customer-analytics] section of the cookbook.*
 
-Once we have categorised our users into different buckets, we should compare conversion rates for each product page against each audience segment. It is especially instructive to identify low conversion rates for groups 1 and 2. For example, if a product page is relatively poor at converting users in bucket 1, that suggests that maybe:
+Once we have categorised our users into different buckets, we should compare conversion rates for each product page against each audience segment. It is especially instructive to identify low conversion rates for Buckets One and Two. For example, if a product page is relatively poor at converting users in Bucket One, that suggests that maybe:
 
 * The price of the item is too high
-* It is ambiguous what the item is
+* The description of the item is unclear or offputting
 * There is some other reason why the user would prefer to buy it from another retailer than you
 
-On the other hand, a low conversion rate for people in bucket two suggests:
+On the other hand, a low conversion rate for people in Bucket Two suggests:
 
 * The product page does a bad job of explaining what is special about this product, to someone who is not so familiar with it
 * The images are not attractive
 * There are other, more attractive products on offer, either within the website or on competitor sites
 
-In addition, a relatively high conversion rate for users in bucket 3 suggests that we have a "hero" product in the catalog: one that people buy even though they haven't come to the website to make a purchase. This is a product we should be marketing the hell out of.
+In addition, a relatively high conversion rate for users in Bucket Three suggests that we have a "hero" product in the catalog: one that people buy even though they haven't come to the website to make a purchase. This is a product we should be marketing intensively.
 
 Back to [top](#top).
-
 
 [pbz]: http://www.psychicbazaar.com/
 [struct-event]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#wiki-custom-structured-events
