@@ -307,7 +307,7 @@ Once we have categorised our users into different buckets, we should compare con
 
 On the other hand, a low conversion rate for people in Bucket Two suggests:
 
-* The product page does a bad job of explaining what is special about this product, to someone who is not so familiar with it
+* The product page does a bad job of explaining the appeal of this product to someone who is unfamiliar with it
 * The images are not attractive
 * There are other, more attractive products on offer, either within the website or on competitor sites
 
