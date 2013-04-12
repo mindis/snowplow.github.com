@@ -28,8 +28,8 @@ COUNT(DISTINCT(domain_userid)) AS unique_visitors,
 COUNT(*) AS page_views
 FROM `events_008`
 WHERE (                                    # Only display results for *product* pages
-	(page_urlpath LIKE '/tarot-cards/%' ) 
-	OR ( page_urlpath LIKE '/oracles/%' ) 
+	(page_urlpath LIKE '/tarot-cards/%') 
+	OR (page_urlpath LIKE '/oracles/%') 
 	OR (page_urlpath LIKE '/pendula/%')
 	OR (page_urlpath LIKE '/jewellery/%')
 ) AND `event` = 'page_view'
