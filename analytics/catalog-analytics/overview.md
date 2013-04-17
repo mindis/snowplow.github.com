@@ -6,9 +6,9 @@ title: Overview
 weight: 1
 ---
 
-## Catalog Analytics
+# Catalog Analytics
 
-### What do we mean by "catalog analytics"?
+## What do we mean by "catalog analytics"?
 
 If you are an online retailer, or run an media website, an integral part of your digital offering is your digital "catalog". The contents of your online catalog will vary depending on what industry you are in:
 
@@ -22,7 +22,7 @@ Catalog analytics, then, is the set of analyses you can run across the items in 
 2. How effectively you are organizing your items (e.g. into categories and collections) within your catalog
 3. How effectively you are tailoring items to individual customers and segments of customers
 
-### Why perform catalog analytics?
+## Why perform catalog analytics?
 
 Understanding how users engage with each item of content or each product in your catalog, and how effectively your website enables users to navigate and engage with that content is essential to improving your digital proposition. It enables you to:
 
@@ -32,7 +32,7 @@ Understanding how users engage with each item of content or each product in your
 
 In this section of the [analytics cookbook] [analytics-cookbook], we outline a range of recipes you can use to perform catalog analytics.
 
-### Catalog analytics recipes
+## Catalog analytics recipes
 
 1. [Measuring the effectiveness of your product pages] [product-pages]
 2. [Measuring how deeply users engage with content pages] [content-pages]

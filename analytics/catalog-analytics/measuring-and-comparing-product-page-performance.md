@@ -6,7 +6,7 @@ title: Product page performance
 weight: 2
 ---
 
-<a name="top"><h2>Measuring product page performance</h2></a>
+<a name="top"><h1>Measuring product page performance</h1></a>
 
 1. [Measuring what fraction of users to a product page add the product to their basket](#add-to-basket)
 2. [Visualising the data in an actionable scatter plot](#visualising)
