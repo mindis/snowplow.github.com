@@ -1,7 +1,7 @@
 ---
 layout: blog-post
 shortenedlink: Online catalog analytics
-title: Online catalog analytics with Snowplow
+title: Measuring product page performance with Snowplow (Catalog Analytics part 1)
 tags: snowplow ecommerce retail catalog catalogue analytics
 author: Yali
 category: Analytics

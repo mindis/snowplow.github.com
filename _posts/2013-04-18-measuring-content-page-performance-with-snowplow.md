@@ -7,6 +7,8 @@ author: Yali
 category: Analytics
 ---
 
+*This is the second part in our blog post series on Catalog Analytics. The [first part] [part1] was published last week.*
+
 Last week, we started building out the [Catalog Analytics] [catalog-analytics] section of the [Analytics Cookbook] [cookbook], with a section documenting how to [measure the effectiveness of your product pages] [measure-product-pages]. Those recipes were geared specifically towards retailers.
 
 This week, we've added an extra section to the cookbook, covering [how to measure engagement levels with content pages] [content-page-performance]. The recipes covered should be of interest to any company that produces content-rich web pages. (Indeed, all the example analytics were performed using data from this very website.) However, they should be of special interest to publishers and newspaper sites that depend on driving high levels of user engagement with content to make money
@@ -40,3 +42,4 @@ We have much more content planned for the [Analytics Cookbook] [cookbook]. As al
 [cookbook]: /analytics/index.html
 [measure-product-pages]: /analytics/catalog-analytics/measuring-and-comparing-product-page-performance.html
 [content-page-performance]: /analytics/catalog-analytics/measuring-and-comparing-content-page-performance.html
+[part1]: /blog/2013/04/12/online-catalog-analytics-with-snowplow/
