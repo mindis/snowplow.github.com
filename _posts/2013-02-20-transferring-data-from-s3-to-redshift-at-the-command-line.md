@@ -7,9 +7,9 @@ author: Yali
 category: Other
 ---
 
-On Friday Amazon launched [Redshift] [redshift], a fully managed, petabyte-scale data warehouse service. We've been busy since building out SnowPlow support for Redshift, so that SnowPlow users can use Redshift to store their granular, customer-level and event-level data for OLAP analysis.
+On Friday Amazon launched [Redshift] [redshift], a fully managed, petabyte-scale data warehouse service. We've been busy since building out Snowplow support for Redshift, so that Snowplow users can use Redshift to store their granular, customer-level and event-level data for OLAP analysis.
 
-In the course of building out SnowPlow support for Redshift, we need to bulk load data stored in S3 into Redshift, programmatically. Unfortunately, the Redshift Java SDK is very slow at inserts, so not suitable bulk loading. We found a simple workaround that might be helpful for anyone who wishes to bulk load data into Redshift from S3, and have documented it below.
+In the course of building out Snowplow support for Redshift, we need to bulk load data stored in S3 into Redshift, programmatically. Unfortunately, the Redshift Java SDK is very slow at inserts, so not suitable bulk loading. We found a simple workaround that might be helpful for anyone who wishes to bulk load data into Redshift from S3, and have documented it below.
 
 
 ## An overview of the workaround
@@ -27,7 +27,7 @@ However, these queries can only be executed in a SQL client running a JDBC or OD
 
 <!--more-->
 
-In order to orchestrate bulk loading programmatically, we used [JiSQL] [jisql], a Java based command-line tool for executing SQL queries that uses a JDBC driver. JiSQL enables us to specify the specific, Redshift-compatible JDBC driver to use to establish the connection. This meant we could upgrade our Ruby [StorageLoader][storageloader] to execute the relevant command-line syntax to initiate the regular data loads of SnowPlow data from S3 into Redshift.
+In order to orchestrate bulk loading programmatically, we used [JiSQL] [jisql], a Java based command-line tool for executing SQL queries that uses a JDBC driver. JiSQL enables us to specify the specific, Redshift-compatible JDBC driver to use to establish the connection. This meant we could upgrade our Ruby [StorageLoader][storageloader] to execute the relevant command-line syntax to initiate the regular data loads of Snowplow data from S3 into Redshift.
 
 ## Using JiSQL to bulk load data from S3 to Redshift at the command-line: a step by step guide
 

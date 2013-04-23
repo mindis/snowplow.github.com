@@ -2,23 +2,23 @@
 layout: section
 category: analytics
 analytics_category: tools-and-techniques
-title: Converting SnowPlow data into a format suitable for OLAP
+title: Converting Snowplow data into a format suitable for OLAP
 weight: 2
 ---
 
-<h1><a name="top">Converting SnowPlow data into a format suitable for OLAP reporting tools e.g. Tableau, Qlikview, Pentaho, Microstrategy</a></h1>
+<h1><a name="top">Converting Snowplow data into a format suitable for OLAP reporting tools e.g. Tableau, Qlikview, Pentaho, Microstrategy</a></h1>
 
-SnowPlow data is stored in a log file format, where each line of data represents one "event" on a particular user journey. This data structure is unsuitable for traditional BI / analysis tools like Tableau, Qlikview, Pentaho or Microstrategy which require that the data be structured in a format suitable for OLAP analysis. (Sometimes also called _pivot tables_.) In this section of the cookbook, we describe how to restructure SnowPlow event data into a format suitable for OLAP analysis, so that it can be interrogated using tools like Tableau and Qlikview.
+Snowplow data is stored in a log file format, where each line of data represents one "event" on a particular user journey. This data structure is unsuitable for traditional BI / analysis tools like Tableau, Qlikview, Pentaho or Microstrategy which require that the data be structured in a format suitable for OLAP analysis. (Sometimes also called _pivot tables_.) In this section of the cookbook, we describe how to restructure Snowplow event data into a format suitable for OLAP analysis, so that it can be interrogated using tools like Tableau and Qlikview.
 
-Although this guide is written specifically for SnowPlow data, the basic approach to converting log format data into a structure suitable for OLAP data should work for other log or event data sets as well.
+Although this guide is written specifically for Snowplow data, the basic approach to converting log format data into a structure suitable for OLAP data should work for other log or event data sets as well.
 
-In this recipe, we give an overview of OLAP reporting tools before walking through the steps necessary to convert SnowPlow log file format data into a format suitable for data analysis. (So that it can be interrogated by tools like Tableau, Qlikview, Microstrategy etc.)
+In this recipe, we give an overview of OLAP reporting tools before walking through the steps necessary to convert Snowplow log file format data into a format suitable for data analysis. (So that it can be interrogated by tools like Tableau, Qlikview, Microstrategy etc.)
 
 1. [Why use OLAP?] (#why)
 2. [What is OLAP exactly?](#what)
 3. [What structure does the data need to be in to support an OLAP cube?](#structure)
 4. [Some practical considerations related to databases and tables](#practical)
-5. [Converting SnowPlow event log data into dimensional OLAP structure: step by step guide](#conversion)
+5. [Converting Snowplow event log data into dimensional OLAP structure: step by step guide](#conversion)
 6. [Interrogating the data with Tableau](#tableau-test)
 7. [Interrogating the data with Qlikview](#qlikview-test)
 8. [Limitations in OLAP analysis](#limitations)
@@ -32,7 +32,7 @@ OLAP tools like Tableau, Qlikview, Pentaho and Microstrategy are very popular am
 2. They do not require much technical knowledge to use. (E.g. no need to know SQL or Python).
 3. They are well suited to "train of thought analysis" i.e. moving quickly between one view of the data and another, as insights derived from the first immediately lead to questions that are answered by the second.
 
-OLAP tools are especially well suited for SnowPlow web analytics data:
+OLAP tools are especially well suited for Snowplow web analytics data:
 
 1. There are a wide range of dimensions we might want to slice and dice web analytics data by, including time, user, visit, geography, device, browser, type of web page, web page, content and/or product, acquisition channel...
 2. There are a wide variety of metrics we might want to compare between dimension combinations e.g. unique users, visits, page views, events, purchases, conversion rates, revenue...
@@ -97,12 +97,12 @@ Back to [top] (#top).
 
 <a name="structure"><h3>3. What structure does the data need to be in to support an OLAP cube?</h3></a>
 
-In traditional OLAP parlance, at the heart of OLAP data is a "fact table". In SnowPlow paralance, that fact table is really an "events" table. There are two key requirements to fulfil to ensure that events data is structured in a format suitable for processing by an OLAP tool like Tableau:
+In traditional OLAP parlance, at the heart of OLAP data is a "fact table". In Snowplow paralance, that fact table is really an "events" table. There are two key requirements to fulfil to ensure that events data is structured in a format suitable for processing by an OLAP tool like Tableau:
 
 1. The granularity of the data is sufficient to support the sufficient "drill down". So, for example, if you want to be able to drill down to an individual user level, for example, your data set has to have separate entries for each user, each differentiated by the `user_id` field. Any aggregation of users (e.g. cohorts) must happen in the OLAP tool e.g. Tableau, **not** in the raw data fed into Tableau
 2. All the dimensional information associated with each event (or "fact") that you want to slice / dice on must be present in the line of event data. 
 
-Of the two requirements outlined above, meeting the first using SnowPlow data is easy, because SnowPlow data is already stored at the most granular level. (I.e. at least one line of data per "event".) Meeting the second is a bit more nuanced. We discuss both below:
+Of the two requirements outlined above, meeting the first using Snowplow data is easy, because Snowplow data is already stored at the most granular level. (I.e. at least one line of data per "event".) Meeting the second is a bit more nuanced. We discuss both below:
 
 #### 3.1 Getting the granularity of data right
 
@@ -110,15 +110,15 @@ The more granular our data, the more reporting flexibility we have. One of the m
 
 With OLAP analysis, increased granularity doesn't just support better drill down facilities. It also enables more pivotting possibilities - as you can slice and dice more combinations of metrics against one another.
 
-So granularity is good. The good news is that SnowPlow data is very granular: at least one line of data per event. If we wanted (and it's perfectly legitimate to), we could feed SnowPlow data into our OLAP reporting tool without aggregating it at all. However, there is a cost associated with this level of granularity: it means that the data volumes are greater, and so it is likely that the reporting tool will work more slowly. This used to be a much more important consideration (when RAM wasn't so cheap, and before columnar databases like Infobright, in-memory databases and SSD drives). However, it is still a reasonable consideration today.
+So granularity is good. The good news is that Snowplow data is very granular: at least one line of data per event. If we wanted (and it's perfectly legitimate to), we could feed Snowplow data into our OLAP reporting tool without aggregating it at all. However, there is a cost associated with this level of granularity: it means that the data volumes are greater, and so it is likely that the reporting tool will work more slowly. This used to be a much more important consideration (when RAM wasn't so cheap, and before columnar databases like Infobright, in-memory databases and SSD drives). However, it is still a reasonable consideration today.
 
-One example of an approach to aggregating SnowPlow data: we could aggregate it at the level of the user, session and event. (Be it a particular page load, product add to basket etc.) In this case, if we had a user who had visited a particular page 3x in one session, we would only have one line of data representing those three page views. (As opposed to having three in our original SnowPlow events data set.) This would reduce our volume of data somewhat (likely by a factor of 0.1 - 0.25), but still give us a lot of reporting flexibility. (We'd be able to drill down to the user and action level.) We would not, however, be able to perform any path analysis. (I.e. look at the sequence of events in a particular user session.) In any case, this type of analysis isn't well supported by OLAP tools like Tableau.
+One example of an approach to aggregating Snowplow data: we could aggregate it at the level of the user, session and event. (Be it a particular page load, product add to basket etc.) In this case, if we had a user who had visited a particular page 3x in one session, we would only have one line of data representing those three page views. (As opposed to having three in our original Snowplow events data set.) This would reduce our volume of data somewhat (likely by a factor of 0.1 - 0.25), but still give us a lot of reporting flexibility. (We'd be able to drill down to the user and action level.) We would not, however, be able to perform any path analysis. (I.e. look at the sequence of events in a particular user session.) In any case, this type of analysis isn't well supported by OLAP tools like Tableau.
 
 #### 3.2 Ensure all dimensions information associated with each event is in every line of data
 
-There are a number of dimensions that are already available on every line of SnowPlow data. For example, the browser and operating system fields are populated in every line of SnowPlow data. 
+There are a number of dimensions that are already available on every line of Snowplow data. For example, the browser and operating system fields are populated in every line of Snowplow data. 
 
-However, there are other dimensions that are not available on every line of SnowPlow data. These dimensions need to be inferred by looking at user behaviour across multiple lines of data. To give two examples:
+However, there are other dimensions that are not available on every line of Snowplow data. These dimensions need to be inferred by looking at user behaviour across multiple lines of data. To give two examples:
 
 Say we are interested in bucketing users into cohorts based on the first time they performed a particular action e.g. "signup". Maybe we bucket users by month. In order to decide which bucket a user belongs, we need to scan all their records to identify the line of data generated when they first signed up, and then read the `dt` field on that line and use that to determine the bucket. This can be accomplished, for example, using the following SQL:
 
@@ -176,9 +176,9 @@ Columnar databases make this possible because they make "columns cheap": query t
 
 Back to [top] (#top).
 
-<a name="conversion"><h3>5. Converting SnowPlow event log data into dimensional OLAP structure: step by step guide</h3></a>
+<a name="conversion"><h3>5. Converting Snowplow event log data into dimensional OLAP structure: step by step guide</h3></a>
 
-Converting SnowPlow event log data into a dimensional OLAP struture is a four step process
+Converting Snowplow event log data into a dimensional OLAP struture is a four step process
 
 1. [Define the structure of our OLAP data table](#structure-2), including both metric and dimension columns
 2. [Work out what level of granularity to use](#granularity) i.e. what each line of data reprents. (One event or a higher level of aggregation?)
@@ -196,7 +196,7 @@ Let us start with the metrics we want to include, and make sure we have all the 
 * Visits
 * Page views
 
-There are a large number of other metrics we could include, depending on the type of website / web app running SnowPlow. For example, an ecommerce site might want to log:
+There are a large number of other metrics we could include, depending on the type of website / web app running Snowplow. For example, an ecommerce site might want to log:
 
 * Number of purchases (transactions)
 * Number of products sold
@@ -238,7 +238,7 @@ A social network might want to include:
 * Number of X way conversations
 * Number of shares
 
-To keep this tutorial a manageable length, we'll only include the first three metrics (uniques, visits and page views) in our example. However, extending our OLAP data table to include many more metrics is possible (and recommended): one of the explicit aims of SnowPlow, after all, is to enable you to report the metrics that matter to your business, however particular those metrics are. (For a video of an example cube with many more dimensions, see our blog post on [analysing SnowPlow data with Tableau] [analysing-snowplow-data-with-tableau].)
+To keep this tutorial a manageable length, we'll only include the first three metrics (uniques, visits and page views) in our example. However, extending our OLAP data table to include many more metrics is possible (and recommended): one of the explicit aims of Snowplow, after all, is to enable you to report the metrics that matter to your business, however particular those metrics are. (For a video of an example cube with many more dimensions, see our blog post on [analysing Snowplow data with Tableau] [analysing-snowplow-data-with-tableau].)
 
 ### 5.1.2 Dimensions
 
@@ -341,7 +341,7 @@ Similarly, if we were to aggregate our data to the user level (so we have one li
 
 <h3><a name="compute">5.4 Work out how to compute each line of data</a></h3>
 
-There are a number of tools we can use to generate out OLAP data set from our SnowPlow data set. In this example, we're going to assume our events data is in Infobright, and we'll generate our OLAP data set using just SQL. Note: the same SQL should work equally well to generate an output data set in Hive. However, we would **not** want our OLAP data to live in Hive, as querying it would be much slower than if that data lived in a columnar database like Infobright. Train-of-thought analysis (which OLAP reporting tools excel at) is only possible if querying is fast, and Hive/ map reduce is not fast.
+There are a number of tools we can use to generate out OLAP data set from our Snowplow data set. In this example, we're going to assume our events data is in Infobright, and we'll generate our OLAP data set using just SQL. Note: the same SQL should work equally well to generate an output data set in Hive. However, we would **not** want our OLAP data to live in Hive, as querying it would be much slower than if that data lived in a columnar database like Infobright. Train-of-thought analysis (which OLAP reporting tools excel at) is only possible if querying is fast, and Hive/ map reduce is not fast.
 
 We've decided that we want a line of data for every web page on every visit. We can generate a line of data at this granularity using the following query:
 
@@ -360,7 +360,7 @@ GROUP BY
 
 So far so good, we now have a number of the desired columns in our OLAP data set. We're still missing a number of dimensions, however, that relate to the visit (i.e. `dt`, `tm`, and source of traffic) and user (i.e. cohort and source of traffic).
 
-Let us first generate the missing visit data. We want the date, time and traffic source data fields that are stored in the first line of event data for each visit. We can pull that data from our SnowPlow events table by executing the following query:
+Let us first generate the missing visit data. We want the date, time and traffic source data fields that are stored in the first line of event data for each visit. We can pull that data from our Snowplow events table by executing the following query:
 
 {% highlight mysql %}
 SELECT
@@ -558,11 +558,11 @@ LEFT JOIN
 ON page_views.user_id = users.user_id
 {% endhighlight %}
 
-The above query will return SnowPlow data in a format suitable for processing in an OLAP reporting tool like Tableau.
+The above query will return Snowplow data in a format suitable for processing in an OLAP reporting tool like Tableau.
 
 <h3><a name="generate">5.5 Generate the OLAP data</a></h3>
 
-Generating the data required is as simple as running the above query. However, using SQL statements to generate versions of the SnowPlow events data to use in OLAP reporting tools is not computationally efficient: in particular, it requires multiple passes through the entire data set and several joins between subtables derived from the events table, all of which are pretty costly.
+Generating the data required is as simple as running the above query. However, using SQL statements to generate versions of the Snowplow events data to use in OLAP reporting tools is not computationally efficient: in particular, it requires multiple passes through the entire data set and several joins between subtables derived from the events table, all of which are pretty costly.
 
 For that reason, we recommend using SQL to generate **agile data cubes**: to quickly generate data for querying in Tableau / Qlikview / Pentaho with a view to experimenting with new dimensions and metrics, for example. If it turns out that a particular data cube is of value to you, and you want to continue to use it (and keep it updated), we'd recommend using [Cascading] [cascading] in a Hadoop environment to keep you OLAP data set up-to-date. We will document how to do this in due course.
 
@@ -613,7 +613,7 @@ Click **OK**: `Uniques` will now be listed as a **Measure**. Now we need to crea
 
 <p style="text-align:center;"><img src="/static/img/olap/tableau-6.JPG" alt="calculated field - visits" width="550" /></p>
 
-Now we're all set! We can drag and drop our fields and metrics to our heart's content, to explore our data set. To see a video demonstration of how to do this (including with a cube with more dimensions and metrics than in this tutorial) see our blog post on [analysing SnowPlow data with Tableau] [analysing-snowplow-data-with-tableau].
+Now we're all set! We can drag and drop our fields and metrics to our heart's content, to explore our data set. To see a video demonstration of how to do this (including with a cube with more dimensions and metrics than in this tutorial) see our blog post on [analysing Snowplow data with Tableau] [analysing-snowplow-data-with-tableau].
 
 Back to [top] (#top).
 
@@ -625,14 +625,14 @@ Back to [top] (#top).
 
 <a name="limitations"><h3>8. Limitations in OLAP analysis</h3></a>
 
-One of the things that people often note when running tools like Tableau on top of SnowPlow data is that it is quick and easy to put together the vast majority of reports delivered by standard analytics package like Google Analytics and even the type of cohort analysis delivered by toolsl like [Mixpanel][mixpanel] and [Kissmetrics][kissmetrics]. This sometimes leads excited analysts to forget all the analytics possibilities that are **not** supported by OLAP tools:
+One of the things that people often note when running tools like Tableau on top of Snowplow data is that it is quick and easy to put together the vast majority of reports delivered by standard analytics package like Google Analytics and even the type of cohort analysis delivered by toolsl like [Mixpanel][mixpanel] and [Kissmetrics][kissmetrics]. This sometimes leads excited analysts to forget all the analytics possibilities that are **not** supported by OLAP tools:
 
 1. Path / journey analysis
 2. Building and testing statistical models of customer behaviour e.g. customer lifetime models. (Although the model build might be informed by the results and visualisations generated by an OLAP tool.)
 3. Machine learning approaches e.g. clustering and classifying visitors by behaviour
 4. Predictive analytics: how much do we expect to make from this product launch, or this customer, going forwards?
 
-That is not to take anything away from OLAP tools, just to remind users that they are one in an arsenal of analytic techniques, that SnowPlow makes it possible to leverage with web analytics data.
+That is not to take anything away from OLAP tools, just to remind users that they are one in an arsenal of analytic techniques, that Snowplow makes it possible to leverage with web analytics data.
 
 Back to [top] (#top).
 

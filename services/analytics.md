@@ -50,7 +50,7 @@ Some illustrateive analyses from past projects are shown below, to give a flavou
 
 ### Example consumer analytics: engagement levels over time
 
-A SnowPlow client wanted to understand how their user engagement levels were changing over time. One of the measures we experimented with using as a proxy for engagement was the number of days per month that each user that month had logged in for. We then compared the distribution of users each month by the number of days they had logged in that month:
+A Snowplow client wanted to understand how their user engagement levels were changing over time. One of the measures we experimented with using as a proxy for engagement was the number of days per month that each user that month had logged in for. We then compared the distribution of users each month by the number of days they had logged in that month:
 
 ![example-user-engagement-over-time-relative][engagement-graph-1]
 
@@ -77,7 +77,7 @@ The analysis revealed a number of commercially significant findings:
 * The conversion rate varied widely between products. Further analysis suggestesd this was **not** related to product pricing. (Conversion rates did not change for specific products if pricing promotions were used.) Rather, it the site template was better used to preview certain categories of products than others. (Conversion rates varied by product categories as a whole, rather than by individual product.) Again, this was used to justify investing in a new ecommerce platform that allowed for more flexible templating between product categories.
 * The potential upside from raising conversion rates for poorly converting categories was enormous. In particular, some of the lower converting products were still generating a significant share of overall revenue, in spite of their low conversion rates. Just raising these to be in line with the average across all products would raise overall revenue by more than 15%. 
 
-Note: the above graph was produced using two data sets exported out of Google Analytics and joined together. (Ecomm sales data and page view data.) A better two metrics to plot on the X-axis and Y-axis would be "unique users who viewed page" and "unique users who bought the product". This is possible with SnowPlow data, but not with data exported from GA.
+Note: the above graph was produced using two data sets exported out of Google Analytics and joined together. (Ecomm sales data and page view data.) A better two metrics to plot on the X-axis and Y-axis would be "unique users who viewed page" and "unique users who bought the product". This is possible with Snowplow data, but not with data exported from GA.
 
 <a name="prices"><h2>5. Prices</h2></a>
 
@@ -91,7 +91,7 @@ Man-days are charged out based on our [rate card] [rate-card]. However, once the
 
 <a name="learn-more"><h2>Learn more</h2></a>
 
-[Get in touch] [get-in-touch] with the SnowPlow team to discuss your project. Find out about our other professional services, including [report design and implementation] [reporting], [SnowPlow implementations] [implementation] and [custom development] [custom-dev].
+[Get in touch] [get-in-touch] with the Snowplow team to discuss your project. Find out about our other professional services, including [report design and implementation] [reporting], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
 
 [engagement-graph-1]: img/user-dist-by-days-used-service-by-month-perc-breakdown.jpg
 [engagement-graph-2]: img/user-dist-by-days-used-service-by-month-actual-figs.jpg

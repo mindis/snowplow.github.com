@@ -6,13 +6,13 @@ title: Customer Lifetime Value
 weight: 4
 ---
 
-# Measuring customer lifetime value with SnowPlow
+# Measuring customer lifetime value with Snowplow
 
 1. [What is customer lifetime value?](#what-is-customer-lifetime-value)
 2. [Why is calculating customer lifetime value so important?](#why-is-it-important)
 3. [Where is customer lifetime value used?](#where)
 4. [Why traditional web analytics tools suck at customer lifetime value](#why-competitors-suck)
-5. [Calculating customer lifetime value with SnowPlow](#calculating-clv)
+5. [Calculating customer lifetime value with Snowplow](#calculating-clv)
 
  <a name="what-is-customer-lifetime-value"><h2>1. What is customer lifetime value?</h2></a>
 
@@ -51,9 +51,9 @@ Traditionally, web analytics tools have sucked at enabling analysts to calculate
 3. They don't integrate with other systems used in other channels, to enable a holistic view of customer behaviour and value across online and offline channels
 4. They don't provide the granular data required to build sophisticated models to forecast customer value going forwards
 
-Fortunately, SnowPlow addresses the above limitations, enabling analysts to calculate customer lifetime value as detailed below.
+Fortunately, Snowplow addresses the above limitations, enabling analysts to calculate customer lifetime value as detailed below.
 
-<a name="calculating-clv"><h2>5. Calculating customer lifetime value with SnowPlow</h2></a>
+<a name="calculating-clv"><h2>5. Calculating customer lifetime value with Snowplow</h2></a>
 
 There are diffent levels of sophistication to calculate customer lifetime value. The diagram below illustrates some different approaches:
 
@@ -70,7 +70,7 @@ We can distinguish different levels of sophistication when measuring customer li
 
 Which approach you adopt will depend on your own circumstances, data quality and customer understanding: a cruder approach will often suffice and a more sophisticated approach may be misleading if there isn't the customer understanding in place to justify the assumptions an analyst uses in predicting future revenue / profits per customer.
 
-In all cases, however, SnowPlow provides a solid foundation for doing the customer-lifetime value calculations. Below, we detail how to calculate customer lifetime value using a number of approaches:
+In all cases, however, Snowplow provides a solid foundation for doing the customer-lifetime value calculations. Below, we detail how to calculate customer lifetime value using a number of approaches:
 
 1. [Summing historical revenue by customers over time](#direct-historical-revenue-by-customer)
 2. [Including all revenue per customer across multiple channels](#cross-channel)
@@ -79,9 +79,9 @@ In all cases, however, SnowPlow provides a solid foundation for doing the custom
 
 <a name="direct-historical-revenue-by-customer"><h3>5.1 Summing historical revenue by customer over time</h3></a>
 
-SnowPlow makes it easy to sum the amount of direct revenue attributable to each customer over their entire user history.
+Snowplow makes it easy to sum the amount of direct revenue attributable to each customer over their entire user history.
 
-Let's start with the example of an online retailer, that has implemented SnowPlow so that every time an order is completed, an event is fired where:
+Let's start with the example of an online retailer, that has implemented Snowplow so that every time an order is completed, an event is fired where:
 
 	ev_category = 'ecommerce'
 	ev_action = 'order-complete'
@@ -125,7 +125,7 @@ For many online businesses, customers engage in multiple value-generating activi
 4. Signing up for email marketing
 5. Signing up to a new freemium service
 
-How you ascribe value to actions like the ones listed above will be subject to a blog post in the future. (There are wide range of possible techniques: because SnowPlow gives you access to granular event-level detail, it enables you to use a wide range of techniques to analyse the associated value.) The important thing to understand from the perspective of this guide is that there is a value that you ascribe at the time you perform the analysis. When you perform the anaysis, you create a table with the different values:
+How you ascribe value to actions like the ones listed above will be subject to a blog post in the future. (There are wide range of possible techniques: because Snowplow gives you access to granular event-level detail, it enables you to use a wide range of techniques to analyse the associated value.) The important thing to understand from the perspective of this guide is that there is a value that you ascribe at the time you perform the analysis. When you perform the anaysis, you create a table with the different values:
 
 {% highlight mysql %}
 CREATE TABLE events_by_value (
@@ -133,7 +133,7 @@ CREATE TABLE events_by_value (
 	value FLOAT)
 {% endhighlight%}
 
-Populate the above table with each different type of event and the value you want to ascribe it. You can then add up the value of actions that indirectly drive revenue by joining the above table with the SnowPlow events table:
+Populate the above table with each different type of event and the value you want to ascribe it. You can then add up the value of actions that indirectly drive revenue by joining the above table with the Snowplow events table:
 
 {% highlight mysql %}
 SELECT
@@ -184,7 +184,7 @@ The resulting `future_value` by `user_id` would be added to the past value calcu
 
 ## Want to learn more?
 
-Read this [Keplar blog post][keplar-clv] on calculating customer lifetime value, find out [how to measure user engagement][user-engagement] using SnowPlow find out about [how to perform cohort analysis][cohort] using SnowPlow.
+Read this [Keplar blog post][keplar-clv] on calculating customer lifetime value, find out [how to measure user engagement][user-engagement] using Snowplow find out about [how to perform cohort analysis][cohort] using Snowplow.
 
 [clv-img-1]: img/lifetime-value-segmentation.jpg
 [joining-snowplow-data]: /analytics/customer-analytics/joining-customer-data.html

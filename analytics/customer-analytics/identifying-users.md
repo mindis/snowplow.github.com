@@ -6,33 +6,33 @@ title: Identifying users
 weight: 2
 ---
 
-# Identifying users and customers using SnowPlow
+# Identifying users and customers using Snowplow
 
-All customer analytics starts with a solid understanding of what constitutes a customer and a user: this is missing in traditional web analytics. In this section, we explain how to use SnowPlow to reliably identify customers and users:
+All customer analytics starts with a solid understanding of what constitutes a customer and a user: this is missing in traditional web analytics. In this section, we explain how to use Snowplow to reliably identify customers and users:
 
-1. [Understanding the different SnowPlow user IDs](#user_id). An overview of the different user IDs that SnowPlow recognises
+1. [Understanding the different Snowplow user IDs](#user_id). An overview of the different user IDs that Snowplow recognises
 2. [The benefits of exposing user IDs](#benefits_of_user_id). The value that aggregating and filtering on user_ids provides data analysts
 3. [The benefits of exposing multiple user IDs](#benefits_of_multiple_user_ids). The value that exposing multiple user IDs provides data analysts
-4. [Robust approaches to identifying customers through tracking login events, using multiple IDs] (#login-events). A guide to reliable approach to identifying users, based on using SnowPlow to track login events
+4. [Robust approaches to identifying customers through tracking login events, using multiple IDs] (#login-events). A guide to reliable approach to identifying users, based on using Snowplow to track login events
 
 
 <h2><a name="user_id">1. Understanding user IDs</a></h2>
 
-Every line of SnowPlow table includes placeholders for three different user IDs:
+Every line of Snowplow table includes placeholders for three different user IDs:
 
 1. The `domain_userid`. This is a user ID that is set via a first party cookie. It can therefore be used to track user behaviour within a particular webdomain e.g. `mynewssite.com`
 2. The `network_userid`. This is a user ID that is set via a third party cookie. It can be used to track user behaviour across a network of sites on different domains.
-3. A `user_id` that can be set to custom values. This can be used to assign e.g. an ID set by a CRM system to SnowPlow data.
+3. A `user_id` that can be set to custom values. This can be used to assign e.g. an ID set by a CRM system to Snowplow data.
 
 There are strengths and weaknesses associated with each different type of user identifier. In many cases, we recommend using a combination of two or three of them to power the most robust set of user analytics. (More on this below.) In this introductory section, however, we'll stick to outlining the benefits and limitations of each:
 
 ### 1. The `domain_userid`
 
-The `domain_userid` is set via a first party cookie in the SnowPlow Javascript (`sp.js`). 
+The `domain_userid` is set via a first party cookie in the Snowplow Javascript (`sp.js`). 
 
 Because it is set via a first party cookie, the `domain_userid` is rarely blocked.
 
-However, because it is tied to a first party cookie, it cannot be used to track users across domains: if you have SnowPlow set up across a network of sites, the same user on different sites will have different `domain_userid`s. (At least one for each site.)
+However, because it is tied to a first party cookie, it cannot be used to track users across domains: if you have Snowplow set up across a network of sites, the same user on different sites will have different `domain_userid`s. (At least one for each site.)
 
 ### 2. The `network_userid`
 
@@ -44,7 +44,7 @@ Currently, the `network_userid` is **only** set if you use the [Clojure collecto
 
 ### 3. The `user_id` 
 
-Many companies and business already set their identifiers for their users and / or customers. (For example, when the user creates an account, or completes a first purchase.) In these cases, that user ID can be passed into SnowPlow as the `user_id` using the [setUserID][setuserid] method. This makes it easy to join SnowPlow event data with other customer data sets e.g. CRM data.
+Many companies and business already set their identifiers for their users and / or customers. (For example, when the user creates an account, or completes a first purchase.) In these cases, that user ID can be passed into Snowplow as the `user_id` using the [setUserID][setuserid] method. This makes it easy to join Snowplow event data with other customer data sets e.g. CRM data.
 
 <h2><a name="benefits_of_user_id">2. Benefits of exposing the user IDs for analysis</a></h2>
 
@@ -67,9 +67,9 @@ E.g. executing the query in Navicat:
 
 ### 2b. Ability to track users over multiple sessions
 
-Often a user will visit a website several times before completing a particular goal. Whereas traditional web analytics programs only provide analysts with data on the visit when the goal was completed, SnowPlow lets analysts zoom back in time to see all the actions that led up to a goal. This makes it possible, for example, to see which referrer *first* drove a user to a service, who only converted after 3 visits. As a result, the analyst can accurately attribute a return on that marketing spend, that would not be possible if you were only to look at data on a per session basis. (For more on using SnowPlow for [attribution][attribution], see the [attribution section][attribution] of this documentation.)
+Often a user will visit a website several times before completing a particular goal. Whereas traditional web analytics programs only provide analysts with data on the visit when the goal was completed, Snowplow lets analysts zoom back in time to see all the actions that led up to a goal. This makes it possible, for example, to see which referrer *first* drove a user to a service, who only converted after 3 visits. As a result, the analyst can accurately attribute a return on that marketing spend, that would not be possible if you were only to look at data on a per session basis. (For more on using Snowplow for [attribution][attribution], see the [attribution section][attribution] of this documentation.)
 
-Each time a user visits a site, SnowPlow sets a session counter (`domain_sessionidx`): this is set to 1 on the user's first visit, 2 on the user's second visit etc. So to view how many visits a customer makes before purchasing, we can execute a query like this:
+Each time a user visits a site, Snowplow sets a session counter (`domain_sessionidx`): this is set to 1 on the user's first visit, 2 on the user's second visit etc. So to view how many visits a customer makes before purchasing, we can execute a query like this:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -112,7 +112,7 @@ For businesses that wish to track users across multiple domains (notably content
 
 However, a growing proportion of browsers and users are dropping support for third party cookies. 
 
-By maintaining support for both first party cookies (`domain_userid`) and third party cookies (`network_userid`), SnowPlow makes it possible to use the `network_userid` to identify users where those users have are happy to be tracked using third party cookies. For those users who are not (whom it is easy to identify because they do not have values set for `network_userid`), it is possible to fall back on `domain_userid`.
+By maintaining support for both first party cookies (`domain_userid`) and third party cookies (`network_userid`), Snowplow makes it possible to use the `network_userid` to identify users where those users have are happy to be tracked using third party cookies. For those users who are not (whom it is easy to identify because they do not have values set for `network_userid`), it is possible to fall back on `domain_userid`.
 
 This makes it possible to perform statistical analyses on network behaviour based on the subset of users who are comfortable with third party cookies. It makes it clear which users are and are not covered by the sample.
 
@@ -120,7 +120,7 @@ It also leaves open the possibility of joining domain identifiers from different
 
 ### 3b. Advantages of maintaining a separate user identifier for businesses to populate with their own customer IDs
 
-Enabling businesses to set their own user ID where it is available is a very powerful feature: it makes it possible, for example, to join SnowPlow behavioural data with other customer data sets e.g. CRM, marketing etc.
+Enabling businesses to set their own user ID where it is available is a very powerful feature: it makes it possible, for example, to join Snowplow behavioural data with other customer data sets e.g. CRM, marketing etc.
 
 Rather then override the `domain_userid` and / or `network_userid`, however, we have a separate field `user_id` set aside for this purpose. This is to give analysts maximum flexibility when analysing user behaviour over the user's entire behaviour. To illustrate this with an example:
 
@@ -139,9 +139,9 @@ Relying on cookies to reliably identify users is risky for a number of reasons:
 1. Users may delete cookies between sessions: in which case two or more `user_id`s really represent the same user
 2. Users may access your website from different browsers (e.g. a home computer and a work computer, or a mobile device and a desktop): in which case again, two or more `user_id`'s really represent one user
 
-Websites where users login, however, have the opportunity to identify users much more reliably. It is straightforward to incorporate this additional data into SnowPlow, to make customer identification more robust:
+Websites where users login, however, have the opportunity to identify users much more reliably. It is straightforward to incorporate this additional data into Snowplow, to make customer identification more robust:
 
-When a user logs in to a website, the [SnowPlow event tracker][event-tracking] should be fired to capture the login event. The user's login ID (as defined in whichever system is used to manage the login process e.g. the CMS, Facebook etc.) should be captured and passed to SnowPlow using the setUserId call:
+When a user logs in to a website, the [Snowplow event tracker][event-tracking] should be fired to capture the login event. The user's login ID (as defined in whichever system is used to manage the login process e.g. the CMS, Facebook etc.) should be captured and passed to Snowplow using the setUserId call:
 
 {% highlight javascript %}
 _snaq.push(['setUserId', 'joe.blogs@email.com']);
@@ -165,9 +165,9 @@ This type of mapping table is reliable and flexible, because it can accommodate 
 1. A user logs in to his / her account from multiple devices. In that case, there would be many `domain_userid` to each `user_id`. That is fine, because we can aggregate data by `user_id` to capture the user's behaviour across all those different devices.
 2. Multiple users log in and out of their account from a single shared computer. In that case, there would be many `user_id` to each `domain_userid`. In that case, we'd need to be careful to aggregate records between log in and out events and ascribe them to a single user, so that we can differentiate actions performed by different users on the same computer.
 
-## 4. Understand how to use SnowPlow to reliably identify users and customers?
+## 4. Understand how to use Snowplow to reliably identify users and customers?
 
-[Read on][join-customer-data] to learn how to join SnowPlow customer data with [other sources of customer data][join-customer-data].
+[Read on][join-customer-data] to learn how to join Snowplow customer data with [other sources of customer data][join-customer-data].
 
 [cohort-analysis]: /analytics/customer-analytics/cohort-analysis.html
 [event-tracking]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-events
