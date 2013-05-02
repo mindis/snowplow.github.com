@@ -31,8 +31,7 @@ Snowplow consists of five loosely-coupled subsystems.
 ### 4. Storage
 
 * Snowplow can be setup to load your event-level and customer level data into one or more data stores, to enable analytics
-* Currently we support loading Snowplow data into [S3] [s3] (for processing by Hive / Pig / Hadoop / Mahout on EMR), [Redshift] [redshift] and [Infobright Community Edition] [ice] for more traditional OLAP analysis (e.g. using BI tools like [ChartIO] [chartio]).
-* We plan to launch support for loading data into [Amazon Redshift] [redshift] as soon as this service is available
+* Currently we support loading Snowplow data into [S3] [s3] (for processing by Hive / Pig / Hadoop / Mahout on EMR), [Redshift] [redshift] and [Infobright Community Edition] [ice] for more traditional analysis (e.g. using BI tools like [ChartIO] [chartio] or sophisticated analytics tools like [R] [r])
 
 ### 5. Analytics
 
@@ -76,3 +75,4 @@ Snowplow consists of five loosely-coupled subsystems.
 [setup-guide]: https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow
 [tech-docs]: https://github.com/snowplow/snowplow/wiki/Snowplow%20technical%20documentation
 [architecture]: /static/img/architecture.png
+[r]: http://www.r-project.org/
