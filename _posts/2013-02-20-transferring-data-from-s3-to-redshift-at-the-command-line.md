@@ -64,6 +64,10 @@ Some notes about the above query:
 * If you want to experiment with the tool, you can leave off the `-query` parameter, in which case you'll invoke an interactive command-line session
 * If the query is successful, it will return `0 rows affected.` at the command line. This is a bit misleading: if you then look in Redshift you'll see the new rows have loaded.
 
+A note about bulk loading data from S3 into Redshift:
+
+* Amazon will only let you use the above syntax to load data from S3 into Redshift if the S3 bucket and the Redshift cluster are located in the **same** region. If they are not (and Redshift is not available in all regions, at the time of writing), you will need to copy your S3 data into a new bucket in the same region as your Redshift cluster, prior to running the bulk upload.
+
 Happy bulk loading from the command line!
 
 [redshift]: http://aws.amazon.com/redshift/
