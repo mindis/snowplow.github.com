@@ -4,7 +4,7 @@ shortenedlink: Snowplow event validation
 title: Towards high-fidelity web analytics - introducing Snowplow's innovative new event validation capabilities
 tags: snowplow event validation
 author: Alex
-category: Releases
+category: Inside the Plow
 ---
 
 A key goal of the Snowplow project is enabling **high-fidelity analytics** for businesses running Snowplow.
