@@ -21,15 +21,15 @@ Unfortunately, identifying where your visitors come from is **not** as straightf
 2. [Potential sources of errors](/blog/2013/05/10/where-does-your-traffic-really-come-from#errors)
 3. [Problems with relying on the Google Analytics approach, and why the Snowplow approach is superior](/blog/2013/05/10/where-does-your-traffic-really-come-from#ga)
 4. [Surprises when examining visitors acquired from AdWords search campaigns: most visitors clicked on an ad that was not shown on a Google domain](/blog/2013/05/10/where-does-your-traffic-really-come-from#adwords)
-5. [Pulling all the findings together: the value of high fidelity data in determining where your visitors come from](/blog/2013/05/10/where-does-your-traffic-really-come-from/#conclusion)
+5. [Pulling all the findings together: the value of high-fidelity data in determining where your visitors come from](/blog/2013/05/10/where-does-your-traffic-really-come-from/#conclusion)
 
 <!--more-->
 
 <a name="how"><h2>1. How, technically, can we determine where visitors have come from?</h2></a>
 
-There are two sources of raw data that we can use to determine where a vistor to a website has come from: the [HTTP referer](#http-referer) and the [page URL](#page-url).
+There are two sources of raw data that we can use to determine where a vistor to a website has come from: the [page referer](#page-referer) and the [page URL](#page-url).
 
-<a name="http-referer"><h3>Page referer</h3></a>
+<a name="page-referer"><h3>Page referer</h3></a>
 
 When you load a web page in your browser, your browser makes an HTTP request to a web server to deliver that page. That request includes a header field that identifies the address of the web page that linked to the resource being requested: this is called the [HTTP referer] [http-referer] (sic). It is also possible to access the current page's referer information from the browser itself, using `document.referrer` in JavaScript.
 
@@ -176,7 +176,7 @@ Plotting the results in Tableau, there are a few surprises:
 
 The top two domains by amount of AdWords traffic directed towards Psychic Bazaar are **not** Google owned domains. They are eBay and Amazon - both websites that Psychic Bazaar sells on as a third party merchant. 
 
-We expected *some* of the domains to be non-Google domains - after all, we were aware that search engines like Ask serve results and advertising powered by Google. We *were* surprised, however, that Amazon and eBay would do this. (It seems strange that they would show ads for merchants who are competing with themselves and their own merchants. Nonetheless, if you visit either website, perform a search, and scroll down to the bottom of the result set, you will see AdWords ads displayed at the bottom:
+We expected *some* of the domains to be non-Google domains - after all, we were aware that search engines like Ask serve results and advertising powered by Google. We *were* surprised, however, that Amazon and eBay would do this: it seems strange that they would show ads for merchants who are competing with themselves and their own merchants. Nonetheless, if you visit either website, perform a search, and scroll down to the bottom of the result set, you will see AdWords ads displayed at the bottom:
 
 <a href="/static/img/blog/2013/05/amazon-with-adwords-links-screenshot.png"><img src="/static/img/blog/2013/05/amazon-with-adwords-links-screenshot.png"></a>
 
@@ -184,7 +184,7 @@ This puts Psychic Bazaar in the uncomfortable position of competing not only wit
 
 We were also surprised to learn that in total, 69% of the click-throughs received were from non-Google domains: in this case at least, powering search advertising on other sites doesn't simply add additional advertising inventory to Google's core search inventory, it actually makes up the bulk of that inventory. (We'd be interested in finding out from other Snowplow users who buy on AdWords whether they see similar results.)
 
-<a name="conclusion"><h2>Pulling all the findings together: the value of high fidelity data in determining where your visitors come from</h2></a>
+<a name="conclusion"><h2>Pulling all the findings together: the value of high-fidelity data in determining where your visitors come from</h2></a>
 
 In this post, we have seen that the extra level of data provided by Snowplow related to where visitors come from, over-and-above that provided by standard web analytics programs like Google Analytics, is incredibly valuable for a number of reasons:
 
