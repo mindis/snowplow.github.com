@@ -1,6 +1,6 @@
 ---
 layout: section
-category: contact
+category: about
 title: Team
 weight: 2
 ---

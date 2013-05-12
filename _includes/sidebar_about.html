@@ -3,7 +3,7 @@
 	<ul>
 		{% for weight in (1..10) %}
 			{% for p in site.pages %}
-				{% if p.category == 'contact' %}
+				{% if p.category == 'about' %}
 					{% if p.weight == weight %}
 						{% if page.url == p.url %}
 						<li class="active"><a href="{{ p.url }}" class="active">{{ p.title }}</a></li>

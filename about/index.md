@@ -1,7 +1,7 @@
 ---
 layout: section
-category: contact
-title: Contact Details
+category: about
+title: Contact us
 weight: 1
 ---
 
