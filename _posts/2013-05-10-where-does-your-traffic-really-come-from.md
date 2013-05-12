@@ -192,8 +192,13 @@ In this post, we have seen that the extra level of data provided by Snowplow rel
 2. It leads to more intelligent and robust inferences about where you traffic comes from
 3. It identifies surprising results related to the placement of your paid campaigns, which may have significant implications for your overall marketing strategy.
 
+## Want to do more intelligent, more robust attribution?
+
+Then [get in touch] [contact] with the Snowplow Professional Services team.
+
 [http-referer]: http://en.wikipedia.org/wiki/HTTP_referer
 [pbz]: http://www.psychicbazaar.com/
 [ga-mkt-parameters]: https://support.google.com/analytics/answer/1033863?hl=en-GB
 [ga-referer-detailed]: https://developers.google.com/analytics/devguides/platform/features/campaigns-trafficsources
 [high-fidelity-analytics]: /blog/2013/04/10/snowplow-event-validation/
+[contact]: /about/index.html

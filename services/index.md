@@ -32,4 +32,4 @@ As well as supporting clients through our professional services team, we provide
 [rate-card]: rate-card.html
 [google-group]: https://groups.google.com/forum/#!forum/snowplow-user
 [github-repo]: http://github.com/snowplow/snowplow
-[get-in-touch]: /contact/index.html 
+[get-in-touch]: /about/index.html 

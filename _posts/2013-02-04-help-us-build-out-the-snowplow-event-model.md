@@ -79,4 +79,4 @@ A lot about big data is sexy. Unfortunately, data modelling is not. Nonetheless,
 [wiki]: https://github.com/snowplow/snowplow/wiki
 [unstruct-events]: https://github.com/snowplow/snowplow/wiki/canonical-event-model#wiki-customunstruct
 [avro]: http://avro.apache.org/
-[contact]: /contact/index.html
+[contact]: /about/index.html

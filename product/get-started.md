@@ -36,7 +36,7 @@ There are several places you can learn more about Snowplow:
 [github-repo]: https://github.com/snowplow/snowplow
 [tech-architecture]: /technology/index.html
 [pro-services]: /services/index.html
-[contact-us]: /contact/index.html
+[contact-us]: /about/index.html
 [aws]: http://aws.amazon.com/
 [github-repo]: https://github.com/snowplow/snowplow
 [analytics-cookbook]: /analytics/index.html

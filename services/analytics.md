@@ -97,7 +97,7 @@ Man-days are charged out based on our [rate card] [rate-card]. However, once the
 [engagement-graph-2]: img/user-dist-by-days-used-service-by-month-actual-figs.jpg
 [product-performance-example]: img/pvs-by-unique-purchaes-by-product-2011.jpg
 [rate-card]: rate-card.html
-[get-in-touch]: /contact/index.html
+[get-in-touch]: /about/index.html
 [reporting]: reporting.html
 [implementation]: implementation.html
 [custom-dev]: custom-development.html

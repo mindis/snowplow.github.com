@@ -96,7 +96,7 @@ The Snowplow [Professional Services team] [pro-services] can produce implementat
 [snowplow-ecomm-tracker]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-ecommerce
 [snowplow-ad-imp-tracker]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-adimps
 [snowplow-page-tracking]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-page
-[contact-us]: /contact/index.html
+[contact-us]: /about/index.html
 [psychic-bazaar]: http://www.psychicbazaar.com/index.php
 [imp-guide]: /static/pdf/google-tag-manager-implementation-specification-for-psychic-bazaar.pdf 
 [pro-services]: /services/index.html

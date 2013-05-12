@@ -9,4 +9,4 @@ weight: 6
 
 We are currently in the process of finalizing our rate card... Please [get in touch][contact] for a quote.
 
-[contact]: /contact/index.html
+[contact]: /about/index.html
