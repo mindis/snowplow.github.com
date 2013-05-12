@@ -11,8 +11,8 @@ A short blog post this, to announce the release of [**Scala MaxMind GeoIP**] [sc
 
 We have extracted Scala MaxMind GeoIP from our current (ongoing) work porting our ETL process from Apache Hive to [Scalding] [scalding]. We extracted this as a separate library for two main reasons:
 
-1. **Being good open-source citizens** - as with our [referer-parser] [referer-parser] library, we believe this library willl be useful to the wider community of software developers, not just SnowPlow users
-2. **Keeping SnowPlow's footprint small** - at SnowPlow we believe very strongly in building modular, loosely-coupled software. Massive monolithic systems that 'do everything' are a nightmare to test, maintain and extend - so we prefer to build small, standalone components and libraries which we (and the community) can then compose into larger pipelines and processes
+1. **Being good open-source citizens** - as with our [referer-parser] [referer-parser] library, we believe this library willl be useful to the wider community of software developers, not just Snowplow users
+2. **Keeping Snowplow's footprint small** - at Snowplow we believe very strongly in building modular, loosely-coupled software. Massive monolithic systems that 'do everything' are a nightmare to test, maintain and extend - so we prefer to build small, standalone components and libraries which we (and the community) can then compose into larger pipelines and processes
 
 On to the library: for Scala developers, the main benefits of using [scala-maxmind-geoip] [scala-maxmind-geoip] over the MaxMind Java library are:
 

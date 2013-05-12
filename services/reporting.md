@@ -37,7 +37,7 @@ KPI are therefore enormously valuable. Unfortunately, KPI, especially KPI based 
 
 1. We work with our clients to understand (i) their goals, (ii) the key success factors for achieving those goals and (iii) the levers at their disposal for reaching those goals
 2. We look at the complete set of data available to measure progress against those goals, and analyse: (i) what has happened to date, (ii) how relevant different data points are, and (iii) how sensitive to key success factors
-3. On the basis of the above we design and mockup an easy to read KPI dashboard, and iterate this with the client. (This may or may not include SnowPlow data, as appropriate.)
+3. On the basis of the above we design and mockup an easy to read KPI dashboard, and iterate this with the client. (This may or may not include Snowplow data, as appropriate.)
 4. When the client is happy with the dashboard we implement it technically.
 
 <a name="output" />
@@ -61,8 +61,8 @@ The fixed fees we quote will be based on our [rate card] [rate-card].
 <a name="learn-more" />
 ## Learn more
 
-* [Get in touch] [get-in-touch] with the SnowPlow team 
-* Find out about our other professional services, including [analytics services] [analytics], [SnowPlow implementations] [implementation] and [custom development] [custom-dev].
+* [Get in touch] [get-in-touch] with the Snowplow team 
+* Find out about our other professional services, including [analytics services] [analytics], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
 
 [get-in-touch]: /contact/index.html
 [rate-card]: rate-card.html

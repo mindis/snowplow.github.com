@@ -1,7 +1,7 @@
 ---
 layout: homepage
 category: homepage
-title: SnowPlow Analytics - your web analytics data in your hands
+title: Snowplow Analytics - your web analytics data in your hands
 permalink: index.html
 ---
 
@@ -26,19 +26,19 @@ permalink: index.html
 
 <div id="buttons">
 	<div class="big-button" id="left-button"><a href="/product/index.html">Learn more</a></div>
-	<div class="big-button" id="right-button"><a href="/product/get-started.html">Setup SnowPlow today</a></div>
+	<div class="big-button" id="right-button"><a href="/product/get-started.html">Setup Snowplow today</a></div>
 </div>
 
 <div class="column">
 	<h2>Open source</h2>
 	<ul>
 		<li><strong>No lock in</strong>. <strong>Your</strong> data is kept on <strong>your</strong> S3 and Redshift account or Infobright instance</li>
-		<li><strong>Active community</strong> extending SnowPlow into new platforms and analyses tools</li>
+		<li><strong>Active community</strong> extending Snowplow into new platforms and analyses tools</li>
 		<li>Complete code available on <a href="https://github.com/snowplow/snowplow">Github</a></li>
 	</ul>
 	<p style="text-align:center;"><a href="https://github.com/snowplow/snowplow"><img src="/static/img/github.png" width="150" /></a></p>
 	<ul>
-		<li><a href="https://github.com/snowplow/snowplow/wiki/SnowPlow-setup-guide">Setup guide</a> and <a href="https://github.com/snowplow/snowplow/wiki/SnowPlow-technical-documentation">technical documentation</a> available on <a href="https://github.com/snowplow/snowplow/wiki">wiki</a></li>
+		<li><a href="https://github.com/snowplow/snowplow/wiki/Snowplow-setup-guide">Setup guide</a> and <a href="https://github.com/snowplow/snowplow/wiki/Snowplow-technical-documentation">technical documentation</a> available on <a href="https://github.com/snowplow/snowplow/wiki">wiki</a></li>
 	</ul>
 </div>
 
@@ -52,8 +52,8 @@ permalink: index.html
 </div>
 
 <div class="column">
-	<h2>SnowPlow on Twitter</h2>
-	<a class="twitter-timeline" width="266" height="350" href="https://twitter.com/SnowPlowData" data-widget-id="266927205374885888">Tweets by @SnowPlowData</a>
+	<h2>Snowplow on Twitter</h2>
+	<a class="twitter-timeline" width="266" height="350" href="https://twitter.com/SnowplowData" data-widget-id="266927205374885888">Tweets by @SnowplowData</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 </div>

@@ -6,6 +6,6 @@ title: Behavioral segmentation
 weight: 8
 ---
 
-# Segmenting your audience by behavior with SnowPlow
+# Segmenting your audience by behavior with Snowplow
 
 CONTENT COMING SOON

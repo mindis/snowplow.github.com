@@ -34,7 +34,7 @@ Granular data means you can join e.g. customer-data at an individual customer le
 
 ### What will you do with your web analytics data? 
 
-[Get started with SnowPlow today] [get-started].
+[Get started with Snowplow today] [get-started].
 
 [chartio]: http://chartio.com/
 [tableau]: http://www.tableausoftware.com/

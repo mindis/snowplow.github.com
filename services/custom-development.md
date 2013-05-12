@@ -5,16 +5,16 @@ title: Custom Development
 weight: 5
 ---
 
-# Custom development of SnowPlow
+# Custom development of Snowplow
 
-SnowPlow has been [architected] [technical-architecture] to be as extensible as possible. Indeed, one of the primary motivations for us in keeping SnowPlow open source is to encourage developers to extend it in multiple directions. Those directions include:
+Snowplow has been [architected] [technical-architecture] to be as extensible as possible. Indeed, one of the primary motivations for us in keeping Snowplow open source is to encourage developers to extend it in multiple directions. Those directions include:
 
 1. Building mobile and other app clients 
 2. Building real-time collectors
-3. Giving website audience control over what data is and is not captured by SnowPlow
-4. Building machine learning algorithms that use SnowPlow data to do content recommendation and personalisation
+3. Giving website audience control over what data is and is not captured by Snowplow
+4. Building machine learning algorithms that use Snowplow data to do content recommendation and personalisation
 
-If there's a specific piece of functionality from SnowPlow that SnowPlow doesn't include today, our Professional Services team can in many cases develop it for you.
+If there's a specific piece of functionality from Snowplow that Snowplow doesn't include today, our Professional Services team can in many cases develop it for you.
 
 There are two costing models that we apply for custom-development:
 
@@ -23,7 +23,7 @@ There are two costing models that we apply for custom-development:
 
 ## Learn more
 
-* [Get in touch] [get-in-touch] with the SnowPlow team to discuss your project
+* [Get in touch] [get-in-touch] with the Snowplow team to discuss your project
 * Find out about our other professional services, including [analytics services] [analytics], [report design and implementation] [reporting] and [custom development] [custom-dev].
 
 [reporting]: reporting.html

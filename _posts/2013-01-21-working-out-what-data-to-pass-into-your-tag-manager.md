@@ -21,15 +21,15 @@ We think this is rather dangerous. We're much more excited about the way that ta
 
 The trouble with insisting on formally passing data to your tag management system using things like the [`dataLayer`] [dataLayer] or [`Universal Variable`] [universal-variable] is that it makes the process of implementing a tag management system more complicated: because you have to identify all the data points you want to pass to your web analytics (and advertising) systems and often develop a data model for transferring them to your tag management system, so that it can pass them on via the tags it fires.
 
-For SnowPlow users, the challenge is more acute. Whereas other analytics systems recommend that you only pass data into them that you know how to use / evaluate, we recommend that SnowPlow users pass in *all* the data associated with the events on a user journey so that analysts have a **complete** picture of a user's journey. Then it is up to the analyst to decide whether or not specific bits of data are valuable based on what he / she does with that data (rather than prejudging it). So for SnowPlow users who are setting up a tag management system, the challenge is to identify, upfront **all** the data points to pass into the tag management system, so that they can be passed on to SnowPlow via the SnowPlow tracking tags. Simple, right?
+For Snowplow users, the challenge is more acute. Whereas other analytics systems recommend that you only pass data into them that you know how to use / evaluate, we recommend that Snowplow users pass in *all* the data associated with the events on a user journey so that analysts have a **complete** picture of a user's journey. Then it is up to the analyst to decide whether or not specific bits of data are valuable based on what he / she does with that data (rather than prejudging it). So for Snowplow users who are setting up a tag management system, the challenge is to identify, upfront **all** the data points to pass into the tag management system, so that they can be passed on to Snowplow via the Snowplow tracking tags. Simple, right?
 
-## What data do we want to pass into SnowPlow?
+## What data do we want to pass into Snowplow?
 
-Broadly speaking, there are types of data that we want to process in SnowPlow: event data and page-level data.
+Broadly speaking, there are types of data that we want to process in Snowplow: event data and page-level data.
 
 ### Event data
 
-At its heart, SnowPlow is a tool for capturing, storing and analysing event-stream data, with a focus on web event data. We aim to capture all events that occur on an individual's customer journey. To give a random assortment of examples of the types of events we might include:
+At its heart, Snowplow is a tool for capturing, storing and analysing event-stream data, with a focus on web event data. We aim to capture all events that occur on an individual's customer journey. To give a random assortment of examples of the types of events we might include:
 
 * Add item to basket
 * Like a post
@@ -51,9 +51,9 @@ As part of setting up a tag management solution, it is important to identify all
 
 As the web evolves, websites look less-and-less like hyperlinked documents and more-and-more like interactive applications. A larger fraction of interesting events on a customer journeys are powered by AJAX events, and fewer are enabled by web page loads.
 
-In spite of this evolution, web page loads are still very important events in a user journey. Broadly speaking, we capture data that occur thanks to AJAX events using the [SnowPlow event tracking method] [snowplow-event-tracker] except for specific events that have their own specific methods e.g. [tracking ecommerce transaction] [snowplow-ecomm-tracker] or [ad impression tracking] [snowplow-ad-imp-tracker].
+In spite of this evolution, web page loads are still very important events in a user journey. Broadly speaking, we capture data that occur thanks to AJAX events using the [Snowplow event tracking method] [snowplow-event-tracker] except for specific events that have their own specific methods e.g. [tracking ecommerce transaction] [snowplow-ecomm-tracker] or [ad impression tracking] [snowplow-ad-imp-tracker].
 
-To capture the broad swathe of events that result in a web page load, we use the [page tracker method] [snowplow-page-tracking]. However, performing an analysis on the journey a user has taken based on the URLs and page titles of the pages they have visited is not that informative: we really want to store what entities were displayed on those web pages, so we can analyse what the user was shown, what entities they engaged with and which they did not. To take a simple example, we might want to compare conversion rate for a retailer by product, to see which products 'convert best' and why. In order to do this, we need to pass onto SnowPlow exactly what products were displayed on the web pages they visited, and potentially pass in additional information like what type of listing they were shown.
+To capture the broad swathe of events that result in a web page load, we use the [page tracker method] [snowplow-page-tracking]. However, performing an analysis on the journey a user has taken based on the URLs and page titles of the pages they have visited is not that informative: we really want to store what entities were displayed on those web pages, so we can analyse what the user was shown, what entities they engaged with and which they did not. To take a simple example, we might want to compare conversion rate for a retailer by product, to see which products 'convert best' and why. In order to do this, we need to pass onto Snowplow exactly what products were displayed on the web pages they visited, and potentially pass in additional information like what type of listing they were shown.
 
 To give an example of the types of entities we might identify:
 
@@ -84,7 +84,7 @@ We applied the above methodology to [Psychic Bazaar] [psychic-bazaar], an online
 
 ## Want help implementing a tag management solution?
 
-The SnowPlow [Professional Services team] [pro-services] can produce implementation guides like [the one for Psychic Bazaar][imp-guide]. If you are implementing a tag management solution, either as part of a SnowPlow implementation or not, and and would like assistance, then [get in touch] [contact-us].
+The Snowplow [Professional Services team] [pro-services] can produce implementation guides like [the one for Psychic Bazaar][imp-guide]. If you are implementing a tag management solution, either as part of a Snowplow implementation or not, and and would like assistance, then [get in touch] [contact-us].
 
 
 [gtm]: https://www.google.com/tagmanager/

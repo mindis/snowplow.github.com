@@ -6,7 +6,7 @@ title: Cohort Analysis
 weight: 6
 ---
 
-# Performing cohort analyses with SnowPlow
+# Performing cohort analyses with Snowplow
 
 1. [What is cohort analysis?](#what)
 2. [Steps to performing a cohort analysis](#steps)
@@ -124,7 +124,7 @@ By including the other marketing fields (`mkt_term`, `mkt_content`, `mkt_name`) 
 
 ### 1d. Other ways to define cohorts
 
-SnowPlow makes it possible to define cohorts based on a wide variety of criteria, including definitions obtained from data that exists outside of SnowPlow. (This data will need to be uploaded to SnowPlow before it can be used.) For more information, [get in touch] [get-in-touch]
+Snowplow makes it possible to define cohorts based on a wide variety of criteria, including definitions obtained from data that exists outside of Snowplow. (This data will need to be uploaded to Snowplow before it can be used.) For more information, [get in touch] [get-in-touch]
 
 
  <a name="metric-definition"><h2>2. Metric definitions</h2></a>
@@ -190,7 +190,7 @@ GROUP BY domain_userid,
 
 ### 2c. Other metrics to compare
 
-SnowPlow makes it possible to compare a large number of other metrics. For specific help / questions, [get in touch] [get-in-touch].
+Snowplow makes it possible to compare a large number of other metrics. For specific help / questions, [get in touch] [get-in-touch].
 
 <a name="combinetheresults"><h2>3. Combining the results in the final cohort analysis</h2></a>
 
@@ -218,9 +218,9 @@ GROUP BY c.cohort, m.time_period ;
 
 Note: this is the same query *regardless* of what cohort definition was chosen in step 1, or what metric definition was chosen in step 2.
 
-In the above case, we've used the `AVG()` function to aggregate the metric over all users in each cohort. This is the most common aggregation function to use with SnowPlow. To use a more unusual function (e.g. a percentile), it may be necessary to write a user-defined-function (UDF) to perform the required aggregation.
+In the above case, we've used the `AVG()` function to aggregate the metric over all users in each cohort. This is the most common aggregation function to use with Snowplow. To use a more unusual function (e.g. a percentile), it may be necessary to write a user-defined-function (UDF) to perform the required aggregation.
 
-For more about cohort analyses and performing them on SnowPlow, view the [blog post series] [cohort-analysis-blog-post-series] on [Keplar LLP] [keplarllp].
+For more about cohort analyses and performing them on Snowplow, view the [blog post series] [cohort-analysis-blog-post-series] on [Keplar LLP] [keplarllp].
 
 [user-engagement]: /analytics/customer-analytics/user-engagement.html
 [clv]: /analytics/customer-analytics/customer-lifetime-value.html

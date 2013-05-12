@@ -10,7 +10,7 @@ weight: 5
 <a name="top"><h1>Bread and butter web analytics queries</h1></a>
 
 
-The following queries return basic web analytics data that someone could expect from any standard web analytics package. These are *not* the queries that SnowPlow was designed to perform: we built SnowPlow to enable analysts to run queries on web analytics data that are **not** possible with other web analytics programs. These queries return the results that **all** web analytics queries return. However, running them can be useful for an analyst to validate SnowPlow has been setup correctly (by comparing the output against e.g. Google Analytics), and help her get familiar with writing queries in SnowPlow.
+The following queries return basic web analytics data that someone could expect from any standard web analytics package. These are *not* the queries that Snowplow was designed to perform: we built Snowplow to enable analysts to run queries on web analytics data that are **not** possible with other web analytics programs. These queries return the results that **all** web analytics queries return. However, running them can be useful for an analyst to validate Snowplow has been setup correctly (by comparing the output against e.g. Google Analytics), and help her get familiar with writing queries in Snowplow.
 
 The following queries will work with both Hive and Infobright.
 
@@ -34,7 +34,7 @@ The following queries will work with both Hive and Infobright.
 
  <a name="counting-unique-visitors"><h2>1. Number of unique visitors </h2></a>
 
-The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period e.g. day. (Because each user is assigned a unique domain_userid, based on a lack of SnowPlow tracking cookies on their browser):
+The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period e.g. day. (Because each user is assigned a unique domain_userid, based on a lack of Snowplow tracking cookies on their browser):
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -80,7 +80,7 @@ In ChartIO:
 
  <a name="counting-visits"><h2>2. Number of visits</h2></a>
 
-Because each user might visit a site more than once, summing the number of `domain_userid`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, SnowPlow assigns that session with a `domain_sessionidx` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `domain_userid` with the `domain_sessionidx` and then count the number of distinct concatenated entry in the events table:
+Because each user might visit a site more than once, summing the number of `domain_userid`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, Snowplow assigns that session with a `domain_sessionidx` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `domain_userid` with the `domain_sessionidx` and then count the number of distinct concatenated entry in the events table:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -100,7 +100,7 @@ In ChartIO:
 
  <a name="counting-pageviews"><h2>3. Number of page views</h2></a>
 
-Page views are one type of event that are stored in the SnowPlow events table. Their defining feature is that the `page_title` contain values (are not `NULL`). In the case of an *event* that is not a page view (e.g. an _add to basket_) these fields would all be `NULL`, and the event fields (`ev_category`, `ev_action`, `ev_label` etc.) would contain values. For details, see the [Introduction to the SnowPlow events table](https://github.com/snowplow/snowplow/blog/master/docs/07_snowplow_hive_tables_introduction.md).
+Page views are one type of event that are stored in the Snowplow events table. Their defining feature is that the `page_title` contain values (are not `NULL`). In the case of an *event* that is not a page view (e.g. an _add to basket_) these fields would all be `NULL`, and the event fields (`ev_category`, `ev_action`, `ev_label` etc.) would contain values. For details, see the [Introduction to the Snowplow events table](https://github.com/snowplow/snowplow/blog/master/docs/07_snowplow_hive_tables_introduction.md).
 
 To count the number of page views by day, then we simply execute the following query:
 
@@ -125,7 +125,7 @@ In ChartIO:
 
 Although the number of page views is a standard metric in web analytics, this reflects the web's history as a set of hyperlinked documents rather than the modern reality of web applications that are comprise lots of AJAX events (that need not necessarily result in a page load.)
 
-As a result, counting the total number of events (including page views but also other AJAX events) is actually a more meaningful thing to do than to count the number of page views, as we have done above. We recommend setting up SnowPlow so that *all* events / actions that a user takes are tracked. Hence, running the below queries should return a total sum of events on the site by time period:
+As a result, counting the total number of events (including page views but also other AJAX events) is actually a more meaningful thing to do than to count the number of page views, as we have done above. We recommend setting up Snowplow so that *all* events / actions that a user takes are tracked. Hence, running the below queries should return a total sum of events on the site by time period:
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
@@ -157,7 +157,7 @@ FROM `events_008`
 GROUP BY `year`, `month`, `user`;
 {% endhighlight %}
 
-There is scope to taking a progressively more nuanced approach to measuring user engagement levels. For more details see the section on [measuring user engagement with SnowPlow][measure-user-engagement].
+There is scope to taking a progressively more nuanced approach to measuring user engagement levels. For more details see the section on [measuring user engagement with Snowplow][measure-user-engagement].
 
 [Back to top](#top)
 
@@ -558,7 +558,7 @@ Google Analytics provides two sets of metrics to indicate *engagement*:
 1. Visit duration
 2. Page depth (i.e. number of pages visited per session)
 
-Both of these are flakey and unsophisticated measures of engagement. Nevertheless, they are easy to report on in SnowPlow. To plot visit duration, we execute the following query: 
+Both of these are flakey and unsophisticated measures of engagement. Nevertheless, they are easy to report on in Snowplow. To plot visit duration, we execute the following query: 
 
 {% highlight mysql %}
 /* HiveQL / MySQL */

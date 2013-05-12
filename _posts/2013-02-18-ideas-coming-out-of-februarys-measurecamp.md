@@ -31,7 +31,7 @@ And then test whether those audience behaved in significantly different ways to 
 
 <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/carmenmardiros/getting-to-the-people-behind-the-keywords-16581811" title="Getting to the People Behind The Keywords" target="_blank">Getting to the People Behind The Keywords</a> </strong> from <strong><a href="http://www.slideshare.net/carmenmardiros" target="_blank">Carmen Mardiros</a></strong> </div>
 
-An especially exciting prospect going forwards is to use machine learning to extend the segmentation beyond the subset of users for whom we have keyword data: so we can classify users who have not entered keywords, but appear to behave in a similar way to those who have, into the same buckets. This would be especially powerful with SnowPlow data, as we have a user's complete click stream to work with when identifying users who "look-like" those we have classified on the basis of keywords alone. I hope to explore this in the near future, and blog about it here.
+An especially exciting prospect going forwards is to use machine learning to extend the segmentation beyond the subset of users for whom we have keyword data: so we can classify users who have not entered keywords, but appear to behave in a similar way to those who have, into the same buckets. This would be especially powerful with Snowplow data, as we have a user's complete click stream to work with when identifying users who "look-like" those we have classified on the basis of keywords alone. I hope to explore this in the near future, and blog about it here.
 
 <h2><a name="server-side-datalayer">Transferring commercially-sensitive data into your web analytics platform via a server-side dataLayer</a></h2>
 
@@ -48,7 +48,7 @@ Passing this commercially sensitive data into Univesal Analytics is not trivial,
 
 <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/MattClarke4/measurecamp-improving-e-commerce-tracking-with-universal-analytics" title="Measurecamp - Improving e commerce tracking with universal analytics" target="_blank">Measurecamp - Improving e commerce tracking with universal analytics</a> </strong> from <strong><a href="http://www.slideshare.net/MattClarke4" target="_blank">Matt Clarke</a></strong> </div>
 
-Matt's presentation is a must-read for anyone who wants to push web analytics tools into a more powerful business analytics tool. For us at SnowPlow, it really highlights the need to enable server side tracking alongside client-side tracking: previously it hadn't occurred to me that a SnowPlow user might want to use both approaches together, and replicate the dataLayer approach that has become best practice client-side on the server-side.
+Matt's presentation is a must-read for anyone who wants to push web analytics tools into a more powerful business analytics tool. For us at Snowplow, it really highlights the need to enable server side tracking alongside client-side tracking: previously it hadn't occurred to me that a Snowplow user might want to use both approaches together, and replicate the dataLayer approach that has become best practice client-side on the server-side.
 
 <h2><a name="clv">Customer lifetime value</a></h2>
 

@@ -1,20 +1,20 @@
 ---
 layout: blog-post
-shortenedlink: Using ChartIO to visualise SnowPlow data
-title: Using ChartIO to visualise and interrogate SnowPlow data
+shortenedlink: Using ChartIO to visualise Snowplow data
+title: Using ChartIO to visualise and interrogate Snowplow data
 tags: chartio analytics
 category: Analytics
 author: yali
 ---
 
-In the last couple of weeks, we have been experimenting with [ChartIO] [chartio] - a hosted BI tool for visualising data and creating dashboards. So far, we are very impressed - ChartIO is an excellent analytics tool to use to interrogate and visualise SnowPlow data. Given the number of requests we get from SnowPlow users to recommend tools to assist with analytics on SnowPlow data, we thought it well worth sharing why ChartIO is so good, and give some examples of analyses on SnowPlow data using ChartIO.
+In the last couple of weeks, we have been experimenting with [ChartIO] [chartio] - a hosted BI tool for visualising data and creating dashboards. So far, we are very impressed - ChartIO is an excellent analytics tool to use to interrogate and visualise Snowplow data. Given the number of requests we get from Snowplow users to recommend tools to assist with analytics on Snowplow data, we thought it well worth sharing why ChartIO is so good, and give some examples of analyses on Snowplow data using ChartIO.
 
 ![chartio-pic-0] [chartio-pic-0]
 
 In this post we cover:
 
 1. [Why is ChartIO so good?] [why]
-2. [Setting up ChartIO to work with SnowPlow] [setup]
+2. [Setting up ChartIO to work with Snowplow] [setup]
 3. [Tutorial: using ChartIO to unpick the drivers of engagement with a site] [engagement]
 
 <h2><a name="why">Why is ChartIO so good?</a></h2>
@@ -24,20 +24,20 @@ ChartIO is great for two reasons:
 1. **Fast**. ChartIO is quick to setup. (Because it is a hosted product, with a very nice script for establishing an SSH connection between your database and the ChartIO web application.) At the same time, it is very quick, once a data connection is established, to create new graphs and charts and embed them in dashboards.
 2. **Easy**. ChartIO is easy to use. This is partly because the UI is really nice. (Lots of drag and drop, easy-to-follow workflow.) But it is also because ChartIO is very simple: it lacks a lot of the complexity of more traditional BI tools like Microstrategy and Pentaho. It is a lot simpler even than more recent innovations in the space like Tableau. Whilst this means it is a bit less powerful, the upside is the tool is a lot easier to use than comparable tools.
 
-ChartIO has one enormous advantage that makes it especially well suited to querying SnowPlow data: it does not require the data to be in a specific format before it will let users chart / graph it. That compares with the vast majority of tools (including Tableau, Qlikview, Pentaho and Microstrategy) that all require that any data is structured in a format suitable for [OLAP analysis] [olap] before they can be used. (We covered how to convert SnowPlow data into that format in the [analytics cookbook] [olap].) ChartIO **does** work better with data that is formatted in this way, but it still works beautifully with the data as is. As a result, **ChartIO is, we believe, the easiest way to build graphs and dashboards on top of SnowPlow data**.
+ChartIO has one enormous advantage that makes it especially well suited to querying Snowplow data: it does not require the data to be in a specific format before it will let users chart / graph it. That compares with the vast majority of tools (including Tableau, Qlikview, Pentaho and Microstrategy) that all require that any data is structured in a format suitable for [OLAP analysis] [olap] before they can be used. (We covered how to convert Snowplow data into that format in the [analytics cookbook] [olap].) ChartIO **does** work better with data that is formatted in this way, but it still works beautifully with the data as is. As a result, **ChartIO is, we believe, the easiest way to build graphs and dashboards on top of Snowplow data**.
 
 <!--more-->
 
-<h2><a name="setup">Setting up ChartIO to work with SnowPlow</a></h2>
+<h2><a name="setup">Setting up ChartIO to work with Snowplow</a></h2>
 
-You can get started with ChartIO by signing up to a free 30 day trial. Connecting it to SnowPlow data is straightforward: full instructions can be found [on the setup guide] [setup-chartio], including how to create your first graph using SnowPlow data in ChartIO.
+You can get started with ChartIO by signing up to a free 30 day trial. Connecting it to Snowplow data is straightforward: full instructions can be found [on the setup guide] [setup-chartio], including how to create your first graph using Snowplow data in ChartIO.
 
 
 <h2><a name="engagement">Tutorial: using ChartIO to unpick the drivers of engagement with a site</a></h2>
 
 ### Before we get started: how will we measure engagement?
 
-As we discuss in detail in the [analytics cookbook] [measuring-engagement], there are many possible ways to measure engagement, and SnowPlow supports all of them. We need to pick one or two to use in this tutorial, although it would be possible to perform the analyses described with any measure that suits your business. 
+As we discuss in detail in the [analytics cookbook] [measuring-engagement], there are many possible ways to measure engagement, and Snowplow supports all of them. We need to pick one or two to use in this tutorial, although it would be possible to perform the analyses described with any measure that suits your business. 
 
 For this tutorial we're going to use data from [Psychic Bazaar] [pbz], an online retailer of esoteric products. For an online retailer, whether a visitors makes a purchase is generally more interesting than whether they 'engage' in vaguer terms. So we will use conversion rate as our first measure of engagement. However, to keep our tutorial interesting to people who want to perform the analysis on non-retail sites, we will also look at number of page views over a period of time as a measure of engagement. 
 
@@ -47,11 +47,11 @@ Lets start by looking out how engagement has changed over time on Psychic Bazaar
 
 ![chartio-pic-1] [chartio-pic-1]
 
-Give the dashboard a suitable name and description and then click the relevant button to craete it. Now we need to add a chart to it. Click on the **+Chart** link on the right hand menu. The Chart Creator opens in **interactive mode**, with your database on the top left, a list of tables under it (including the SnowPlow events table) and under the table, a list of fields split by which ChartIO believes is a measure and dimension.
+Give the dashboard a suitable name and description and then click the relevant button to craete it. Now we need to add a chart to it. Click on the **+Chart** link on the right hand menu. The Chart Creator opens in **interactive mode**, with your database on the top left, a list of tables under it (including the Snowplow events table) and under the table, a list of fields split by which ChartIO believes is a measure and dimension.
 
 ![chartio-pic-2] [chartio-pic-2]
 
-In interactive mode, ChartIO lets you drag and drop measures into the **Measures**, **Dimensions** and **Filters** dialogue box to generate graphs. We're not going to do that, though, because we want to be explicit about how ChartIO uses SnowPlow data. So we're going to use **Query mode** by clicking on the **Query mode** hyperlink on the top left of the **Layer 1** box. This enables us to enter a SQL query directly. ChartIO will graph the results:
+In interactive mode, ChartIO lets you drag and drop measures into the **Measures**, **Dimensions** and **Filters** dialogue box to generate graphs. We're not going to do that, though, because we want to be explicit about how ChartIO uses Snowplow data. So we're going to use **Query mode** by clicking on the **Query mode** hyperlink on the top left of the **Layer 1** box. This enables us to enter a SQL query directly. ChartIO will graph the results:
 
 ![chartio-pic-3] [chartio-pic-3]
 
@@ -139,7 +139,7 @@ We can then rename the graph (by clicking the **edit** hyperlink that appears wh
 
 Great! We can see conversion rates were reasonably stable between September and November of the year, but peaked at the end of the year at a height they were previously in June. The figure for September seems suspiciously high - we'll drill into this in more detail in a bit. Next we will plot our alternative measure of engagement over time: the number of pageviews per user per month, and see how that has changed over time.
 
-Calculating the number of pageviews per user per month is straightforward in SnowPlow - we can use the following query:
+Calculating the number of pageviews per user per month is straightforward in Snowplow - we can use the following query:
 
 {% highlight mysql %}
 SELECT
@@ -266,7 +266,7 @@ Our baseline data tells us an interesting story, which from the dashboard, we're
 
 ### Unpicking the drivers of changing engagement levels
 
-For our sample data set there appears to be a rather interesting rise in engagement level (as measured by both conversion rates and page views by month) between November and December. What's driving that increase? What clues can our SnowPlow data give us?
+For our sample data set there appears to be a rather interesting rise in engagement level (as measured by both conversion rates and page views by month) between November and December. What's driving that increase? What clues can our Snowplow data give us?
 
 We can divide drivers into two groups: those that effect all users on our website, and those that only effect some of them. If, for example, we performed a measure rearchitecture of our entire site, that is likely to effect **all** users' behaviour. But if we upgraded the site for mobile, then we would **only** expect that to impact user behaviour for people browsing from mobile sites.
 
@@ -410,7 +410,7 @@ Plotting the above graph shows that growth in paid search traffic accounts for s
 
 #### Other factors that might account for the rise
 
-There is a wealth of other factors that we can explore using SnowPlow data, to see if they account for the rise in engagement levels / conversion rates in December. Doing so is beyond the scope of this blog post. However, we can outline them:
+There is a wealth of other factors that we can explore using Snowplow data, to see if they account for the rise in engagement levels / conversion rates in December. Doing so is beyond the scope of this blog post. However, we can outline them:
 
 | **Factor** | **How we would test it**                                                |
 |:-----------|:------------------------------------------------------------------------|
@@ -419,13 +419,13 @@ There is a wealth of other factors that we can explore using SnowPlow data, to s
 | A change in the makeup of the users e.g. so that in December, a bigger portion of the userbase are repeat visitors | Explore whether there is a change in makeup (e.g. more repeat visitors as a proportion of uniques) and see if there's a corresponding difference in conversion rates by different types of users (e.g. new vs returning). Note: this is the same approach as described above for  user acquired from *paid search*. |
 | Christmas  | Hard to prove definitively - but if no other factor can be identified, and the engagement level drops back in January, then the December bump might be season. | 
 
-SnowPlow makes it possible to drill into all of the above, and other factors we can think of, to see which is responsible for driving changing engagement levels.
+Snowplow makes it possible to drill into all of the above, and other factors we can think of, to see which is responsible for driving changing engagement levels.
 
 ## Summarising our thoughts on ChartIO
 
-From our experience with it in the last couple of weeks, we believe that ChartIO is an excellent tool for visualising SnowPlow data. We highly recommend SnowPlow users give it a try,: ChartIO's simplicitly, speed, and lack of assumptions about the way data is structured make it an ideal analytics tool to run directly on top of SnowPlow data stored in Infobright.
+From our experience with it in the last couple of weeks, we believe that ChartIO is an excellent tool for visualising Snowplow data. We highly recommend Snowplow users give it a try,: ChartIO's simplicitly, speed, and lack of assumptions about the way data is structured make it an ideal analytics tool to run directly on top of Snowplow data stored in Infobright.
 
-We're going to continue to use ChartIO (and blog about the results). We'd love to hear from other SnowPlow users who are using it.
+We're going to continue to use ChartIO (and blog about the results). We'd love to hear from other Snowplow users who are using it.
 
 [chartio]: http://chartio.com/
 [why]: /blog/2013/01/08/using-chartio-to-visualise-and-interrogate-snowplow-data#why

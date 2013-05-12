@@ -1,7 +1,7 @@
 ---
 layout: blog-post
-shortenedlink: How the role of Hive is changing in SnowPlow
-title: How we use Hive at SnowPlow, and how the role of Hive is changing. (Slides from our presentation to Hive London.)
+shortenedlink: How the role of Hive is changing in Snowplow
+title: How we use Hive at Snowplow, and how the role of Hive is changing. (Slides from our presentation to Hive London.)
 tags: snowplow ecommerce multi-site
 author: Yali
 category: Other
@@ -10,8 +10,8 @@ category: Other
 Last night I gave a presentation to the clever folks at Hive London covering three things:
 
 1. How big data technologies like Apache Hive are transforming web analytics
-2. Howe we've used Hive in SnowPlow development
-3. How the role of Hive has changed at SnowPlow over time, including a comparison of Hive against other technologies.
+2. Howe we've used Hive in Snowplow development
+3. How the role of Hive has changed at Snowplow over time, including a comparison of Hive against other technologies.
 
 The slides from the presentation are below. As always, any questions / comments, please post them below.
 

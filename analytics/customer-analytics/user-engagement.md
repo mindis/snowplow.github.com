@@ -6,7 +6,7 @@ title: User engagement
 weight: 5
 ---
 
-# Measuring user engagement with SnowPlow
+# Measuring user engagement with Snowplow
 
 1. [What is user engagement?](#what)
 2. [Different proxies for measuring user engagement](#proxies)
@@ -21,7 +21,7 @@ User engagement is a critical metric to understand for every business with an on
 
 We can differentiate different levels of sophistication of approach when it comes to measuring user engagement. To take the example of a media website, an analyst who distinguishes the breadth of engagement (how wide a variety of content a user engages with) with the depth of engagement (i.e. how deeply a user engages with each article) is more engagement than one who simply looks at the time spent on the website, or the number of page views. However, we might want to be even more sophisticated in our approach: distinguishing users who have to look through a number of articles to find the one they want (which is not a good user experience) with those that engage with multiple articles because the website is good at recommending related content to them every time they finish one article. Learning how to spot the difference between the two cases, one "successful" and one "unsuccessful", takes some care.
 
-Because what constitutes "successful engagement" varies depending on the type of business and type of website, we cannot offer a definitive guide to measuring engagement. Instead, we give a number of different queries, which reflect a number of different approaches to measuring engagement. SnowPlow is flexible enough that most businesses should be able to develop robust engagement metrics and use SnowPlow to report on those metrics.
+Because what constitutes "successful engagement" varies depending on the type of business and type of website, we cannot offer a definitive guide to measuring engagement. Instead, we give a number of different queries, which reflect a number of different approaches to measuring engagement. Snowplow is flexible enough that most businesses should be able to develop robust engagement metrics and use Snowplow to report on those metrics.
 
 Note: for a more in-depth discussion of measuring user engagement, particularly with respect to performing cohort analyses, see [this post][user-engagement-keplar-blog-post] on the Keplar blog covering [different approaches to measuring user engagement][user-engagement-keplar-blog-post] on the [Keplar blog][keplar-blog].
 
@@ -196,7 +196,7 @@ TO WRITE
 
 ## Want to learn more?
 
-Find out [how to perform cohort analysis][cohort-analysis] using SnowPlow.
+Find out [how to perform cohort analysis][cohort-analysis] using Snowplow.
 
 [user-engagement-keplar-blog-post]: http://www.keplarllp.com/blog/2012/05/different-approaches-to-measuring-user-engagement-with-snowplow
 [keplar-blog]: http://www.keplarllp.com/blog
