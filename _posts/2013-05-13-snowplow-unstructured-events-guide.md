@@ -72,9 +72,9 @@ Our datatypes, then, are as follows:
 | String            | String of characters         | String               | -                    | Yes             |
 | Number            | Integer or decimal           | Number               | -                    | Yes             |
 | Boolean           | True or false                | Boolean              | -                    | Yes             |
-| Geo-coordinates   | Longitude and latitude       | [Number, Number]     | `$geo`               | Yes             |
+| Geo-coordinates   | Longitude and latitude       | \[Number, Number\]     | `$geo`               | Yes             |
 | Date              | Date and time (ms precision) | Number               | `$dt`, `$tm`, `$tms` | Yes             |
-| Array             | Array of values              | [x, y, z]            | -                    | -               |
+| Array             | Array of values              | \[x, y, z\]            | -                    | -               |
 
 Let's go through each of these in turn, providing some examples as we go:
 
@@ -106,7 +106,7 @@ Both Snowplow and JavaScript have only one type of a Number, track it like this:
 
 {% highlight javascript %}
 {
-    in-stock: 23,
+    in_stock: 23,
     price: 49.95,
     ...
 }
@@ -129,16 +129,16 @@ Tracking a pair of geographic coordinates is done like so:
 
 {% highlight javascript %}
 {
-    check-in$geo: [-88.21337, 40.11041],
+    check_in$geo: [-88.21337, 40.11041],
     ...
 }
 {% endhighlight %}
 
-**Warning:** if you do not add the `$geo` type suffix, then the value will be incorrectly interpreted as an Array of Floats.
+**Warning:** if you do not add the `$geo` type suffix, then the value will be incorrectly interpreted by Snowplow as an Array of Floats.
 
 ### Date
 
-Snowplow Dates include the date _and_ the time, with milliseconds precision. There are three type suffixes supported:
+Snowplow Dates include the date _and_ the time, with milliseconds precision. There are three type suffixes supported for tracking a Date:
 
 * `$dt` - the Number of days since the epoch
 * `$tm` - the Number of seconds since the epoch
@@ -149,10 +149,10 @@ You can track a date by adding either a JavaScript Number _or_ JavaScript Date t
 {% highlight javascript %}
 {
     birthday$dt: new Date(1980,11,10), // Sent to Snowplow as birthday$dt: XXXXXXXXX
-    _birthday$dt: XXXXXXXXX, // ^ Same
-    signed-up$tm: XXXXXXXXXXXXXX, // With secs precision
-    last-ping$tms: XXXXXXXXXXXXXXXX, // Accurate to secs
-    last-action: new Date() // Sent to Snowplow as last-action$tms: XXXXXXXXXXXXX
+    bday$dt: XXXXXXXXX, // ^ Same
+    signed_up$tm: XXXXXXXXXXXXXX, // With secs precision
+    last_ping$tms: XXXXXXXXXXXXXXXX, // Accurate to milliseconds
+    last_action: new Date() // Sent to Snowplow as last-action$tms: XXXXXXXXXXXXX
     ...
 }
 {% endhighlight %}
@@ -161,19 +161,19 @@ Note that the type prefix only indicates how the JavaScript Number sent to Snowp
 
 **Two warnings:**
 
-1. If you specify a JavaScript Number but do not add a valid Date suffix (`$dt`, `$tm` or `$tms`), then the value will be incorrectly interpreted as a Number, not a Date
+1. If you specify a JavaScript Number but do not add a valid Date suffix (`$dt`, `$tm` or `$tms`), then the value will be incorrectly interpreted by Snowplow as a Number, not a Date
 2. If you specify a JavaScript Number but add the wrong Date suffix, then the Date will be incorrectly interpreted by Snowplow, for example:
 
 {% highlight javascript %}
 {
-    last-ping$dt: XXXXXXXXXXXXXXXX, // Should have been $tms. Snowplow interprets as XXXXXXXXXXXXXXXXXXXX
+    last_ping$dt: XXXXXXXXXXXXXXXX, // Should have been $tms. Snowplow interprets as XXXXXXXXXXXXXXXXXXXX
     ...
 }
 {% endhighlight %}
 
 ### Arrays
 
-You can send an Array of values, of any data type other than Null.
+You can track an Array of values of any data type other than Null.
 
 Arrays must be homogeneous - in other words, all values within the Array must be of the same datatype. This means that the following is **not** allowed:
 
@@ -191,14 +191,17 @@ By contrast, the following are all allowed:
 {
     product_id: 'ASO01043',
     sizes: ['xs', 's', 'l', 'xl', 'xxl'],
-    session-starts$tm: [XXXXXXXXXX, YYYYYYYYYYY, ZZZZZZZZZZZZ],
-    check-ins$geo: [[-88.21337, 40.11041], [-78.81557, 30.22047]]
+    session_starts$tm: [XXXXXXXXXX, YYYYYYYYYYY, ZZZZZZZZZZZZ],
+    check_ins$geo: [[-88.21337, 40.11041], [-78.81557, 30.22047]]
     ...
 }
 {% endhighlight %}
 
 <h2><a name="help">4. Getting help</a></h2>
 
-As always, if you do run into any issues or don't understand any of the above changes, please do get in touch with us via [the usual channels] [talk-to-us].
+As always, if you do run into any issues or don't understand any of the above guide, please do get in touch with us via [the usual channels] [talk-to-us].
 
-And if you have any ideas or feedback for our custom unstructured events, do please share them, either in the comments below or through the usual channels.
+And if you have any ideas or feedback for Snowplow' custom unstructured events, do please share them, either in the comments below or through the usual channels.
+
+[snowplow-083-blog]: http://xxx
+[talk-to-us]: https://github.com/snowplow/snowplow/wiki/Talk-to-us
