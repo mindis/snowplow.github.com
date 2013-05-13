@@ -70,8 +70,8 @@ We have benefited enormously from the generosity of companies who've provided fr
 
 | **Supported by**                 | **Description**                                                                               |
 |----------------------------------|-----------------------------------------------------------------------------------------------|
-| <img src="/static/img/thanks/bizspark_logo.jpg" /> | Snowplow Analytics Ltd is proud to be a member of the [Microsoft BizSpark Program] [bizspark] |
-| <img src="/static/img/thanks/navicat_logo.jpg" />  | [Navicat] [navicat] is our go-to database tool, so we were delighted to join Premiumsoft's Navicat Open Source Project License Program |
+| <a href="https://www.microsoft.com/bizspark/"><img src="/static/img/thanks/bizspark_logo.jpg" /></a> | Snowplow Analytics Ltd is proud to be a member of the [Microsoft BizSpark Program] [bizspark] |
+| <a href="http://www.navicat.com/"><img src="/static/img/thanks/navicat_logo.jpg" /></a>  | [Navicat] [navicat] is our go-to database tool, so we were delighted to join Premiumsoft's Navicat Open Source Project License Program |
 
 [snowcannon]: https://github.com/shermozle/SnowCannon
 [qwaya]: http://www.qwaya.com
