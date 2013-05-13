@@ -139,15 +139,18 @@ Snowplow Dates include the date _and_ the time, with milliseconds precision. The
 * `$tm` - the Number of seconds since the epoch
 * `$tms` - the Number of milliseconds since the epoch. The default for JavaScript Dates if no type suffix supplied
 
-You can track a date by adding either a JavaScript Number _or_ JavaScript Date to your `properties` object:
+You can track a date by adding either a JavaScript Number _or_ JavaScript Date to your `properties` object. The following are all valid dates:
 
 {% highlight javascript %}
 {
-    birthday$dt: new Date(1980,11,10), // Sent to Snowplow as birthday$dt: XXXXXXXXX
-    bday$dt: XXXXXXXXX, // ^ Same
-    signed_up$tm: XXXXXXXXXXXXXX, // With secs precision
-    last_ping$tms: XXXXXXXXXXXXXXXX, // Accurate to milliseconds
-    last_action: new Date() // Sent to Snowplow as last-action$tms: XXXXXXXXXXXXX
+    birthday$dt: new Date(1980,11,10), // Sent to Snowplow as birthday$dt: 345254400000
+    birthday_alt$dt: 345254400000, // ^ Same as above
+    
+    registered$tm: new Date(2013,05,13,14,20,10), // Sent to Snowplow as signedup$tm: 1371129610
+    registered_alt$tm: 1371129610, // Same as above
+    
+    last_ping$tms: 1368454114215, // Accurate to milliseconds
+    last_action: new Date() // Sent to Snowplow as last-action$tms: 1368454114215
 }
 {% endhighlight %}
 
@@ -160,7 +163,7 @@ Note that the type prefix only indicates how the JavaScript Number sent to Snowp
 
 {% highlight javascript %}
 {
-    last_ping$dt: XXXXXXXXXXXXXXXX // Should have been $tms. Snowplow interprets as XXXXXXXXXXXXXXXXXXXX
+    last_ping$dt: 1371129610 // Should have been $tm. Snowplow will interpret this as the year 3756521449
 }
 {% endhighlight %}
 
@@ -182,7 +185,7 @@ By contrast, the following are all allowed:
 {
     product_id: 'ASO01043',
     sizes: ['xs', 's', 'l', 'xl', 'xxl'],
-    session_starts$tm: [XXXXXXXXXX, YYYYYYYYYYY, ZZZZZZZZZZZZ],
+    session_starts$tm: [1371129610, 1064329730, 1341127611],
     check_ins$geo: [[-88.21337, 40.11041], [-78.81557, 30.22047]]
 }
 {% endhighlight %}
