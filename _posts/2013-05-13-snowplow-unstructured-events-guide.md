@@ -71,9 +71,9 @@ Our datatypes, then, are as follows:
 | String            | String of characters         | String               | -                    | Yes             |
 | Number            | Integer or decimal           | Number               | -                    | Yes             |
 | Boolean           | True or false                | Boolean              | -                    | Yes             |
-| Geo-coordinates   | Longitude and latitude       | \[Number, Number\]     | `$geo`               | Yes             |
+| Geo-coordinates   | Longitude and latitude       | \[Number, Number\]   | `$geo`               | Yes             |
 | Date              | Date and time (ms precision) | Number               | `$dt`, `$tm`, `$tms` | Yes             |
-| Array             | Array of values              | \[x, y, z\]            | -                    | -               |
+| Array             | Array of values              | \[x, y, z\]          | -                    | -               |
 
 Let's go through each of these in turn, providing some examples as we go:
 
