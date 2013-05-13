@@ -13,11 +13,10 @@ In our earlier blog post we briefly introduced the capabilities of `trackUnstruc
 
 In the rest of this post, then, we will cover:
 
-1. [Basic usage](/blog/2013/04/12/snowplow-0.8.1-released-with-referer-url-parsing#referer-parsing)
-2. [XXX](/blog/2013/04/12/snowplow-0.8.1-released-with-referer-url-parsing#example-data)
-3. [XXX](/blog/2013/04/12/snowplow-0.8.1-released-with-referer-url-parsing#upgrading-usage)
-4. [XXX]()
-4. [XXX](/blog/2013/04/12/snowplow-0.8.1-released-with-referer-url-parsing#help)
+1. [Basic usage](/blog/2013/05/13/snowplow-unstructured-events-guide#basic-usage)
+2. [The `properties` JavaScript object](/blog/2013/05/13/snowplow-unstructured-events-guide#properties-object)
+3. [Supported datatypes](/blog/2013/05/13/snowplow-unstructured-events-guide#supported-datatypes)
+4. [Getting help](/blog/2013/05/13/snowplow-unstructured-events-guide#help)
 
 <!--more-->
 
@@ -48,13 +47,13 @@ Every call to `trackUnstructEvent` has the same structure - the complexity comes
 
 <h2><a name="properties-object">2. The `properties` JavaScript object</a></h2>
 
-The `properties` JavaScript consists of a set of individual `name: value` properties. The structure must be flat - in other words, properties cannot be nested. Continuing with the exampe code above, this means that the following is **not** allowed:
+The `properties` JavaScript consists of a set of individual `name: value` properties.
+
+The structure must be flat - in other words, properties cannot be nested. Continuing with the exampe code above, this means that the following is **not** allowed:
 
 {% highlight javascript %}
 {
-    product_id: 'ASO01043',
     category: { primary: 'Womenswear', secondary: 'Dresses'}, // NOT allowed
-    ...
 }
 {% endhighlight %}
 
@@ -95,8 +94,7 @@ Tracking a String is easy:
 
 {% highlight javascript %}
 {
-    product_id: 'ASO01043', // Or "ASO01043"
-    ...
+    product_id: 'ASO01043' // Or "ASO01043"
 }
 {% endhighlight %}
 
@@ -107,8 +105,7 @@ Both Snowplow and JavaScript have only one type of a Number, track it like this:
 {% highlight javascript %}
 {
     in_stock: 23,
-    price: 49.95,
-    ...
+    price: 49.95
 }
 {% endhighlight %}
 
@@ -118,8 +115,7 @@ Tracking a Boolean is straightforward:
 
 {% highlight javascript %}
 {
-    trial: true,
-    ...
+    trial: true
 }
 {% endhighlight %}
 
@@ -129,8 +125,7 @@ Tracking a pair of geographic coordinates is done like so:
 
 {% highlight javascript %}
 {
-    check_in$geo: [-88.21337, 40.11041],
-    ...
+    check_in$geo: [-88.21337, 40.11041]
 }
 {% endhighlight %}
 
@@ -153,7 +148,6 @@ You can track a date by adding either a JavaScript Number _or_ JavaScript Date t
     signed_up$tm: XXXXXXXXXXXXXX, // With secs precision
     last_ping$tms: XXXXXXXXXXXXXXXX, // Accurate to milliseconds
     last_action: new Date() // Sent to Snowplow as last-action$tms: XXXXXXXXXXXXX
-    ...
 }
 {% endhighlight %}
 
@@ -166,8 +160,7 @@ Note that the type prefix only indicates how the JavaScript Number sent to Snowp
 
 {% highlight javascript %}
 {
-    last_ping$dt: XXXXXXXXXXXXXXXX, // Should have been $tms. Snowplow interprets as XXXXXXXXXXXXXXXXXXXX
-    ...
+    last_ping$dt: XXXXXXXXXXXXXXXX // Should have been $tms. Snowplow interprets as XXXXXXXXXXXXXXXXXXXX
 }
 {% endhighlight %}
 
@@ -179,9 +172,7 @@ Arrays must be homogeneous - in other words, all values within the Array must be
 
 {% highlight javascript %}
 {
-    product_id: 'ASO01043',
-    sizes: ['xs', 28, 'l', 38, 'xxl'], // NOT allowed
-    ...
+    sizes: ['xs', 28, 'l', 38, 'xxl'] // NOT allowed
 }
 {% endhighlight %}
 
@@ -193,7 +184,6 @@ By contrast, the following are all allowed:
     sizes: ['xs', 's', 'l', 'xl', 'xxl'],
     session_starts$tm: [XXXXXXXXXX, YYYYYYYYYYY, ZZZZZZZZZZZZ],
     check_ins$geo: [[-88.21337, 40.11041], [-78.81557, 30.22047]]
-    ...
 }
 {% endhighlight %}
 
