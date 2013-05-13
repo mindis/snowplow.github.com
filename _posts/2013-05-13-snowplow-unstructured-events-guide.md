@@ -13,10 +13,10 @@ In our earlier blog post we briefly introduced the capabilities of `trackUnstruc
 
 In the rest of this post, then, we will cover:
 
-1. [Basic usage](/blog/2013/05/13/snowplow-unstructured-events-guide#basic-usage)
-2. [The `properties` JavaScript object](/blog/2013/05/13/snowplow-unstructured-events-guide#properties-object)
-3. [Supported datatypes](/blog/2013/05/13/snowplow-unstructured-events-guide#supported-datatypes)
-4. [Getting help](/blog/2013/05/13/snowplow-unstructured-events-guide#help)
+1. [Basic usage](/blog/2013/05/14/snowplow-unstructured-events-guide#basic-usage)
+2. [The `properties` JavaScript object](/blog/2013/05/14/snowplow-unstructured-events-guide#properties-object)
+3. [Supported datatypes](/blog/2013/05/14/snowplow-unstructured-events-guide#supported-datatypes)
+4. [Getting help](/blog/2013/05/14/snowplow-unstructured-events-guide#help)
 
 <!--more-->
 
@@ -196,5 +196,5 @@ As always, if you do run into any issues or don't understand any of the above gu
 
 And if you have any ideas or feedback for Snowplow' custom unstructured events, do please share them, either in the comments below or through the usual channels.
 
-[snowplow-083-blog]: http://xxx
+[snowplow-083-blog]: /blog/2013/05/14/snowplow-0.8.3-released-with-unstructured-events
 [talk-to-us]: https://github.com/snowplow/snowplow/wiki/Talk-to-us
