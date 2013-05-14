@@ -69,8 +69,9 @@ Our datatypes, then, are as follows:
 |:------------------|:-----------------------------|:---------------------|:---------------------|:----------------|
 | Null              | Absence of a value           | Null                 | -                    | No              |
 | String            | String of characters         | String               | -                    | Yes             |
-| Number            | Integer or decimal           | Number               | -                    | Yes             |
 | Boolean           | True or false                | Boolean              | -                    | Yes             |
+| Integer           | Number without decimal       | Number               | `$int`               | Yes             |
+| Floating point    | Number with decimal          | Number               | `$flt`               | Yes             |
 | Geo-coordinates   | Longitude and latitude       | \[Number, Number\]   | `$geo`               | Yes             |
 | Date              | Date and time (ms precision) | Number               | `$dt`, `$tm`, `$tms` | Yes             |
 | Array             | Array of values              | \[x, y, z\]          | -                    | -               |
@@ -98,17 +99,6 @@ Tracking a String is easy:
 }
 {% endhighlight %}
 
-### Number
-
-Both Snowplow and JavaScript have only one type of a Number, track it like this:
-
-{% highlight javascript %}
-{
-    in_stock: 23,
-    price: 49.95
-}
-{% endhighlight %}
-
 ### Boolean
 
 Tracking a Boolean is straightforward:
@@ -116,6 +106,29 @@ Tracking a Boolean is straightforward:
 {% highlight javascript %}
 {
     trial: true
+}
+{% endhighlight %}
+
+### Integer
+
+To track an Integer, use a JavaScript Number but add a type suffix like so:
+
+{% highlight javascript %}
+{
+    in_stock$int: 23
+}
+{% endhighlight %}
+
+**Warning:** if you do not add the `$int` type suffix, Snowplow will assume you are tracking a Floating point number.
+
+### Floating point
+
+To track a Floating point number, use a JavaScript Number; adding a type suffix is optional:
+
+{% highlight javascript %}
+{
+    price$flt: 4.99, 
+    sales_tax: 49.99 // Same as $sales_tax:$flt
 }
 {% endhighlight %}
 
