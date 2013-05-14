@@ -9,7 +9,9 @@ category: Releases
 
 Earlier today we [announced the release of Snowplow 0.8.3] [snowplow-083-blog], which updated our JavaScript Tracker to add the ability to send custom unstructured events to a Snowplow collector with `trackUnstructEvent()`.
 
-In our earlier blog post we briefly introduced the capabilities of `trackUnstructEvent` with some example code. In this blog post, we will take a detailed look at Snowplow's custom unstructured events functionality, so you can understand how best to send unstructured events to Snowplow. This is particularly important because our ETL process does not yet extract unstructured events, so you will not get any feedback yet from the ETL as to whether you are tracking them correctly.
+In our earlier blog post we briefly introduced the capabilities of `trackUnstructEvent` with some example code. In this blog post, we will take a detailed look at Snowplow's custom unstructured events functionality, so you can understand how best to send unstructured events to Snowplow.
+
+Understanding the unstructured event format is important because our Enrichment process does not yet extract unstructured events, so you will not get any feedback yet from the ETL as to whether you are tracking them correctly. (Nor do we have validation for unstructured event properties in our JavaScript Tracker yet.)
 
 In the rest of this post, then, we will cover:
 
@@ -84,8 +86,7 @@ Tracking a Null value for a given field is straightforward:
 
 {% highlight javascript %}
 {
-    returns_id: null,
-    ...
+    returns_id: null
 }
 {% endhighlight %}
 
@@ -101,7 +102,7 @@ Tracking a String is easy:
 
 ### Boolean
 
-Tracking a Boolean is straightforward:
+Tracking a Boolean is also straightforward:
 
 {% highlight javascript %}
 {
@@ -134,7 +135,7 @@ To track a Floating point number, use a JavaScript Number; adding a type suffix 
 
 ### Geo-coordinates
 
-Tracking a pair of geographic coordinates is done like so:
+Tracking a pair of Geographic coordinates is done like so:
 
 {% highlight javascript %}
 {
@@ -142,7 +143,7 @@ Tracking a pair of geographic coordinates is done like so:
 }
 {% endhighlight %}
 
-**Warning:** if you do not add the `$geo` type suffix, then the value will be incorrectly interpreted by Snowplow as an Array of Floats.
+**Warning:** if you do not add the `$geo` type suffix, then the value will be incorrectly interpreted by Snowplow as an Array of Floating points.
 
 ### Date
 
@@ -150,24 +151,24 @@ Snowplow Dates include the date _and_ the time, with milliseconds precision. The
 
 * `$dt` - the Number of days since the epoch
 * `$tm` - the Number of seconds since the epoch
-* `$tms` - the Number of milliseconds since the epoch. The default for JavaScript Dates if no type suffix supplied
+* `$tms` - the Number of milliseconds since the epoch. This is the default for JavaScript Dates if no type suffix supplied
 
 You can track a date by adding either a JavaScript Number _or_ JavaScript Date to your `properties` object. The following are all valid dates:
 
 {% highlight javascript %}
 {
-    birthday$dt: new Date(1980,11,10), // Sent to Snowplow as birthday$dt: 345254400000
-    birthday_alt$dt: 345254400000, // ^ Same as above
+    birthday$dt: new Date(1980,11,10), // Sent to Snowplow as birthday$dt: 3996
+    birthday2$dt: 3996, // ^ Same as above
     
-    registered$tm: new Date(2013,05,13,14,20,10), // Sent to Snowplow as signedup$tm: 1371129610
-    registered_alt$tm: 1371129610, // Same as above
+    registered$tm: new Date(2013,05,13,14,20,10), // Sent to Snowplow as registered$tm: 1371129610
+    registered2$tm: 1371129610, // Same as above
     
-    last_ping$tms: 1368454114215, // Accurate to milliseconds
-    last_action: new Date() // Sent to Snowplow as last-action$tms: 1368454114215
+    last_action$tms: 1368454114215, // Accurate to milliseconds
+    last_action2: new Date() // Sent to Snowplow as last_action2$tms: 1368454114215
 }
 {% endhighlight %}
 
-Note that the type prefix only indicates how the JavaScript Number sent to Snowplow is _interpreted_ - all Dates are stored by Snowplow to milliseconds precision (whether or not they include that data).
+Note that the type prefix only indicates how the JavaScript Number sent to Snowplow is interpreted - all Snowplow Dates are stored to milliseconds precision (whether or not they include that level of precision).
 
 **Two warnings:**
 
@@ -196,7 +197,6 @@ By contrast, the following are all allowed:
 
 {% highlight javascript %}
 {
-    product_id: 'ASO01043',
     sizes: ['xs', 's', 'l', 'xl', 'xxl'],
     session_starts$tm: [1371129610, 1064329730, 1341127611],
     check_ins$geo: [[-88.21337, 40.11041], [-78.81557, 30.22047]]
