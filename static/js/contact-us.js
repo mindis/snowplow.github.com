@@ -1,9 +1,9 @@
 $(function() {
 	$('.error').hide();
     $(".button").click(function() {
-      	// validate and process form here
-      
-      	$('.error').hide()
+      	
+      	// validate the form
+       	$('.error').hide()
  	 	var name = $("input#name").val();
 		if (name == "") {
 			$("label#name_error").show();
@@ -25,6 +25,7 @@ $(function() {
   			return false;
   		}
 
+  		// Process the form
   		var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
   		
   		$.ajax({

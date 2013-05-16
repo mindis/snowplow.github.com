@@ -184,7 +184,7 @@
   #contents form {
     width: 720px; }
     #contents form label {
-      width: 100px;
+      width: 200px;
       float: left;
       display: inline;
       text-align: right; }
@@ -194,7 +194,18 @@
       text-align: right;
       font-size: 10px; }
     #contents form input {
-      width: 550px;
+      width: 450px;
+      float: left;
+      margin-left: 10px;
+      display: inline; }
+    #contents form textarea {
+      width: 450px;
+      float: left;
+      margin-left: 10px;
+      display: inline;
+      height: 50px; }
+    #contents form #size {
+      width: 100px;
       float: left;
       margin-left: 10px;
       display: inline; }

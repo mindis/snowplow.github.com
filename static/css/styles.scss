@@ -235,7 +235,7 @@ $white: #FFFFFF;
 		width: 720px;
 
 		label {
-			width: 100px;
+			width: 200px;
 			float: left;
 			display: inline;
 			text-align: right;
@@ -249,10 +249,25 @@ $white: #FFFFFF;
 		}		
 
 		input {
-			width: 550px;
+			width: 450px;
 			float: left;
 			margin-left: 10px;
 			display: inline
+		}
+
+		textarea {
+			width: 450px;
+			float: left;
+			margin-left: 10px;
+			display: inline;
+			height: 150px;
+		}
+
+		#size {
+			width: 100px;
+			float: left;
+			margin-left: 10px;
+			display: inline;
 		}
 
 		#submit_btn {
@@ -261,9 +276,6 @@ $white: #FFFFFF;
 			margin-left: 310px;
 		}
 	}
-
-
-	
 }
 
 #header {
