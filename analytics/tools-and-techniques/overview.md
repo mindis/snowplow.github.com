@@ -16,10 +16,17 @@ Many business intelligence tools treat data as a cube and enable analysts to sli
 
 In order to use OLAP reporting tools like Tableau and Qlikview, you need to restructure Snowplow data from what is effectively a log file format (where each line represents one event that occured in a specific point of time) into a format suitable for OLAP analysis. (For this reason, you cannot run tools like Tableau and Qlikview directly on top of Snowplow data.) In [this guide] [convert-data-to-format-for-olap], we explain what data structure is necessary for OLAP analysis, and how to quickly restructure Snowplow data to enable the use of these tools.
 
-### 2. [Using Mahout recommendation engines to deliver content or product recommendations with Snowplow][recommendation]
+### 2. [Getting started analysing Snowplow data with R] [r]
+
+R is a wonderfully powerful and flexible environment for performing statistical and graphical analysis. Unfortunately, the command-line approach and compact syntax can make getting up and running with it a steep learning curve for business analysts who are well versed in OLAP and SQL, but don't have much data science experience outside of those types of tools.
+
+The purpose of [this guide] [r] is to introduce the R newbie to the R approach to doing data analysis through concrete examples with Snowplow data.
+
+### 3. [Using Mahout recommendation engines to deliver content or product recommendations with Snowplow][recommendation]
 
 Coming soon.
 
 [convert-data-to-format-for-olap]: /analytics/tools-and-techniques/converting-snowplow-data-into-a-format-suitable-for-olap.html
 [olap]: http://en.wikipedia.org/wiki/OLAP_cube
 [recommendation]: /analytics/tools-and-techniques/using-mahout-recommendation-engines-to-deliver-content-or-product-recommendations-with-snowplow.html
+[r]: /analytics/tools-and-techniques/get-started-analysing-snowplow-data-with-r.html
