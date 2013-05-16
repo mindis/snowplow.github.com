@@ -139,9 +139,11 @@ Tracking a pair of Geographic coordinates is done like so:
 
 {% highlight javascript %}
 {
-    check_in$geo: [-88.21337, 40.11041]
+    check_in$geo: [40.11041, -88.21337] // Lat, long
 }
 {% endhighlight %}
+
+Please note that the datatype takes the format **latitude** followed by **longitude**. That is the same order used by services such as Google Maps.
 
 **Warning:** if you do not add the `$geo` type suffix, then the value will be incorrectly interpreted by Snowplow as an Array of Floating points.
 
