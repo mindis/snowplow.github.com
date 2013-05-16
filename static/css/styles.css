@@ -181,6 +181,27 @@
     font-size: 13px; }
   #contents a {
     text-decoration: none; }
+  #contents form {
+    width: 720px; }
+    #contents form label {
+      width: 100px;
+      float: left;
+      display: inline;
+      text-align: right; }
+    #contents form label.error {
+      width: 100%;
+      display: block;
+      text-align: right;
+      font-size: 10px; }
+    #contents form input {
+      width: 550px;
+      float: left;
+      margin-left: 10px;
+      display: inline; }
+    #contents form #submit_btn {
+      width: 100px;
+      height: 20px;
+      margin-left: 310px; }
 
 #header {
   display: block;

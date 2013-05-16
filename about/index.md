@@ -1,7 +1,7 @@
 ---
 layout: section
 category: about
-title: Contact us
+title: About
 weight: 1
 ---
 
