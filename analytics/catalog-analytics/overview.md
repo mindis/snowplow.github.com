@@ -36,8 +36,10 @@ In this section of the [analytics cookbook] [analytics-cookbook], we outline a r
 
 1. [Measuring the effectiveness of your product pages] [product-pages]
 2. [Measuring how deeply users engage with content pages] [content-pages]
-3. More coming soon...
+3. [Market basket analysis: identifying products and content that go well together] [market-basket-analysis]
+4. More coming soon...
 
 [analytics-cookbook]: /analytics/index.html
 [product-pages]: /analytics/catalog-analytics/measuring-and-comparing-product-page-performance.html
 [content-pages]: /analytics/catalog-analytics/measuring-and-comparing-content-page-performance.html
+[market-basket-analysis]: /analytics/catalog-analytics/market-basket-analysis-identifying-products-that-sell-well-together.html
