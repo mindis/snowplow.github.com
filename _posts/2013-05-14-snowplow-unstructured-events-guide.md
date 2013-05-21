@@ -47,7 +47,7 @@ _snaq.push(['trackUnstructEvent', 'Viewed Product',
 
 Every call to `trackUnstructEvent` has the same structure - the complexity comes from knowing how to structure the `properties` JavaScript object. We will discuss this next:
 
-<h2><a name="properties-object">2. The `properties` JavaScript object</a></h2>
+<h2><a name="properties-object">2. The 'properties' JavaScript object</a></h2>
 
 The `properties` JavaScript consists of a set of individual `name: value` properties.
 
