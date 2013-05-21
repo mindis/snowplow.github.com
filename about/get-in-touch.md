@@ -12,15 +12,16 @@ weight: 4
 <form name="contact" action="">
 	<fieldset>
 		<label for="question" id="question_label">How can we help you?*</label>
-		<textarea name="question" id="question">Type your question in here</textarea>
-	
+		<textarea name="question" id="question">Enter your question here</textarea>
+		<label class="error" for="name" id="question_error">This field is required.</label>
+
 		<label for="name" id="name_label">Name*</label>
 		<input type="text" name="name" id="name" size="30" value="" class="text-input" />
 		<label class="error" for="name" id="name_error">This field is required.</label>
 	  
 	  <label for="email" id="email_label">Email*</label>
 	  <input type="text" name="email" id="email" size="30" value="" class="text-input" />
-	  <label class="error" for="email" id="email_error">This field is required.</label>
+	  <label class="error" for="email" id="email_error">This email address is invalid.</label>
 	  
 	  <label for="phone" id="phone_label">Telephone</label>
 	  <input type="text" name="phone" id="phone" size="30" value="" class="text-input" />
@@ -42,6 +43,8 @@ weight: 4
 	  </select>
 	  <br />
 	  <input type="submit" name="submit" class="button" id="submit_btn" value="Send" />
+	  <br /><p style="display:block;float:right;margin-right:30px;margin-top:20px;font-size:10px;">Note: * indicates a required field</p>
 	</fieldset>
+
 </form>
 </div>
