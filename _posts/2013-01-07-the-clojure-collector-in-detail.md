@@ -105,5 +105,5 @@ Want to help us develop the Clojure Collector, or some other part of the Snowplo
 [siege]: http://www.joedog.org/siege-home/
 [apache-bench]: http://httpd.apache.org/docs/2.2/programs/ab.html
 [storm]: http://storm-project.net/
-[contact]: /contact/index.html
+[contact]: /about/index.html
 [repo]: https://github.com/snowplow/snowplow/tree/master/2-collectors/cloudfront-collector

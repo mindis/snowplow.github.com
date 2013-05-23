@@ -42,7 +42,7 @@ As part of this service we roll out any upgrades to Snowplow.
 * [Get in touch] [get-in-touch] with the Snowplow team to discuss your project
 * Find out about our other professional services, including [analytics services] [analytics], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
 
-[get-in-touch]: /contact/index.html
+[get-in-touch]: /about/index.html
 [analytics]: analytics.html
 [implementation]: implementation.html
 [custom-dev]: custom-development.html

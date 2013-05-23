@@ -31,4 +31,4 @@ This will be the first of many platform analytics recipes - if there are specifi
 [platform-analytics]: /analytics/platform-analytics/overview.html
 [funnel-analysis]: /analytics/platform-analytics/funnel-analysis.html
 [funnel-analysis-with-tableau]: /static/img/analytics/platform-analytics/funnel-analysis/visualization-in-tableau.jpg
-[contact]: /contact/index.html
+[contact]: /about/index.html

@@ -67,4 +67,4 @@ Then [get started][getstarted] with Snowplow, or [get in touch][getintouch] to f
 [powerpivot]: http://www.microsoft.com/en-us/bi/powerpivot.aspx
 [mahout]: http://mahout.apache.org/
 [getstarted]: /product/get-started.html
-[getintouch]: /contact/index.html
+[getintouch]: /about/index.html

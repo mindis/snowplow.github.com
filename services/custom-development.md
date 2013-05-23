@@ -27,7 +27,7 @@ There are two costing models that we apply for custom-development:
 * Find out about our other professional services, including [analytics services] [analytics], [report design and implementation] [reporting] and [custom development] [custom-dev].
 
 [reporting]: reporting.html
-[get-in-touch]: /contact/index.html
+[get-in-touch]: /about/index.html
 [analytics]: analytics.html
 [implementation]: implementation.html
 [custom-dev]: custom-development.html

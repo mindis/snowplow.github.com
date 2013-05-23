@@ -64,7 +64,7 @@ The fixed fees we quote will be based on our [rate card] [rate-card].
 * [Get in touch] [get-in-touch] with the Snowplow team 
 * Find out about our other professional services, including [analytics services] [analytics], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
 
-[get-in-touch]: /contact/index.html
+[get-in-touch]: /about/index.html
 [rate-card]: rate-card.html
 [analytics]: analytics.html
 [implementation]: implementation.html
