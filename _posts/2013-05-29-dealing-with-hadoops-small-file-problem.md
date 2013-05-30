@@ -9,7 +9,7 @@ category: Inside the Plow
 
 Hadoop has a serious Small Files Problem. It's widely known that Hadoop struggles to run MapReduce jobs that involve thousands of small files; Hadoop much prefers to crunch through 10s or 100s of files sized at or around the magic size of 128 megabytes. The technical reasons for this are well explained in this [Cloudera blog post] [cloudera-small-files] - what is less well understood is how badly small files can slow down your Hadoop job, and what to do about it.
 
-<< COOL IMAGE >>
+<img src="/static/img/blog/2013/05/plowing-small-files.jpg" />
 
 In this blog post we will discuss the small files problem in terms of our experiences with it at Snowplow. **And we will argue that dealing with the small files problem - if you have it - is the single most important optimisation you can perform on your MapReduce process.**
 
@@ -29,7 +29,7 @@ This week we implemented a solution to aggregate our tiny CloudFront logs into m
 
 In testing this code and running before- and after- performance tests, we realised just how badly the small file problem was slowing down our Enrichment process. This screenshot shows you what we found:
 
-<< IMAGE >>
+<img src="/static/img/blog/2013/05/small-files-before-after.png" />
 
 That's right - aggregating with the small files first reduced total processing time from 2 hours 57 minutes to just 9 minutes - of which 3 minutes was the aggregation, and 4 minutes was running our actual Enrichment process. That's a speedup of **1,867%**.
 
@@ -37,9 +37,12 @@ To make the comparison as helpful as possible, here is the exact specification o
 
 << TODO >>
 
-This is an astonishing speed-up.
+This is an astonishing speed-up, which shows how badly the small files problem could affect our Hadoop job. Of course, the impact of small files will depend on how many you have, and how sparsely populated they are - and we encourage you to run your own benchmarks.
+
+So how did we fix the small files problem for Snowplow? In the next section we will discuss possible solutions, and in the last section we will go into some more detail on the solution we chose.
 
 We are not saying that implementing a speedup will always increase in a XX speedup - certainly 
 
 [cloudera-small-files]: http://blog.cloudera.com/blog/2009/02/the-small-files-problem/
 [scalding]: https://github.com/twitter/scalding/wiki
+[milestone-086]: https://github.com/snowplow/snowplow/issues?milestone=22&page=1&state=open
