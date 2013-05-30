@@ -7,7 +7,7 @@ author: Alex
 category: Inside the Plow
 ---
 
-Hadoop has a serious Small Files Problem. It's widely known that Hadoop struggles to run MapReduce jobs that involve thousands of small files; Hadoop much prefers to crunch through 10s or 100s of files sized at or around the magic size of 128 megabytes. The technical reasons for this are well explained in this [Cloudera blog post] [cloudera-small-files] - what is less well understood is how badly small files can slow down your Hadoop job, and what to do about it.
+Hadoop has a serious Small Files Problem. It's widely known that Hadoop struggles to run MapReduce jobs that involve thousands of small files; Hadoop much prefers to crunch through tens or hundreds of files sized at or around the magic size of 128 megabytes. The technical reasons for this are well explained in this [Cloudera blog post] [cloudera-small-files] - what is less well understood is how badly small files can slow down your Hadoop job, and what to do about it.
 
 <img src="/static/img/blog/2013/05/plowing-small-files.jpg" />
 
@@ -25,7 +25,7 @@ So you can see that our Enrichment process ran pretty directly into Hadoop's sma
 
 ## Quantifying the small file problem
 
-This week we implemented a solution to aggregate our tiny CloudFront logs into more sensibly sized input files - we will be releasing this as part of [Snowplow 0.8.6] [milestone-086] shortly.
+This week we implemented a solution to aggregate our tiny CloudFront logs into more sensibly sized input files - this enhancement will be released as part of [Snowplow 0.8.6] [milestone-086] shortly.
 
 In testing this code and running before- and after- performance tests, we realised just how badly the small file problem was slowing down our Enrichment process. This screenshot shows you what we found:
 
@@ -35,9 +35,17 @@ That's right - aggregating with the small files first reduced total processing t
 
 To make the comparison as helpful as possible, here is the exact specification of the before- and after- test:
 
-<< TODO >>
+| Metric              | Before (with small files)    | After (with small files aggregated) |
+|:--------------------|:-----------------------------|:------------------------------------|
+| **Log files in**    | 26,372                       | 26,372                              | 
+| **part- files out** | 23,618                       | 141                                 |
+| **Events out**      | 83,110                       | 83,110                              |
+| **Execution time**  | 177 minutes                  | 9 minutes                           |
+| **Cluster**         | 1 x m1.large, 18 x m1.medium | 1 x m1.large, 18 x m1.medium        |
 
-This is an astonishing speed-up, which shows how badly the small files problem could affect our Hadoop job. Of course, the impact of small files will depend on how many you have, and how sparsely populated they are - and we encourage you to run your own benchmarks.
+This is an astonishing speed-up, which shows how badly the small files problem could affect our Hadoop job. And the small files were not just impacting our Hadoop job - the much smaller number of `part-` output files sped up the load of events into Redshift dramatically.
+
+**Of course, the negative impact of small files will depend on how many you have, and how sparsely populated they are - and we encourage you to run your own benchmarks.**
 
 So how did we fix the small files problem for Snowplow? In the next section we will discuss possible solutions, and in the last section we will go into some more detail on the solution we chose.
 
