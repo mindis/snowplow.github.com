@@ -33,20 +33,20 @@ In testing this code and running before- and after- performance tests, we realis
 
 That's right - aggregating with the small files first reduced total processing time from 2 hours 57 minutes to just 9 minutes - of which 3 minutes was the aggregation, and 4 minutes was running our actual Enrichment process. That's a speedup of **1,867%**.
 
-To make the comparison as helpful as possible, here is the exact specification of the before- and after- test:
+To make the comparison as helpful as possible, here is the exact specification of the before- and after- test. We have also added a second after- run with a more realistic cluster size.
 
-| Metric                   | Before (with small files)    | After (with small files aggregated) |
-|:-------------------------|:-----------------------------|:------------------------------------|
-| **Source log files**     | 26,372                       | 26,372                              |
-| **Files read by job**    | Source log files             | Aggregated log files                |
-| **Location of files**    | Amazon S3                    | HDFS on CORE instances              |
-| **File compression**     | Gzip                         | LZO                                 |
-| **part- files out**      | 23,618                       | 141                                 |
-| **Events out**           | 83,110                       | 83,110                              |
-| **Cluster**              | 1 x m1.large, 18 x m1.medium | 1 x m1.large, 18 x m1.medium        |
-| **Execution time**       | **177 minutes**              | **9 minutes**                       |
-| **Aggregate step time**  | -                            | 3 minutes                           |
-| **ETL step time**        | 166 minutes                  | 4 minutes                           |
+| Metric                   | Before (with small files)    | After (with small files aggregated) | After (with smaller cluster) |
+|:-------------------------|:-----------------------------|:------------------------------------|------------------------------|
+| **Source log files**     | 26,372                       | 26,372                              | 26,372                       |
+| **Files read by job**    | Source log files             | Aggregated log files                | Aggregated log files         |
+| **Location of files**    | Amazon S3                    | HDFS on Core instances              | HDFS on Core instances       |
+| **File compression**     | Gzip                         | LZO                                 | LZO                          |
+| **part- files out**      | 23,618                       | 141                                 | 141                          |
+| **Events out**           | 83,110                       | 83,110                              | 83,110                       |
+| **Cluster**              | 1 x m1.large, 18 x m1.medium | 1 x m1.large, 18 x m1.medium        | 1 x m1.small, 1 x m1.small   |
+| **Execution time**       | **177 minutes**              | **9 minutes**                       | **39 minutes**               |
+| **Aggregate step time**  | -                            | 3 minutes                           | 11 minutes                   |
+| **ETL step time**        | 166 minutes                  | 4 minutes                           | 25 minutes                   |
 
 **Health warning:** this is one single benchmark, measuring the performance of the [Snowplow Hadoop job] [etl-repo] using a single data set. We encourage you to run your own benchmarks.
 
