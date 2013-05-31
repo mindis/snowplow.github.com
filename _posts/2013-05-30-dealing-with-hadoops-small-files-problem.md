@@ -47,6 +47,7 @@ To make the comparison as helpful as possible, here is the exact specification o
 | **Execution time**       | **177 minutes**              | **9 minutes**                       | **39 minutes**               |
 | **Aggregate step time**  | -                            | 3 minutes                           | 11 minutes                   |
 | **ETL step time**        | 166 minutes                  | 4 minutes                           | 25 minutes                   |
+| **Norm. instance hours** | 120                          | 40                                  | 2                            |
 
 **Health warning:** this is one single benchmark, measuring the performance of the [Snowplow Hadoop job] [etl-repo] using a single data set. We encourage you to run your own benchmarks.
 
