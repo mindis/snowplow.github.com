@@ -74,7 +74,7 @@ In the end, though, we opted for option 3, for a few reasons:
 
 With that decided, we then looked for options to aggregate and compact small files on Hadoop, identifying three possible solutions:
 
-1. [**filecrush**] [filecrush] - a highly configurable tool by [Edward Capriolo] [edwardcapriolo] to "crush" small files on HDFS. It supports a rich set of configuration arguments and is available as a jarfile ready to run on your cluster. It's a sophisticated tool - for example, by default it won't bother crushing a file which is within 75% of the HDFS block size already. Unfortunately, it does not work yet with Amazon's s3:// paths, only hdfs:// paths - and our [pull request] [filecrush-pr] to add this functionality is incomplete
+1. [**filecrush**] [filecrush] - a highly configurable tool by [Edward Capriolo] [edwardcapriolo] to "crush" small files on HDFS. It supports a rich set of configuration arguments and is available as a jarfile ([download it here] [filecrush-dl]) ready to run on your cluster. It's a sophisticated tool - for example, by default it won't bother crushing a file which is within 75% of the HDFS block size already. Unfortunately, it does not work yet with Amazon's s3:// paths, only hdfs:// paths - and our [pull request] [filecrush-pr] to add this functionality is incomplete
 2. [**Consolidator**] [consolidator] - a Hadoop file consolidation tool from the [dfs-datastores] [dfs-datastores] library, written by [Nathan Marz] [nathanmarz]. There is scant documentation for this - we could only find one paragraph, [in this email thread] [consolidator-thread]. It has fewer capabilities than filecrush, and could do with a CLI-like wrapper to invoke it (we started writing just such a wrapper but then we found filecrush)
 3. [**S3DistCp**] [s3distcp] - created by Amazon as an S3-friendly adaptation of Hadoop's [DistCp] [distcp] utility for HDFS. Don't be fooled by the name - if you are running on Elastic MapReduce, then this can deal with your small files problem using its `--groupBy` option for aggregating files (which the original DistCp seems to lack)
 
@@ -159,6 +159,7 @@ So that's everything - hopefully this post has helped to illustrate just how bad
 [filecrush]: https://github.com/edwardcapriolo/filecrush
 [edwardcapriolo]: https://github.com/edwardcapriolo
 [filecrush-pr]: https://github.com/edwardcapriolo/filecrush/pull/2
+[filecrush-dl]: http://www.jointhegrid.com/hadoop_filecrush/
 
 [consolidator]: https://github.com/nathanmarz/dfs-datastores/blob/develop/dfs-datastores/src/main/java/com/backtype/hadoop/Consolidator.java
 [dfs-datastores]: https://github.com/nathanmarz/dfs-datastores
