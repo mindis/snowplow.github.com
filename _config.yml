@@ -15,7 +15,7 @@ pygments:    true
 markdown:    maruku
 permalink:   /blog/:year/:month/:day/:title
 paginate:    5
-paginate_file: blog.html
+paginate_file: blog.html 
 
 maruku:
   use_tex:    false
@@ -41,3 +41,14 @@ kramdown:
     coderay_tab_width: 4
     coderay_bold_every: 10
     coderay_css: style
+
+authors:
+  Yali:
+    display_name: Yali Sassoon
+    url:          /yali.html
+    avatar:       tbd
+
+  Alex:
+    display_name: Alex Dean 
+    url:          /alex.html
+    avatar:       tbd
