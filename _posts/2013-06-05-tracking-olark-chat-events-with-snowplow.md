@@ -13,7 +13,7 @@ As some of you will have noticed, we recently installed [Olark] [olark] on the S
 
 Setting up Olark was an incredibly easy process - the Olark team provides a very straightforward [quick start guide][olark-get-started]. We tested Olark for a week on the Snowplow website - we wanted to see:
 
-1. Whether people visiting the site would want to chat to us?
+1. Whether people visiting the site would want to chat to us.
 2. Whether the chats were "useful" i.e. did they drive visitors to become Snowplow users? Did they help us identify content on the site that was confusing and needed clarification? Does it help drive sales of [Snowplow professional services] [pro-services].
 
 What became clear very quickly was that only a minority of visitors to the Snowplow site were interested in chatting. However, the "usefulness" of those chats was very high - already two professional services contracts have been won off the back of initial conversations powered by Olark. And in addition, we learnt a lot about where out content needs clarifying.
@@ -23,9 +23,9 @@ The testing of Olark to date has been qualitative however. Longer term, we want 
 1. The type of user behaviour on the site that typically leads up to a user reaching out to us on Olark
 2. The type of user behaviour on the site that leads to a user being responsive to us reaching out to them via Olark
 3. What impact do conversation on Olark have on the visitors subsequent browsing behaviour (and likelihood to start using Snowplow and buying Snowplow professional services)?
-4. How good (quick) we are at responding to visitors reaching out to us via Olark
+4. How good (quick) we are at responding to visitors reaching out to us via Olark?
 
-In this blog post, we will describe how we used [Snowplow structured events] [struct-events] to track Olark chat events. In a future blog post, we will analyse the data collected in Snowplow, to show how to answer the four questions outlined above. (We'll write this once we've been running Olark for a while, so have a good data set to use to peform the analysis.)
+In this blog post, we will describe how we used [Snowplow structured events] [struct-events] to track Olark chat events. In a future blog post, we will analyze the data collected in Snowplow, to show how to answer the four questions outlined above. (We'll write this once we've been running Olark for a while, so have a good data set to use to peform the analysis.)
 
 <!--more-->
 
@@ -75,14 +75,14 @@ _snaq.push(['trackStructEvent', 'contact', 'olark_chat', 'message_to_operator', 
 
 Secondly, we've created a rule that fires the tag when an event occurs in the dataLayer called 'olarkMessageToOperator'. This is triggered by Javascript that we added to out page template.
 
-Now that our first tag is setup, we need to create an analogous tag, but one that fires when the operator sends a message to the visitor. (Rather than the visitor sending a message to the operator.) This is done as shown below:
+Now that our first tag is setup, we need to create an analogous tag, one that fires when the operator sends a message to the visitor. (Rather than the visitor sending a message to the operator.) This is done as shown below:
 
 ![gtm-create-tag-2][gtm-2]
 
-And bingo! We create a new version in Google Tag Manager, and publish the changes. Simple! Now, for every visitor to our website, we will record in granular data a line of data in Snowplow  whenever they send a message to us, and another line of data every time we send a message back. We'll be able to analyse when someone pings us: 
+And bingo! We create a new version in Google Tag Manager, and publish the changes. Simple! Now, for every visitor to our website, we will record in granular detail a line of data in Snowplow  whenever they send a message to us, and another line of data every time we send a message back. We'll be able to analyze: 
 
 * How quickly we respond to messages from visitors
-* When visitors respond to messages from us. (When should we reach out, and when shouldn't we)
+* When visitors tend respond to messages from us. (When should we reach out, and when we shouldn't.)
 * What impact chats on Olark have, in aggregate on visitor's subsequent behaviour on the site. (Are they more likely to engage deeply with the site? Are they more likely to look at our Github repo? Are they more likely to look at the professional services pages? Does any of the above vary by the length of the chat? Or the location of the visitor? Or the amount of time the visitor had spend on our site prior to talking to us via Olark?) 
 
 We'll cover how to perform the above analysis in a future blog post.
