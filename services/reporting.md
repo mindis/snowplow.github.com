@@ -1,24 +1,22 @@
 ---
 layout: section
 category: services
-title: Report design and implementation
-weight: 3
+title: KPI and dashboards
+weight: 5
 ---
 
-# Report design and implementation
+# KPI and dashboards
 
-We deliver actionable, easy-to-understand KPI that enable your team to make the decisions they need to reach their specific goals.
+We deliver actionable, easy-to-understand KPI and dashbaords on top of Snowplow data that enable your team to make the decisions they need to reach their specific goals.
 
-Learn more about our approach to report design and implementation below:
+Learn more about our approach to designing and implementing KPI, dashboards and reporting cubes below:
 
 1. [Context](#context)
 2. [Approach](#approach)
 3. [Project output](#output)
-4. [Prices](#prices)
-5. [Learn more](#learn-more)
+4. [Learn more](#learn-more)
 
-<a name="context" />
-## Context
+<a name="context"><h2>Context</h2></a>
 
 When properly designed and delivered, a small set of KPI can enable a team to:
 
@@ -31,38 +29,22 @@ KPI are therefore enormously valuable. Unfortunately, KPI, especially KPI based 
 1. Teams typically get 'swamped' in web analytics data, making it difficult to see the wood from the trees
 2. KPI are not specifically identified around a team's particular goals, or take into account the broader company / product in which they function. As a result, KPI for things like 'user engagement' typically involve rough proxies (e.g. average page views per visit) that do not capture what 'successful engagement' looks like for a particular product / team / company
 3. KPI are typically not designed with the levers that a team can pull in mind. As a result, they are not *actionable*: people look at them and think "that's interesting", but the numbers they look at don't lead them to make quick decisions that have a meaningful impact
+4. KPIs fail to distinguish different *types* of users and the *type* of activity they are engaged with
 
-<a name="approach" />
-## Our approach
+<a name="approach"><h2>Approach</h2></a> 
 
-1. We work with our clients to understand (i) their goals, (ii) the key success factors for achieving those goals and (iii) the levers at their disposal for reaching those goals
+1. We work with our clients to understand (i) their goals, (ii) the key success factors for achieving those goals, (iii) the levers at their disposal for reaching those goals and (iv) how their audience segment and the different kinds of activity their visitors engage in on their websites
 2. We look at the complete set of data available to measure progress against those goals, and analyse: (i) what has happened to date, (ii) how relevant different data points are, and (iii) how sensitive to key success factors
 3. On the basis of the above we design and mockup an easy to read KPI dashboard, and iterate this with the client. (This may or may not include Snowplow data, as appropriate.)
 4. When the client is happy with the dashboard we implement it technically.
 
-<a name="output" />
-## Output
+<a name="output"><h2>Output</h2></a>
 
-The output of the project is either a working set of reports, delivered on a timely basis, or a complete specification for the client's development team to deliver those reports.
+The output of the project is either a working set of dashboards and reports, delivered on a timely basis, or a complete specification for the client's development team to deliver those reports.
 
+<a name="learn-more"><h2>Sounds interesting?</h2></a>
 
-<a name="prices" />
-## Prices
-
-Reporting design and implementation projects generally involve two phases:
-
-1. An analysis phase (corresponding to steps 1-3 above)
-2. An implementation phase
-
-We generally estimate the complete project cost and do the first part on a fixed fee basis, after which we give a fixed fee quote for the 2nd part.
-
-The fixed fees we quote will be based on our [rate card] [rate-card].
-
-<a name="learn-more" />
-## Learn more
-
-* [Get in touch] [get-in-touch] with the Snowplow team 
-* Find out about our other professional services, including [analytics services] [analytics], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
+[Get in touch] [get-in-touch] with the Snowplow team to discuss your requirements.
 
 [get-in-touch]: /about/index.html
 [rate-card]: rate-card.html

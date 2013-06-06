@@ -5,7 +5,6 @@ category: blog
 ---
 <div id="contents">
 	{% for post in paginator.posts %}
-		<a name="{{ post.shortenedlink }}" />
 		<div class="post">
 			{{ post.date | date_to_string }}
 			<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>

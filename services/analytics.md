@@ -1,11 +1,11 @@
 ---
 layout: section
 category: services
-title: Analytics Projects
-weight: 2
+title: Web and event analytics
+weight: 4
 ---
 
-# Analytics Projects
+# Web and event analytics
 
 We help you use your customer, catalogue and web analytics data to drive platform development and marketing decisions. 
 
@@ -15,8 +15,7 @@ Learn more about our approach to analytics projects below:
 2. [Approach](#approach)
 3. [Project output](#output)
 4. [Examples of our work](#examples)
-5. [Prices](#prices)
-6. [Learn more](#learn-more)
+5. [Learn more](#learn-more)
 
 
 <a name="context"><h2>1. Context</h2></a>
@@ -79,19 +78,10 @@ The analysis revealed a number of commercially significant findings:
 
 Note: the above graph was produced using two data sets exported out of Google Analytics and joined together. (Ecomm sales data and page view data.) A better two metrics to plot on the X-axis and Y-axis would be "unique users who viewed page" and "unique users who bought the product". This is possible with Snowplow data, but not with data exported from GA.
 
-<a name="prices"><h2>5. Prices</h2></a>
 
-Analytics projects are done for clients on a fixed fee basis, where the fee will be project-specific. Our estimate of the fixed fee will be based on an estimate of the man-days required to complete the project, which is a function of:
+<a name="learn-more"><h2>Sounds interesting?</h2></a>
 
-1. The project scope (exactly what questions will be answering)
-2. The available data sets
-
-Man-days are charged out based on our [rate card] [rate-card]. However, once these have been estimated, they are fixed. 
-
-
-<a name="learn-more"><h2>Learn more</h2></a>
-
-[Get in touch] [get-in-touch] with the Snowplow team to discuss your project. Find out about our other professional services, including [report design and implementation] [reporting], [Snowplow implementations] [implementation] and [custom development] [custom-dev].
+[Get in touch] [get-in-touch] with the Snowplow team to discuss your project. 
 
 [engagement-graph-1]: img/user-dist-by-days-used-service-by-month-perc-breakdown.jpg
 [engagement-graph-2]: img/user-dist-by-days-used-service-by-month-actual-figs.jpg

@@ -7,23 +7,22 @@ weight: 1
 
 # Snowplow Professional Services
 
-The Snowplow team works with clients on four different types of Snowplow-related projects:
+We offer five types of professional service:
 
-1. [Analytics projects] [analytics]. Have a specific business question that you'd like to answer using your customer / platform / catalogue data? The Snowplow team can work with you to frame your question and use your data (incl. web analtyics) data to answer it
-2. [Report design and implementation] [reporting]. What are the most important KPIs to monitor as you work towards reaching a mid-long term goal? The Snowplow team can help you develop a small number of specific KPIs and actionable reports, to keep your business moving in the right direction
-3. [Snowplow implementation] [implementation]. We can help you implement Snowplow, by identifying all the relevant actions you should be tracking (and capturing via the Snowplow tags), and working with your technical team to implement the Snowplow infrastructure
-4. [Custom development] [custom-dev]. Require an extension to the core Snowplow features set? We work with clients to extend Snowplow to meet their specific needs
+1. [Snowplow implementation] [implementation]. We support clients implementing Snowplow, including running proof-of-concepts, rolling Snowplow out across domains and applications, integrating Snowplow data with third party data sets and designing and implementing dashboards and reporting cubes on top of Snowplow and connected data.
+2. [Snowplow Care] [care]. A monthly support contract for Snowplow Enterprise customers.
+3. [Web and event analytics] [analytics]. We help companies make the most of Snowplow data to answer the business questions that matter to them: including designing research questions, formulating hypotheses and testing and iterating hypotheses with Snowplow event data.
+4. [KPI and dashboards] [reporting]. We design KPI and reporting dashboards on top of Snowplow and other data sets that monitor your progress against the business objectives that matter most to you.
+5. [Data pipelines and algorithms] [pipelines]. We bring our experience delivering sophisticated, scalable, fault-tolerent data pipelines for Snowplow and help companies use the same cutting edge technology (Hadoop, HBase, Cascading, Scalding, Cascalog, Amazon Redshift) to deliver scalable, reliable data pipelines and ETL processes for other (non-Snowplow) datasets.
 
-[Get in touch] [get-in-touch] with the Snowplow team to discuss your project needs. View our [rate card] [rate-card] for pricing details. 
 
-### Other sources of Snowplow support
+## Other sources of Snowplow support
 
 As well as supporting clients through our professional services team, we provide lower-level, ad hoc support via
 
 1. Our [Google group] [google-group]
 2. The Snowplow [Github repository] [github-repo]. (For technical issues / bug reporting)
 
-[Learn more][analytics] about Snowplow Professional Services.
 
 [analytics]: analytics.html
 [reporting]: reporting.html
@@ -33,3 +32,5 @@ As well as supporting clients through our professional services team, we provide
 [google-group]: https://groups.google.com/forum/#!forum/snowplow-user
 [github-repo]: http://github.com/snowplow/snowplow
 [get-in-touch]: /about/index.html 
+[care]: snowplow-care.html
+[pipelines]: pipelines.html
