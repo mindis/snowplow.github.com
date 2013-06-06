@@ -96,4 +96,3 @@ We'll cover how to perform the above analysis in a future blog post.
 [gtm-1]: /static/img/blog/2013/06/olark/gtm-create-tag.JPG
 [gtm-2]: /static/img/blog/2013/06/olark/gtm-create-tag-2.JPG
 [struct-events]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#wiki-custom-structured-events
-[struct-events]
