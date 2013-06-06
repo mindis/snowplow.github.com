@@ -31,7 +31,7 @@ There are several places you can learn more about Snowplow:
 * All the sourcecode is available [on Github] [github-repo].
 * Check out the [blog] [blog] for news of new releases and discussion of the development approach behind Snowplow
 
-[setup-guide]: https://github.com/snowplow/snowplow/wiki/Snowplow-setup-guide
+[setup-guide]: https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow
 [technical-documentation]: https://github.com/snowplow/snowplow/wiki/Snowplow-technical-documentation
 [github-repo]: https://github.com/snowplow/snowplow
 [tech-architecture]: /technology/index.html
