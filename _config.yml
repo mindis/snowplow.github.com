@@ -4,7 +4,7 @@ server:      false
 server_port: 4000
 baseurl:     /
 url:         http://snowplowanalytics.com
-title:       | Snowplow Analytics - the world's most powerful, flexible, open source analytics platform
+title:       Snowplow Analytics - the world's most powerful, flexible, open source analytics platform
 
 source:      .
 destination: ./_site
