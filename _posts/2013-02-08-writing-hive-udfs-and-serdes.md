@@ -223,11 +223,13 @@ And then finally you can use our new UDF in your HiveQL queries, something like 
 
 That completes our article. If you would like to download the example code above as a working project, you can find it on GitHub here: https://github.com/snowplow/hive-example-udf
 
+I hope to return with further articles about Hive and Hadoop in the future - potentially one on writing a custom serde - an area where we have a lot of experience at Snowplow Analytics.
+
 ## Looking for help performing analytics or developing data pipelines using Hive and other Hadoop-powered tools
 
-[Learn more] [pipelines] about services offered by the [Snowplow Professional Services team] [pipeline].
+[Learn more] [pipeline] about services offered by the [Snowplow Professional Services team] [pipeline].
 
-I hope to return with further articles about Hive and Hadoop in the future - potentially one on writing a custom serde - an area where we have a lot of experience at Snowplow Analytics.
+
 
 [alex]: https://github.com/alexanderdean
 [journal]: http://sdjournal.org/apache-hadoop-ecosystem/?a_aid=bartoszmiedeksza&a_bid=45f0d439

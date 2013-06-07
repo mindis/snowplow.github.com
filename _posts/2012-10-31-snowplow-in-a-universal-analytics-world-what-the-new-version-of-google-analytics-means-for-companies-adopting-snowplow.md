@@ -32,7 +32,7 @@ For businesses using GA, being able to augment Google's user identification with
 
 <!--more-->
 
-<a name="customer-journey"><h3>1.2 Capturing events across a user's entire customer journey (not just the web, not just digital </h3></a>interactions)
+<a name="customer-journey"><h3>1.2 Capturing events across a user's entire customer journey (not just the web, not just digital interactions)</h3></a>
 
 We have long argued that web analytics is just one customer data source - and that analysts performing customer analytics need to crunch data covering the customer's complete journey, including other digital channels and offline interactions. That means joining data sets from different digital products and offline data sets to generate a single customer view. To date, companies that have implemented "single customer views" have typically struggled incorporating web behaviour in those views.
 
