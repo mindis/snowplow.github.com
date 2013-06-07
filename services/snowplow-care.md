@@ -2,7 +2,7 @@
 layout: section
 category: services
 title: Snowplow Care
-weight: 3
+weight: 6
 ---
 
 # Snowplow Care: ongoing support from the Snowplow Professional Services team

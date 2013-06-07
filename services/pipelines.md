@@ -2,7 +2,7 @@
 layout: section
 category: services
 title: Data pipelines and algorithms
-weight: 6
+weight: 5
 ---
 
 # Data pipelines and algorithms

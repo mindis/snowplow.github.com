@@ -2,7 +2,7 @@
 layout: section
 category: services
 title: Web and event analytics
-weight: 4
+weight: 3
 ---
 
 # Web and event analytics

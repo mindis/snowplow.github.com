@@ -2,7 +2,7 @@
 layout: section
 category: services
 title: KPI and dashboards
-weight: 5
+weight: 4
 ---
 
 # KPI and dashboards
