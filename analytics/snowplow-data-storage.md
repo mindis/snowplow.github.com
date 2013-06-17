@@ -87,7 +87,7 @@ We plan to incorporate [SkyDB] [skydb] to enable specialist analysis of behavior
 [hbase]: http://hbase.apache.org/
 [hive-table-def]: https://github.com/snowplow/snowplow/blob/master/4-storage/hive-storage/hive-format-table-def.q
 [getting-started-with-hive]: https://github.com/snowplow/snowplow/wiki/Running-Hive-using-the-command-line-tools
-[setup-guide]: https://github.com/snowplow/snowplow/wiki/Snowplow%20setup%20guide
+[setup-guide]: https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow
 [s3-logo]: /static/img/amazon_s3_logo.jpg
 [redshift]: http://aws.amazon.com/redshift/
 [skydb]: http://skydb.io/
