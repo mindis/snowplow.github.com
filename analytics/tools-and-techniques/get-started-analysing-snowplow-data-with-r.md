@@ -15,6 +15,8 @@ This guide is geared towards data analysts who have limited or no experience wit
 3. [Having a look at the data: an introduction to data frames in R](#intro-to-data-frames)
 4. [Creating our first plot](#1st-plot)
 5. [A more complicated example: comparing visit characteristics by a range of dimensions](#more-complex-example)
+6. [Introducing factors in R](#factors)
+7. [Producing some more interesting plots with ggplot2](#more-interesting-plots)
 
 <a name="why"><h2>1. Why use R?</h2></a>
 
@@ -365,7 +367,156 @@ Now that we have our query, we can pull the data into R:
 ")
 {% endhighlight %}
 
+Our `visits` data frame is more complicated than the `uniquesByDay` data frame we created last time. Let's inspect the structure:
+
+{% highlight r %}
+> str(visits)
+'data.frame':	21521 obs. of  13 variables:
+ $ domain_userid         : chr  "602978179116344f" "eb11ac6179052d3d" "20e77808d8778a3b" "eb11ac6179052d3d" ...
+ $ domain_sessionidx     : int  61 2 1 3 10 1 1 4 24 1 ...
+ $ geo_country           : chr  "GB" "GB" "GB" "GB" ...
+ $ br_type               : chr  "Browser" "Browser" "Browser" "Browser" ...
+ $ landing_page          : chr  "/" "/" "/" "/blog/2013/02/15/snowplow-0.7.3-released/" ...
+ $ refr_medium           : chr  "" "" "search" "internal" ...
+ $ refr_source           : chr  "" "" "Google" "" ...
+ $ refr_term             : chr  "" "" "" "" ...
+ $ refr_urlhost          : chr  "" "" "www.google.co.uk" "snowplowanalytics.com" ...
+ $ visited_services_pages: chr  NA NA "1" NA ...
+ $ time_of_first_touch   : POSIXct, format: "2013-02-22 11:51:27" "2013-02-22 11:52:56" ...
+ $ distinct_pages_visited: num  1 2 4 1 1 4 4 2 5 10 ...
+ $ number_of_events      : num  5 4 5 1 1 4 6 2 5 32 ...
+> 
+{% endhighlight %}
+
+Back to [top](#top).
+
+<a name="factors"><h2>6. Introducing factors in R</h2></a>
+
+This is a convenient moment to take a quick aside from our example and introduce factors in R.
+
+In data analysis, we can distinguish three types of variable:
+
+| **Type of variable**   | **Description**   | **Example**   |
+|:-----------------------|:------------------|:--------------|
+| Continuous | A variable that can take any value with a range | Height of a person, session length |
+| Ordinal    | A discrete (not continuous) variable, but one in which there is an order | Sizes of T-shirt (small / medium / large) |
+| Nominal    | A discrete (not continuous) variable, where there is no inherent order between values | Landing pages |
+
+Continuous variables in R are typically numeric. Ordinal and nominal variables are factors. We can tell R which of the columns in our data frame are factors. This will help R
+
+1. Process our data more efficiently
+2. Plot our data more intelligently (because R will understand the type of variable in each column)
+
+`domain_userid`, for example, is a factor: it can take one of a finite (but large) number of values of cookies set. It is an unordered factor, because there is no hierarchy between values. We can tell R it is factor by entering:
+
+{% highlight r %}
+visits$domain_userid <- as.factor(visits$domain_userid)
+{% endhighlight %}
+
+If we inspect the structure of that column, we'll see it is now a factor:
+
+{% highlight r %}
+> str(visits$domain_userid)
+ Factor w/ 9621 levels "","0002ade0b7018c82",..: 3661 8850 1268 8850 596 1142 1619 8850 8695 426 ...
+{% endhighlight %}
+
+Let's update the status of our other dimensions in the same way:
+
+{% highlight r %}
+> visits$domain_sessionidx <- as.factor(visits$domain_sessionidx)
+> visits$geo_country <- as.factor(visits$geo_country)
+> visits$br_type <- as.factor(visits$br_type)
+> visits$landing_page <- as.factor(visits$landing_page)
+> visits$refr_medium <- as.factor(visits$refr_medium)
+> visits$refr_source <- as.factor(visits$refr_source)
+> visits$refr_term <- as.factor(visits$refr_term)
+> visits$refr_urlhost <- as.factor(visits$refr_urlhost)
+> visits$visited_services_pages <- as.factor(visits$visited_services_pages)
+> 
+{% endhighlight %}
+
+We can view the updated structure of the data frame:
+
+{% highlight r %}
+> str(visits)
+'data.frame':	21521 obs. of  13 variables:
+ $ domain_userid         : Factor w/ 9621 levels "","0002ade0b7018c82",..: 3661 8850 1268 8850 596 1142 1619 8850 8695 426 ...
+ $ domain_sessionidx     : Factor w/ 194 levels "0","1","2","3",..: 62 3 2 4 11 2 2 5 25 2 ...
+ $ geo_country           : Factor w/ 106 levels "A1","AD","AE",..: 36 36 36 36 35 25 100 36 53 35 ...
+ $ br_type               : Factor w/ 4 levels "Browser","Email Client",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ landing_page          : Factor w/ 137 levels "","/","/about/community.html",..: 2 2 2 74 21 2 25 103 45 2 ...
+ $ refr_medium           : Factor w/ 6 levels "","email","internal",..: 1 1 4 3 4 1 1 3 1 1 ...
+ $ refr_source           : Factor w/ 19 levels "","Bing Images",..: 1 1 6 1 6 1 1 1 1 1 ...
+ $ refr_term             : Factor w/ 56 levels "","arduino","CHARTIO",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ refr_urlhost          : Factor w/ 156 levels "","ab-analytics.com",..: 1 1 104 40 114 1 1 40 1 1 ...
+ $ visited_services_pages: Factor w/ 1 level "1": NA NA 1 NA NA NA NA NA NA 1 ...
+ $ time_of_first_touch   : POSIXct, format: "2013-02-22 11:51:27" "2013-02-22 11:52:56" ...
+ $ distinct_pages_visited: num  1 2 4 1 1 4 4 2 5 10 ...
+ $ number_of_events      : num  5 4 5 1 1 4 6 2 5 32 ...
+> 
+{% endhighlight %}
+
+Back to [top](#top).
+
+<a name="more-interesting-plots"><h2>7. Producing some more interesting plots</h2></a>
+
+Let's start by examining the breadth and depth of engagement by visit:
+
+{% highlight r %}
+> qplot(distinct_pages_visited, number_of_events, data=visits, geom="point")
+{% endhighlight %}
+
+![basic-bread-and-depth][graph-2]
+
+That is *kind of* interesting: it shows that we have visitors who engage very deeply with only one page on our site (e.g. the visitor at the top left of the scatter) **and** we have visitors who engage lightly across a broad range of pages (bottom right) and deeply with a lot of pages (top right). However, most of the points are in the bottom left, and they are too closely spaced to see how closely packed they are.
+
+We can get a clearer view if we plot a jitter plot: this "jitters" points left and right about where they would otherwise be plotted, making it easier to identify areas with a high concentration of points:
+
+{% highlight r %}
+> qplot(distinct_pages_visited, number_of_events, data=visits, geom="jitter", alpha=I(5/100)) + 
+scale_y_continuous(limits=c(0,250)) + 
+scale_x_continuous(limits=c(0,20))
+
+Warning message:
+Removed 69 rows containing missing values (geom_point).
+{% endhighlight %}
+
+![jitter-with-transparency][graph-3]
+
+Note: we have changed the plot type from "point" to "jitter" to jitter each point. The "alpha" argument is responsible for point transparency: we have set it to 5% (i.e. 20 points in one place will be required to create a black spot). The `scale_y_continuous` and `scale_x_continuous` arguments scale the x and y axes so that we zoom in on the point of the graph where most of our visits lie. R has kindly reminded us that some of our points lie outside this range, and so have been been removed.
+
+The graph shows us that the majority of visitors do not engage deeply. It actually appears that engagement is likely to be *deeper* if a visitor visits *fewer* pages. That is interesting: we can explore if using a boxplot:
+
+{% highlight r %}
+> qplot(factor(distinct_pages_visited), number_of_events, data=visits, geom="boxplot") + 
+scale_y_continuous(limits=c(0,500))
+{% endhighlight %}
+
+![boxplot][graph-4]
+
+The boxplot shows that are earlier intuition was wrong: engagement depth increases *with* breadth. We had thought looking at the jittered plot that a higher proportion of people who only engaged with one page engaged more deeply. Now we can see that this was false: it looked to be the case, because the absolute number of poeple engaging deeply who only look at one page is higher than the actual number who engage deeply with a broader set. The boxplot controls for the difference in absolute numbers: we are instead looking at the distribution within each breadth level.
+
+One thing to notice is that when producing the boxplot, we plot `factor(distinct_pages_visited)` on the x-axis rather than simply `distinct_pages_visited`. That is because whereas a scatter or jitter plot can be produced by plotting a continuous variable on the x-axis, a boxplot requires a discrete variable. Applying the `factor` function converts our continuous variable into a discrete variable very simply: in general, R makes converting one type of variable into another very simple.
+
+The boxplot above was interesting: it showed very clearly a relationship between breadth and depth of engagement by visit. Let's use the same plot, but this time to compare breadth of engagement by landing page:
+
+{% highlight r %}
+> qplot(landing_page, distinct_pages_visited, data=visits, geom="boxplot")
+{% endhighlight %}
+
+![messy-boxplot][graph-5]
+
+Ouch - this graph is very messy: breadth of engagement does appear to vary by landing page, but there are too many (100+) landing pages to make the analysis straight forward. What we want is to plot the results just for the top 10 landing pages, by number of visits.
+
+Back to [top](#top).
+
+
+
+
+
 [install-r]: https://github.com/snowplow/snowplow/wiki/Setting-up-R-to-perform-more-sophisticated-analysis-on-your-data
 [graph-1]: /static/img/analytics/tools/r/uniques-by-day.png
-
-
+[graph-2]: /static/img/analytics/tools/r/breadth-and-depth-engagement.png
+[graph-3]: /static/img/analytics/tools/r/jitter-with-transparency.png
+[graph-4]: /static/img/analytics/tools/r/boxplot.png
+[graph-5]: /static/img/analytics/tools/r/messy-boxplot.png
