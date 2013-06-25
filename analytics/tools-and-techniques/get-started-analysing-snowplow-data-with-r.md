@@ -190,7 +190,7 @@ The plot appears in a new window:
 
 Back to [top](#top).
 
-<a name="more-complex-example">5. A more complicated example: comparing visit characteristics by a range of dimensions</a>
+<a name="more-complex-example"><h2>5. A more complicated example: comparing visit characteristics by a range of dimensions</h2></a>
 
 The previous example was simple start. It didn't enable us to do anything that could not easily be achieved using any other visualization tool.
 
