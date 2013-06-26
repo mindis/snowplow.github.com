@@ -8,7 +8,7 @@ weight: 3
 
 <a name="top"><h1>Getting started analyzing Snowplow data with R</h1></a>
 
-This guide is geared towards data analysts who have limited or no experience with R. It aims to teach R through concrete examples with Snowplow data - so you can start using R to answer business questions and draw out interesting insights from your Snowplow data fast, whilst growing familiarity with the underlying tool and approach.
+This guide is geared towards data analysts who have limited or no experience with R. It aims to get the reader started with R through concrete examples with Snowplow data - so that by the end of the guide, the reader can pull Snowplow data into R, play around with it and plot it. That should leave the reader comfortable enough to use other resources to build out her knowledge of R, and give her enough knowledge to start using R to perform productive analytics on Snowplow data.
 
 1. [Why use R?](#why)
 2. [Getting started: plotting the number of uniques per day](#start)
@@ -17,6 +17,9 @@ This guide is geared towards data analysts who have limited or no experience wit
 5. [A more complicated example: comparing visit characteristics by a range of dimensions](#more-complex-example)
 6. [Introducing factors in R](#factors)
 7. [Producing some more interesting plots with ggplot2](#more-interesting-plots)
+8. [Where to go from here](#further-reading)
+
+In the first section of this guide, we outline why R is such an excellent tool to use. Next (sections 2 to 4), we work through how to pull a simple data set from Snowplow and visualize it in R. In sections 5 to 7, we work through a more complicated set of examples: one in which we pull a more involved data set from Snowplow, and visualize it in a number of ways that are difficult with traditional BI / OLAP tools in Excel. 
 
 <a name="why"><h2>1. Why use R?</h2></a>
 
@@ -28,6 +31,7 @@ R is a fantastic analytics tool. To date, however, only a minority of web analys
 * It is blindingly fast to both perform complicated analytics and generate beautiful visualizations. The syntax is incredibly concise - what you can achieve in one line of R can take hours of working through menus and options on other systems.
 * It helps you think through what you do with your data in a more rigorous way. R forces you to define your data types much more specifically than either Excel or BI tools like Tableau. That rigour is helpful - it means you do things faster, and you're less liable to make mistakes.
 * It is great at statistics. Traditional BI tools and Excel *suck* at statistics. Sure you can calculate means, medians, quartiles etc. But actually pulling these together into meaningful distribution plots, or plotting how they change over time, is a pain in these tools, which are much better at counting and summing data. R is simply much better at statistics
+* It is a great tool for modelling data: it is straightforward to create models in R, and compare those models to your actual data sets, either formally through calculation, or by plotting you model(s) against your data(sets)
 * It has an **enormous** library of packages available for performing just about any type of analytics imaginable
 * It is free
 * It works on all platforms
@@ -39,6 +43,8 @@ In this guide, we cover them by working through practical examples with Snowplow
 Back to [top](#top).
 
 <a name="start"><h2>2. Getting started: plotting the number of unique visitors by day</h2></a>
+
+*If you have not installed R yet, instructions on doing so can be found [here][install-r].*
 
 This guide assumes you have installed R, and installed the `RPostgreSQL` package required to get R to talk to PostgreSQL databases including Amazon Redshift. If you have not, installed this, you can do so by executing the following at the R prompt:
 
@@ -192,16 +198,16 @@ Back to [top](#top).
 
 <a name="more-complex-example"><h2>5. A more complicated example: comparing visit characteristics by a range of dimensions</h2></a>
 
-The previous example was simple start. It didn't enable us to do anything that could not easily be achieved using any other visualization tool.
+The previous example a was simple enough start. It didn't enable us to do anything that could not easily be achieved using any other visualization tool.
 
-In our second example, we'll pull a more complicated data set from Snowplow, and try out some visualizations in GGPlot (boxplot and jittered scattergrams) that I think are awesome at conveying distribution information, and are not well supported by other tools.
+In our second example, we'll pull a more complicated data set from Snowplow, and try out some visualizations in GGPlot2 (boxplot and jittered scattergrams) that I think are awesome at conveying distribution information, and are not well supported by other tools.
 
 For this example, we're going to look at visit data by a number of different dimensions, and produce different plots to see how different visit characteristics vary with those different dimensions. This is classically something that is well supported by a BI / OLAP tool like Tableau. The example shows that R has those same capabilities, and in addition, a broader set of visualizations to enable us to unpick relationships between metrics and dimensions.
 
 First, we need to design a SQL query to pull the cut of data we want. In this case, we want visit level data. We want to capture the following metrics for each visit:
 
 * Number of distinct pages viewed (i.e. breadth of content engaged with)
-* Total number of events (as a measure of engagement)
+* Total number of events (as a measure of depth engagement)
 
 With the following dimensions:
 
@@ -226,7 +232,7 @@ count(distinct(page_urlpath)) AS "distinct_pages_visited",
 count(*) as "number_of_events"
 FROM "public"."events"
 WHERE collector_tstamp > '2013-02-22'
-GROUP BY "domain_userid, domain_sessionidx, geo_country, br_type
+GROUP BY domain_userid, domain_sessionidx, geo_country, br_type
 {% endhighlight %}
 
 We need to add a line about whether or not one of our services pages was visited as part of the customer journey. We can identify all the visits where the visitor did pop by one of our services pages by executing the following query:
@@ -494,7 +500,7 @@ scale_y_continuous(limits=c(0,500))
 
 ![boxplot][graph-4]
 
-The boxplot shows that are earlier intuition was wrong: engagement depth increases *with* breadth. We had thought looking at the jittered plot that a higher proportion of people who only engaged with one page engaged more deeply. Now we can see that this was false: it looked to be the case, because the absolute number of poeple engaging deeply who only look at one page is higher than the actual number who engage deeply with a broader set. The boxplot controls for the difference in absolute numbers: we are instead looking at the distribution within each breadth level.
+The boxplot shows that our earlier intuition was wrong: engagement depth increases *with* breadth. We had thought looking at the jittered plot that a higher proportion of people who only engaged with one page engaged more deeply. Now we can see that this was false: it looked to be the case, because the absolute number of people engaging deeply who only look at one page is higher than the actual number who engage deeply with a broader set. The boxplot controls for the difference in absolute numbers: we are instead looking at the distribution within each breadth level.
 
 One thing to notice is that when producing the boxplot, we plot `factor(distinct_pages_visited)` on the x-axis rather than simply `distinct_pages_visited`. That is because whereas a scatter or jitter plot can be produced by plotting a continuous variable on the x-axis, a boxplot requires a discrete variable. Applying the `factor` function converts our continuous variable into a discrete variable very simply: in general, R makes converting one type of variable into another very simple.
 
@@ -508,6 +514,120 @@ The boxplot above was interesting: it showed very clearly a relationship between
 
 Ouch - this graph is very messy: breadth of engagement does appear to vary by landing page, but there are too many (100+) landing pages to make the analysis straight forward. What we want is to plot the results just for the top 10 landing pages, by number of visits.
 
+To do this, let's start by identifying the top 10 landing pages by number of visits. This is a straightforward query to write in SQL: luckily a package is available for R called `sqldf` that enables you to to execute SQL statements against data frames in R directly, and returns the results as a new data frame:
+
+{% highlight r %}
+> install.packages("sqldf")
+> library("sqldf")
+Loading required package: DBI
+Loading required package: gsubfn
+Loading required package: proto
+Loading required namespace: tcltk
+Loading required package: chron
+Loading required package: RSQLite
+Loading required package: RSQLite.extfuns
+> topLandingPages = sqldf("select landing_page, count(*) as cnt from visits group by landing_page order by cnt desc limit 10")
+{% endhighlight %}
+
+We've now created a data frame with two columns: `landing_page` (with the landing page name) and `cnt` (with the count of visits). There are 10 lines of data in the frame, which corresopnd to the top 10 landing pages by number of visits.
+
+We can now use this to create a subset of the `visit` data so we only include visits where the landing page is in our top 10 list:
+
+{% highlight r %}
+> visitsSubset <- subset(visits, landing_page %in% topLandingPage$landing_page)
+{% endhighlight %}
+
+Before we produce our plot, it would be nice to make `landing_page` an ordered factor, where the ordering is determined by the number of visits. This is straightforward to do:
+
+{% highlight r %}
+> visitsSubset$landing_page <- factor(
+visitsSubset$landing_page, 
+levels = topLandingPages$landing_page, 
+ordered=TRUE)
+{% endhighlight %}
+
+We can now plot breadth of engagement by landing page, just for the top landing page:
+
+{% highlight r %}
+> qplot(landing_page, distinct_pages_visited, data=visitsSubset, geom="boxplot")
+{% endhighlight %}
+
+![boxplot-messy-axis][graph-6]
+
+We can tidy up the x-axis by aligning the labels on the axis vertically, by adding ` + theme(axis.text.x = element_text(angle=90, vjust=0.4))` to our command. We can also hide the outliers on our plot, to make it clear, by adding `outlier.shape=NA`:
+
+{% highlight r %}
+> qplot(landing_page, distinct_pages_visited, data=visitsSubset, geom="boxplot", outlier.shape=NA) + 
+theme(axis.text.x = element_text(angle=90, vjust=0.4)) + 
+scale_y_continuous(limits=c(0,15))
+{% endhighlight %}
+
+![tidy-boxplot-breadth-of-engagement][graph-7]
+
+The results are very interesting: visitors who land on the homepage and analytics cookbook are much more likely to engage more broadly with content on the site, rather than visitors who land on the specific blog posts (e.g. on writing Hive UDFs or dealing with Hadoop small files problem.)
+
+Let's see if there is a similar pattern in the *depth* of engagement by landing page. (This is likely: remember we showed in our first boxplot that visitors who engage more broadly are more likely to also engage more deeply.)
+
+{% highlight r %}
+> qplot(landing_page, number_of_events, data=visitsSubset, geom="boxplot", outlier.shape=NA) + 
+theme(axis.text.x = element_text(angle=90, vjust=0.4)) + 
+scale_y_continuous(limits=c(0,20))
+{% endhighlight %}
+
+![tidy-boxplot-depth-of-engagement][graph-8]
+
+The impact of landing page on depth of engagement is not nearly as pronounced as that between landing page and depth of engagement. That is likely to be because of both:
+
+* The *intent* of people landing on specific blog posts is likely to be much more focused on learning specific bits of information (that may not be Snowplow specific), rather than learn about Snowplow in general. (Which someone landing on the hoempage or cookbook homepage are likely to be interested in.)
+* The design of the homepage and analytics cookbook homepage encourage users to explore beyond the page much more forcefully than the links that surround individual blog posts.
+
+Let's now have a look and see if breadth of engagement changes depending on the referer type. To do this, we simply swap out `landing_page` as our x-axis dimension (first argument in `qplot`) and swap in `refr_medium`. Also note that we have switched back to using our original data frame `visits`, rather than the subset we created for the landing page analysis:
+
+{% highlight r %}
+> qplot(refr_medium, number_of_events, data=visits, geom="boxplot", outlier.shape=NA) +
+scale_y_continuous(limits=c(0,30))
+{% endhighlight %}
+
+Visitors from email and search tend to engage more deeply with the Snowplow content. Are they more likely to buy our services, though?
+
+{% highlight r %}
+> qplot(refr_medium, data=visits, fill=visited_services_page geom="bar", position="fill")
+{% endhighlight %}
+
+![barchart-conversion-by-refr-medium][graph-9]
+
+Note that `position="fill"` makes each bar on our bar graph extend 100%.
+
+The chart is interesting - it suggests that even though e.g. direct visitors engage less deeply, overall, they are more likely to visit our services pages (and hence convert) than visitors from search. The relationship between level of engagement and conversion isn't straightforward - we can explore it by comparing our engagement scatter plots (breadth vs depth) for visitors that did visit the services page, with those that do not:
+
+{% highlight r %}
+> qplot(distinct_pages_visited, number_of_events, data=visits, 
+facets = visited_services_pages ~.,geom="jitter", alpha=I(5/100)) + 
+scale_y_continuous(limits=c(0,250)) + 
+scale_x_continuous(limits=c(0,20))
+{% endhighlight %}
+
+![facetted-scatter-plot][graph-10]
+
+We used the `facet` argument above to ask R to plot us two version of the scatter plot, one for visits where the services pages were visted, and one for visits where they were not, to see if the overall pattern of engagement for the two groups is different. The results are interesting: they suggest that in both cases, there is a strong relationship between breadth and depth of engagement. (These are highly correlated.) However, visitors that visited the services pages are *more likely* to engage both more deeply and more broadly, overall, than those who do not, as evidenced from the lower fraction of points at the bottom right of the graph. (Further visualization work is required to specify this more precisely.)
+
+Back to [top](#top).
+
+<a name="further-reading"><h2>1. Where to go from here?</h2></a>
+
+This tutorial barely scratches the surface of what is possible with R. The purpose of it is to give enough familiarity with basic R functions around fetching data, managing data via data frames, and plotting data, that the reader will be able to get up and running with R on top of Snowplow data.
+
+There is a wealth of material on R available. The following are some recommended resources:
+
+* [R in Action][r-in-action]. An excellent and thorough overview of R, with lots of straightforward-to-follow examples
+* Hacley Wickham's excellent [ggplot2][ggplot2] book. Written by the author of `ggplot2`, this covers the actual graphics grammar implemented by this excellent library
+* [R-bloggers][r-bloggers]. Regular updates, recipes and R-related news
+
+We will be buildling out the number of recipes in the Snowplow Analytics cookbook that use R. At the moment, we have:
+
+* [Performing market basket analysis with R] [market-basket analysis]
+* **More to come**...
+
 Back to [top](#top).
 
 
@@ -520,3 +640,12 @@ Back to [top](#top).
 [graph-3]: /static/img/analytics/tools/r/jitter-with-transparency.png
 [graph-4]: /static/img/analytics/tools/r/boxplot.png
 [graph-5]: /static/img/analytics/tools/r/messy-boxplot.png
+[graph-6]: /static/img/analytics/tools/r/boxplot-messy-axis.png
+[graph-7]: /static/img/analytics/tools/r/tidy-boxplot-engagement-breadth-by-landing-page.png
+[graph-8]: /static/img/analytics/tools/r/boxplot-depth-of-engagement-by-landing-page.png
+[graph-9]: /static/img/analytics/tools/r/barchart-conversion-by-refr-medium.png
+[graph-10]: /static/img/analytics/tools/r/facetted-scatter.png
+[r-in-action]: http://www.manning.com/kabacoff/
+[r-bloggers]: http://www.r-bloggers.com/
+[market-basket analysis]: /analytics/catalog-analytics/market-basket-analysis-identifying-products-that-sell-well-together.html
+[ggplot2]: http://www.amazon.com/gp/product/0387981403
