@@ -102,6 +102,7 @@ Although the number of page views is a standard metric in web analytics, this re
 As a result, counting the total number of events (including page views but also other AJAX events) is actually a more meaningful thing to do than to count the number of page views, as we have done above. We recommend setting up Snowplow so that *all* events / actions that a user takes are tracked. Hence, running the below queries should return a total sum of events on the site by time period:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
 count(*) AS "events"
@@ -122,6 +123,7 @@ In ChartIO:
 The number of pages per visit can be calculated by visit very straightforwardly:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 domain_userid || '-' || domain_sessionidx AS "session",
 count(*) as pages_visited
@@ -134,6 +136,7 @@ group by session;
 We can then aggregate our data by number of pages per visit, to produce a frequency table:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 pages_visited,
 count(*) as "frequency"
@@ -160,6 +163,7 @@ In ChartIO:
 First we need to identify all the sessions that were 'bounces'. These are visits where there is only a single event captured: the initial page view:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 domain_userid,
 domain_sessionidx,
@@ -176,9 +180,10 @@ This query returns a line of data for every session. For each, it logs a timesta
 To calculate bounce rate by day, we take the above table, aggregate the results by day, sum the number of bounces and divide it by the total number of sessions:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 to_char(time_first_touch, 'YYYY-MM-DD') AS "Date",
-sum(bounces)/count(*) as "Bounce rate"
+sum(bounces)::real/count(*) as "Bounce rate"
 from (
 	select
 	domain_userid,
@@ -193,6 +198,8 @@ from (
 group by Date
 order by Date;
 {% endhighlight %}
+
+Note that we have to cast sum(bounces) as a 'real' number, to force Redshift / PostgreSQL to output a real number rather than an integer for the bounce rate.
 
 In ChartIO:
 
