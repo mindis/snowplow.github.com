@@ -293,10 +293,6 @@ group by "Date"
 order by "Date";
 {% endhighlight %}
 
-In ChartIO:
-
-![average-duration-by-month][average-duration-by-month]
-
 [Back to top](#top)
 
 <a name="language"><h2>9. Demographics: language</h2></a>
@@ -304,17 +300,15 @@ In ChartIO:
 For each event the browser language is stored in the `br_language` field. As a result, counting the number of visitors in a time period by language is trivial:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
+/* Redshift / PostgreSQL */
 SELECT
 br_lang,
-COUNT(DISTINCT(domain_userid)) AS visits
-FROM `events_008_cf`
-WHERE collector_dt>'2012-12-31'
-GROUP BY br_lang
-ORDER By visits DESC
+count(distinct(domain_userid)) as "visitors"
+from events
+where collector_tstamp > current_date - integer '31'
+group by br_lang
+order by "visitors" desc;
 {% endhighlight %}
-
-Note that rather than dividing the visits by language, it may make more sense to divide 
 
 In ChartIO:
 
@@ -324,7 +318,26 @@ In ChartIO:
 
 <a name="location"><h2>10. Demographics: location</h2></a>
 
-THIS NEEDS TO BE DONE IN CONJUNCTION WITH MAXIMIND DATABASE OR OTHER GEOIP DATABASE, BASED ON IP - TO WRITE
+We can identify the geographic location of users using the `geo_country`, `geo_region`, `geo_city`, `geo_zipcode`, `geo_latitude` and `geo_longitude` fields.
+
+To calculate the number of visitors in the last month by country, simply execute:
+
+{% highlight mysql %}
+/* Redshift / PostgreSQL */
+SELECT
+geo_country,
+count(distinct(domain_userid)) as "visitors"
+from events
+where collector_tstamp > current_date - integer '31'
+group by geo_country
+order by "visitors" desc;
+{% endhighlight %}
+
+In ChartIO:
+
+![visitors-by-country][visitors-by-country-chartio]
+
+To create a geographical plot, you'll need to use another tool like [R] [r] or [Tableau] [tableau].
 
 [Back to top](#top)
 
@@ -739,3 +752,7 @@ Plotting the results in ChartIO:
 [visits-by-operating-system]: /static/img/analytics/basic-recipes/visits-by-operating-system.png
 [split-in-visits-by-mobile-vs-desktop]: /static/img/analytics/basic-recipes/split-in-visits-by-mobile-vs-desktop.png
 [page-views-per-visit-frequency-table-chartio]: /static/img/analytics/basic-recipes/page-views-per-visit-frequency-table-chartio.png
+[visitors-by-country-chartio]: /static/img/analytics/basic-recipes/visitors-by-country-chartio.png 
+[tableau]: http://www.tableausoftware.com/
+[r]: http://cran.r-project.org/
+
