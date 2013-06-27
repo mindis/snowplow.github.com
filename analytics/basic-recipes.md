@@ -34,42 +34,16 @@ The following queries will work with both Hive and Infobright.
 
  <a name="counting-unique-visitors"><h2>1. Number of unique visitors </h2></a>
 
-The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period e.g. day. (Because each user is assigned a unique domain_userid, based on a lack of Snowplow tracking cookies on their browser):
+The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period. (Because each user is assigned a unique domain_userid, based on a lack of Snowplow tracking cookies on their browser):
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-collector_dt AS date,
-COUNT(DISTINCT(domain_userid)) AS uniques
-FROM `events_008`
-GROUP BY collector_dt
-ORDER BY collector_dt;
-{% endhighlight %}
-
-Or by week:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-YEAR(collector_dt) AS `year`,
-WEEKOFYEAR(collector_dt) AS `week`,
-COUNT(DISTINCT(domain_userid)) AS uniques
-FROM `events_008`
-GROUP BY `year`, `week`
-ORDER BY `year`, `week`
-{% endhighlight %}
-
-Or by month:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-YEAR(collector_dt) AS `year`,
-MONTH(collector_dt) AS `month`,
-COUNT(DISTINCT(domain_userid)) AS uniques
-FROM `events_008`
-GROUP BY `year`, `month`
-ORDER BY `year`, `month`
+{% highlight sql %}
+select
+to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
+count(distinct(domain_userid)) as "Uniques"
+from events
+where collector_tstamp > current_date - integer '31'
+group by Date
+order by Date;
 {% endhighlight %}
 
 In ChartIO:
@@ -82,14 +56,14 @@ In ChartIO:
 
 Because each user might visit a site more than once, summing the number of `domain_userid`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, Snowplow assigns that session with a `domain_sessionidx` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `domain_userid` with the `domain_sessionidx` and then count the number of distinct concatenated entry in the events table:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-collector_dt AS `date`,
-COUNT( DISTINCT( CONCAT( domain_userid,"-",domain_sessionidx ))) AS `visits`
-FROM `events_008`
-GROUP BY collector_dt 
-ORDER BY collector_dt;
+{% highlight sql %}
+select
+to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
+count( distinct( domain_userid || '-' || domain_sessionidx )) AS "visits"
+from events
+where collector_tstamp > current_date - integer '31'
+group by "Date" 
+order by "Date";
 {% endhighlight %}
 
 In ChartIO:
@@ -100,19 +74,19 @@ In ChartIO:
 
  <a name="counting-pageviews"><h2>3. Number of page views</h2></a>
 
-Page views are one type of event that are stored in the Snowplow events table. Their defining feature is that the `page_title` contain values (are not `NULL`). In the case of an *event* that is not a page view (e.g. an _add to basket_) these fields would all be `NULL`, and the event fields (`ev_category`, `ev_action`, `ev_label` etc.) would contain values. For details, see the [Introduction to the Snowplow events table](https://github.com/snowplow/snowplow/blog/master/docs/07_snowplow_hive_tables_introduction.md).
+Page views are one type of event that are stored in the Snowplow events table. They can easily be identified using the `event` field, which is set to 'page_view'.
 
 To count the number of page views by day, then we simply execute the following query:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-collector_dt,
-COUNT( DISTINCT( event_id )) AS page_views
-FROM `events_008`
-WHERE `event` = 'page_view'
-GROUP BY collector_dt 
-ORDER BY collector_dt;
+{% highlight sql %}
+select
+to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
+count(*) AS "page_views"
+from events
+where collector_tstamp > current_date - integer '31'
+and event = 'page_view'
+group by "Date" 
+order by "Date";
 {% endhighlight %}
 
 In ChartIO:
@@ -127,37 +101,19 @@ Although the number of page views is a standard metric in web analytics, this re
 
 As a result, counting the total number of events (including page views but also other AJAX events) is actually a more meaningful thing to do than to count the number of page views, as we have done above. We recommend setting up Snowplow so that *all* events / actions that a user takes are tracked. Hence, running the below queries should return a total sum of events on the site by time period:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-collector_dt AS `date`,
-COUNT(DISTINCT(event_id)) AS `events`
-FROM `events_008`
-WHERE collector_dt>'2012-11-25'
-GROUP BY collector_dt 
-ORDER BY collector_dt;
+{% highlight sql %}
+select
+to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
+count(*) AS "events"
+from events
+where collector_tstamp > current_date - integer '31'
+group by "Date" 
+order by "Date";
 {% endhighlight %}
 
 In ChartIO:
 
 ![events-by-day][events-by-day]
-
-As well as looking at page views by time period, we can also look by user e.g. by grouping on `domain_userid`. This gives a good impression of the engagement level of each of our users: how does this vary across our user population, how it varies for a particular user over time, for example.
-
-For example, to examine the engagement by user by month, we execute the following query:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-YEAR(collector_dt) AS `year`,
-MONTH(collector_dt) AS `month`,
-domain_userid AS `user`,
-COUNT(event_id) AS `events`
-FROM `events_008`
-GROUP BY `year`, `month`, `user`;
-{% endhighlight %}
-
-There is scope to taking a progressively more nuanced approach to measuring user engagement levels. For more details see the section on [measuring user engagement with Snowplow][measure-user-engagement].
 
 [Back to top](#top)
 
@@ -165,72 +121,77 @@ There is scope to taking a progressively more nuanced approach to measuring user
 
 The number of pages per visit can be calculated by visit very straightforwardly:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-CONCAT(domain_userid,"-",domain_sessionidx) AS `session`,
-count(distinct(event_id)) AS page_views
-FROM `events_008`
-WHERE `event` = 'page_view'
-GROUP BY `session`;
+{% highlight sql %}
+select
+domain_userid || '-' || domain_sessionidx AS "session",
+count(*) as pages_visited
+from events
+where event = 'page_view'
+and collector_tstamp > current_date - integer '31'
+group by session;
 {% endhighlight %}
 
-To calculate the average page views per week we group the results of the above query by week and then average over the results:
+We can then aggregate our data by number of pages per visit, to produce a frequency table:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-DATE_FORMAT(date,  '%Y-%v') AS `week`,
-AVG(page_views) AS `average_pageviews`
-FROM (
-	SELECT
-	CONCAT(domain_userid,"-",domain_sessionidx) AS `session`,
-	MIN(collector_dt) AS `date`,
-	count(distinct(event_id)) AS page_views
-	FROM `events_008`
-	WHERE `event` = 'page_view'
-	GROUP BY `session`) pvs_by_visit
-GROUP BY `week`;
+{% highlight sql %}
+select
+pages_visited,
+count(*) as "frequency"
+from (
+	select
+	domain_userid || '-' || domain_sessionidx AS "session",
+	count(*) as pages_visited
+	from events
+	where event = 'page_view'
+	group by session
+) as page_view_per_visit
+group by pages_visited
+order by pages_visited;
 {% endhighlight %}
 
 In ChartIO:
 
-![avg-pvs-per-visit-per-week-chartio][avg-pvs-per-visit-per-week-chartio]
+![page-views-per-visit-frequency-table-chartio][page-views-per-visit-frequency-table-chartio]
 
 [Back to top](#top)
 
  <a name="bounce-rate"><h2>6. Bounce rate</h2></a>
 
-First we need to look at all the website visits, and flag which of those visits are *bounces*: these are visits where there is only one page view i.e. `COUNT( DISTINCT ( event_id )) = 1`:
+First we need to identify all the sessions that were 'bounces'. These are visits where there is only a single event captured: the initial page view:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-MIN(collector_dt) AS `date`,
-CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-IF(COUNT(DISTINCT(event_id)) = 1, 1,0)  AS bounce
-FROM `events_008`
-GROUP BY `session`
-) ;
+{% highlight sql %}
+select
+domain_userid,
+domain_sessionidx,
+min(collector_tstamp) as time_first_touch,
+count(*) as number_of_events,
+case when count(*) = 1 then 1 else 0 end as bounces
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx
 {% endhighlight %}
 
-Then we need to calculate the fraction of visits by time period that are *bounces* e.g. by day:
+This query returns a line of data for every session. For each, it logs a timestamp, the number of events, and a flag that is set to 1 if the visitor bounced.
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-date,
-sum(bounce)/count(session) as fraction_of_visits_that_bounce
-FROM (
-	SELECT
-	MIN(collector_dt) AS `date`,
-	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-	IF(COUNT(DISTINCT(event_id)) = 1, 1,0)  AS bounce
-	FROM `events_008`
-	GROUP BY `session`) v
-WHERE `date`>'2012-11-26'
-GROUP BY `date`
-ORDER BY `date`;
+To calculate bounce rate by day, we take the above table, aggregate the results by day, sum the number of bounces and divide it by the total number of sessions:
+
+{% highlight sql %}
+select
+to_char(time_first_touch, 'YYYY-MM-DD') AS "Date",
+sum(bounces)/count(*) as "Bounce rate"
+from (
+	select
+	domain_userid,
+	domain_sessionidx,
+	min(collector_tstamp) as time_first_touch,
+	count(*) as number_of_events,
+	case when count(*) = 1 then 1 else 0 end as bounces
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx
+) v
+group by Date
+order by Date;
 {% endhighlight %}
 
 In ChartIO:
@@ -760,3 +721,4 @@ Plotting the results in ChartIO:
 [visits-by-browser-type]: /static/img/analytics/basic-recipes/visits-by-browser-type-chartio.png
 [visits-by-operating-system]: /static/img/analytics/basic-recipes/visits-by-operating-system.png
 [split-in-visits-by-mobile-vs-desktop]: /static/img/analytics/basic-recipes/split-in-visits-by-mobile-vs-desktop.png
+[page-views-per-visit-frequency-table-chartio]: /static/img/analytics/basic-recipes/page-views-per-visit-frequency-table-chartio.png
