@@ -37,6 +37,7 @@ The following queries will work with both Hive and Infobright.
 The number of unique visitors can be calculated by summing the number of distinct `domain_userid`s in a specified time period. (Because each user is assigned a unique domain_userid, based on a lack of Snowplow tracking cookies on their browser):
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
 count(distinct(domain_userid)) as "Uniques"
@@ -57,6 +58,7 @@ In ChartIO:
 Because each user might visit a site more than once, summing the number of `domain_userid`s returns the number if *visitors*, NOT the number of *visits*. Every time a user visits the site, however, Snowplow assigns that session with a `domain_sessionidx` (e.g. `1` for their first visit, `2` for their second.) Hence, to count the number of visits in a time period, we concatenate the unique `domain_userid` with the `domain_sessionidx` and then count the number of distinct concatenated entry in the events table:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
 count( distinct( domain_userid || '-' || domain_sessionidx )) AS "visits"
@@ -79,6 +81,7 @@ Page views are one type of event that are stored in the Snowplow events table. T
 To count the number of page views by day, then we simply execute the following query:
 
 {% highlight sql %}
+/* Redshift / PostgreSQL */
 select
 to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
 count(*) AS "page_views"
@@ -126,7 +129,7 @@ The number of pages per visit can be calculated by visit very straightforwardly:
 /* Redshift / PostgreSQL */
 select
 domain_userid || '-' || domain_sessionidx AS "session",
-count(*) as pages_visited
+count(*) as "pages_visited"
 from events
 where event = 'page_view'
 and collector_tstamp > current_date - integer '31'
@@ -143,7 +146,7 @@ count(*) as "frequency"
 from (
 	select
 	domain_userid || '-' || domain_sessionidx AS "session",
-	count(*) as pages_visited
+	count(*) as "pages_visited"
 	from events
 	where event = 'page_view'
 	group by session
@@ -167,8 +170,8 @@ First we need to identify all the sessions that were 'bounces'. These are visits
 select
 domain_userid,
 domain_sessionidx,
-min(collector_tstamp) as time_first_touch,
-count(*) as number_of_events,
+min(collector_tstamp) as "time_first_touch",
+count(*) as "number_of_events",
 case when count(*) = 1 then 1 else 0 end as bounces
 from events
 where collector_tstamp > current_date - integer '31'
@@ -188,8 +191,8 @@ from (
 	select
 	domain_userid,
 	domain_sessionidx,
-	min(collector_tstamp) as time_first_touch,
-	count(*) as number_of_events,
+	min(collector_tstamp) as "time_first_touch",
+	count(*) as "number_of_events",
 	case when count(*) = 1 then 1 else 0 end as bounces
 	from events
 	where collector_tstamp > current_date - integer '31'
@@ -214,31 +217,35 @@ A new visit is easily identified as a visit where the domain_sessionidx = 1. Hen
 First, we create a table with every visit stored, and identify which visits were "new":
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-MIN(collector_dt) AS `date`,
-CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-IF(domain_sessionidx = 1, 1, 0)  AS new_visit
-FROM `events_008`
-GROUP BY `session`
+/* Redshift / PostgreSQL */
+select
+min(collector_tstamp) AS "time_first_touch",
+domain_userid, 
+domain_sessionidx,
+case when domain_sessionidx = 1 then 1 else 0 end as "first_visit"
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx
 {% endhighlight %}
 
 Then we aggregate the visits over our desired time period, and calculate the fraction of them that are new:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-date,
-sum(new_visit)/count(session) as fraction_of_visits_that_are_new
-FROM (
-	SELECT
-	MIN(collector_dt) AS `date`,
-	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-	IF(domain_sessionidx = 1, 1, 0)  AS new_visit
-	FROM `events_008`
-	GROUP BY `session`) v
-GROUP BY `date`
-ORDER BY `date`;
+/* Redshift / PostgreSQL */
+select
+to_char(time_first_touch, 'YYYY-MM-DD') as "Date",
+sum(first_visit)::real/count(*) as "fraction_of_visits_that_are_new"
+from (
+	select
+	min(collector_tstamp) AS "time_first_touch",
+	domain_userid, 
+	domain_sessionidx,
+	case when domain_sessionidx = 1 then 1 else 0 end as "first_visit"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx) v
+group by "date"
+ORDER BY "date";
 {% endhighlight %}
 
 In ChartIO:
@@ -247,40 +254,43 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="duration"><h2>8. Average visitor duration</h2></a>
+<a name="duration"><h2>8. Average visitor duration</h2></a>
 
 To calculate this, 1st we need to calculate the duration of every visit:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-MIN(collector_dt) AS `date`,
-CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-MIN(CONCAT(collector_dt, " ", collector_tm))  AS start_time,
-MAX(CONCAT(collector_dt, " ", collector_tm)) AS finish_time,
-UNIX_TIMESTAMP(MAX(CONCAT(collector_dt, " ", collector_tm))) - UNIX_TIMESTAMP(MIN(CONCAT(collector_dt, " ", collector_tm))) AS duration
-FROM `events_008`
-GROUP BY `session`;
+/* Redshift / PostgreSQL */
+select
+domain_userid,
+domain_sessionidx,
+min(collector_tstamp) as "start_time",
+max(collector_tstamp) as "finish_time",
+max(collector_tstamp) - min(collector_tstamp) as "duration"
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx;
 {% endhighlight %}
 
 Then we simply average visit durations over the time period we're interested e.g. by day:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-`date`,
-AVG(`duration`) AS average_visit_duration
-FROM (
-	SELECT
-	MIN(collector_dt) AS `date`,
-	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-	MIN(CONCAT(collector_dt, " ", collector_tm))  AS start_time,
-	MAX(CONCAT(collector_dt, " ", collector_tm)) AS finish_time,
-	UNIX_TIMESTAMP(MAX(CONCAT(collector_dt, " ", collector_tm))) - UNIX_TIMESTAMP(MIN(CONCAT(collector_dt, " ", collector_tm))) AS duration
-	FROM `events_008`
-	GROUP BY `session` )v
-GROUP BY `date`
-ORDER BY `date`;
+/* Redshift / PostgreSQL */
+select
+to_char(start_time, 'YYYY-MM-DD') AS "Date",
+avg(duration)/1000000 as "average_visit_duration_seconds"
+from (
+	select
+	domain_userid,
+	domain_sessionidx,
+	min(collector_tstamp) as "start_time",
+	max(collector_tstamp) as "finish_time",
+	max(collector_tstamp) - min(collector_tstamp) as "duration"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx
+) v
+group by "Date"
+order by "Date";
 {% endhighlight %}
 
 In ChartIO:
