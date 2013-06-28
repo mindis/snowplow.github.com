@@ -214,7 +214,7 @@ With the following dimensions:
 * Whether or not the user visited our "services" page. (A goal of ours is to drive visitors to buy our services.)
 * The landing page the visitor arrived on
 * The referer that drove them to our website
-* The timestamp the visit started. (So we can analyse e.g. how behaviour varies by day of the week.)
+* The timestamp the visit started. (So we can analyse e.g. how behavior varies by day of the week.)
 * Which country the visitor is located in
 * The browser type
 * How many times the visitor had visited our website previously
@@ -613,7 +613,7 @@ We used the `facet` argument above to ask R to plot us two version of the scatte
 
 Back to [top](#top).
 
-<a name="further-reading"><h2>1. Where to go from here?</h2></a>
+<a name="further-reading"><h2>8. Where to go from here?</h2></a>
 
 This tutorial barely scratches the surface of what is possible with R. The purpose of it is to give enough familiarity with basic R functions around fetching data, managing data via data frames, and plotting data, that the reader will be able to get up and running with R on top of Snowplow data.
 

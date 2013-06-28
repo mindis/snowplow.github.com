@@ -34,13 +34,13 @@ For businesses using GA, being able to augment Google's user identification with
 
 <a name="customer-journey"><h3>1.2 Capturing events across a user's entire customer journey (not just the web, not just digital interactions)</h3></a>
 
-We have long argued that web analytics is just one customer data source - and that analysts performing customer analytics need to crunch data covering the customer's complete journey, including other digital channels and offline interactions. That means joining data sets from different digital products and offline data sets to generate a single customer view. To date, companies that have implemented "single customer views" have typically struggled incorporating web behaviour in those views.
+We have long argued that web analytics is just one customer data source - and that analysts performing customer analytics need to crunch data covering the customer's complete journey, including other digital channels and offline interactions. That means joining data sets from different digital products and offline data sets to generate a single customer view. To date, companies that have implemented "single customer views" have typically struggled incorporating web behavior in those views.
 
 Google has taken a significant step towards enabling businesses to capture much more of their customer's journeys in Google Analytics itself. The [Measurement Protocol] [measurement-protocol] makes it possible to pass offline events into Google: so for example, when a customer buys an item in store, it would be possible to fire an event to Google Analytics recording that sale. If the customer was on a CRM programme (e.g. loyalty scheme), his / her `client_id` could be passed in, and then Google Analytics would know that this is the same user who browsed the website on their mobile phone yesterday and viewed it from their office today, prior to coming in store to make the purchase. 
 
 The Measurement Protocol can also be used to capture events on digital platforms that are not so well suited to traditional web analytics solution e.g. mobile applications, set-top box applications, videogames on consoles etc. It thus opens the door for Google Analytics to capture and report on event data from a range of devices, not just those that are web based.
 
-Taken together, this means it will be possible for Google Analytics to offer reports detailing customer behaviour across the complete customer journey. Building on this, it should also be possible for GA to enable analysts to calculate [customer lifetime value] [clv] (if the value of different events was passed in with the events): this is one of the most important metrics in customer analytics, and one that has been conspicuous by its absence from web analytics outside of solutions like [Snowplow] [clv] until now. The Measurement Protocol potentially means a huge increase in the scope and value of reports that it should be possible to generate in Google Analytics.
+Taken together, this means it will be possible for Google Analytics to offer reports detailing customer behavior across the complete customer journey. Building on this, it should also be possible for GA to enable analysts to calculate [customer lifetime value] [clv] (if the value of different events was passed in with the events): this is one of the most important metrics in customer analytics, and one that has been conspicuous by its absence from web analytics outside of solutions like [Snowplow] [clv] until now. The Measurement Protocol potentially means a huge increase in the scope and value of reports that it should be possible to generate in Google Analytics.
 
 
 <a name="cost-data"><h3>1.3 Capturing customer-acquisition cost data</h3></a>
@@ -64,8 +64,8 @@ As well as enabling businesses to add custom dimension and metric values to indi
 
 Taken together, the additional data that businesses can feed into Google Analytics gives Google enough to offer a much broader and more valuable range of reporting than was previously possible:
 
-1. **Customer analytics**. We have long argued that web analytics packages including GA are too focused on sessions, page views and conversions, and neglect the broader, more valuable customer analytics that underpin the most successful businesses in the world. With these new data points, GA has the raw data to produce useful customer reports including customer lifetime value, and analysis of user behaviours over their entire journeys. No longer will web analysts using GA be confined to viewing actions over an isolated session: now they can slice and dice metrics by users over their user journeys spanning multiple site visits.
-2. **Event analytics** across platforms, on and offline. GA can now report on user's complete journey, not just what they do on websites, but also their behaviours on other digital platforms (esp.  mobile) and offline.
+1. **Customer analytics**. We have long argued that web analytics packages including GA are too focused on sessions, page views and conversions, and neglect the broader, more valuable customer analytics that underpin the most successful businesses in the world. With these new data points, GA has the raw data to produce useful customer reports including customer lifetime value, and analysis of user behaviors over their entire journeys. No longer will web analysts using GA be confined to viewing actions over an isolated session: now they can slice and dice metrics by users over their user journeys spanning multiple site visits.
+2. **Event analytics** across platforms, on and offline. GA can now report on user's complete journey, not just what they do on websites, but also their behaviors on other digital platforms (esp.  mobile) and offline.
 
 <a name="whysnowplow" />
 <a name="whysnowplow"><h2>2. How do the advances in GA change the case for adopting Snowplow?</h2></a> 
@@ -74,7 +74,7 @@ Prior to the latest announcement, the case for adopting Snowplow alongside your 
 
 * The reporting provided by Google Analytics is very limited, with little/no customer analytics, catalogue analytics and platform analytics supported.
 * Snowplow enables you to perform all these three types of analytics, by providing you with access to your raw customer-level and event-level clickstream data, so that you can use whatever analytics tool you like to crunch the data and perform that analysis
-* Snowplow makes it easier to join your web analytics data sets with other data sets (e.g. marketing data sets, CRM and offline data sets), by enabling businesses to load customer IDs into Snowplow, and then perform the join on the raw data sets. This means that businesses running Snowplow can analyse user behaviour across their entire customer journey (on and offline, across all digital and non-digital channels)
+* Snowplow makes it easier to join your web analytics data sets with other data sets (e.g. marketing data sets, CRM and offline data sets), by enabling businesses to load customer IDs into Snowplow, and then perform the join on the raw data sets. This means that businesses running Snowplow can analyse user behavior across their entire customer journey (on and offline, across all digital and non-digital channels)
 * Snowplow makes it easy to warehouse your customer data for posterity: an asset which will doubtless grow in value over time.
 
 Following the latest announcement, some of these arguments fall away:
@@ -91,7 +91,7 @@ There are several different considerations here:
 
 * Google Analytics still does not give you access to your customer-level and event-level data. Therefore, **there will always be ways that you can crunch Snowplow data that you cannot accomplish in GA**: drilling down to segments of one visitor is just the most obvious example
 * There are a range of analytics techniques which are hard to imagine Google implementing at all, even with the new data sets that are available. To give just three examples:
- 1. Using machine learning techniques (e.g. [Mahout] [mahout]) to **segment audience by behaviour**
+ 1. Using machine learning techniques (e.g. [Mahout] [mahout]) to **segment audience by behavior**
  2. Performing **event analytics** / pathing in a way that takes into account the **structure of the website**. This is described brilliantly by [Gary Angel] [gary-angel] on the [Semphonic blog] [semphonic]. This methodology includes identifying those events that are predictive of customer lifetime value
  3. Building and testing models that **predict customer lifetime value ahead of time**, so that you can quickly (and robustly) calculate the ROI on marketing campaigns, and adjust your spend accordingly
 * There will always be barriers analysts run up against in trying to fit all of their data into Google's schema. For example, it's not obvious how Google's single `client_id` will cope with different packages (CRM, email, CMS et al) each having their own internal set of user IDs

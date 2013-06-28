@@ -20,9 +20,9 @@ What became clear very quickly was that only a minority of visitors to the Snowp
 
 The testing of Olark to date has been qualitative however. Longer term, we want to assess the value Olark adds quantitatively. To do this, naturally, we turn to Snowplow. We want to track Olark chat events in Snowplow, so that we can then analyze the Snowplow data to understand:
 
-1. The type of user behaviour on the site that typically leads up to a user reaching out to us on Olark
-2. The type of user behaviour on the site that leads to a user being responsive to us reaching out to them via Olark
-3. What impact do conversation on Olark have on the visitors subsequent browsing behaviour (and likelihood to start using Snowplow and buying Snowplow professional services)?
+1. The type of user behavior on the site that typically leads up to a user reaching out to us on Olark
+2. The type of user behavior on the site that leads to a user being responsive to us reaching out to them via Olark
+3. What impact do conversation on Olark have on the visitors subsequent browsing behavior (and likelihood to start using Snowplow and buying Snowplow professional services)?
 4. How good (quick) we are at responding to visitors reaching out to us via Olark?
 
 In this blog post, we will describe how we used [Snowplow structured events] [struct-events] to track Olark chat events. In a future blog post, we will analyze the data collected in Snowplow, to show how to answer the four questions outlined above. (We'll write this once we've been running Olark for a while, so have a good data set to use to peform the analysis.)
@@ -83,7 +83,7 @@ And bingo! We create a new version in Google Tag Manager, and publish the change
 
 * How quickly we respond to messages from visitors
 * When visitors tend respond to messages from us. (When should we reach out, and when we shouldn't.)
-* What impact chats on Olark have, in aggregate on visitor's subsequent behaviour on the site. (Are they more likely to engage deeply with the site? Are they more likely to look at our Github repo? Are they more likely to look at the professional services pages? Does any of the above vary by the length of the chat? Or the location of the visitor? Or the amount of time the visitor had spend on our site prior to talking to us via Olark?) 
+* What impact chats on Olark have, in aggregate on visitor's subsequent behavior on the site. (Are they more likely to engage deeply with the site? Are they more likely to look at our Github repo? Are they more likely to look at the professional services pages? Does any of the above vary by the length of the chat? Or the location of the visitor? Or the amount of time the visitor had spend on our site prior to talking to us via Olark?) 
 
 We'll cover how to perform the above analysis in a future blog post.
 

@@ -24,7 +24,7 @@ There is a whole class of web event that Snowplow users may want to capture, but
 2. Views of ecommerce products on 3rd party marketplaces
 3. Views of pages on 3rd party hosting sites e.g. Github 
 
-In these cases, you can use the [No-Javascript tracker] [no-js-wizard] (pixel tracker) to track events directly into your Snowplow stack. Doing so enables you to analyse complete customer journeys: tying together data on the emails a user has opened with their subsequent web browsing behaviour, for example. 
+In these cases, you can use the [No-Javascript tracker] [no-js-wizard] (pixel tracker) to track events directly into your Snowplow stack. Doing so enables you to analyse complete customer journeys: tying together data on the emails a user has opened with their subsequent web browsing behavior, for example. 
 
 <!--more-->
 

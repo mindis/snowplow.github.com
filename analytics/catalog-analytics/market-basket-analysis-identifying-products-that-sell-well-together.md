@@ -25,7 +25,7 @@ There are a wide range of algorithms, available on a wide variety of platforms, 
 2. [Performing marketing basket analysis using the apriori algorithm using R and the `arules` package](#apriori)
 3. [Managing large result sets: visualizing rules using the `arulesViz` package](#arulesviz)
 4. [Interpreting the results: using the analysis to drive business decision-making](#business)
-5. [Expanding on the analysis - zooming out from the basket to look a customer behaviour over longer periods and different events](#expand)
+5. [Expanding on the analysis - zooming out from the basket to look a customer behavior over longer periods and different events](#expand)
 
 
 <a name="metrics"><h2>1. Market basket analysis: the basics</h2></a>
@@ -245,7 +245,7 @@ How we use the analysis has significant implications for the analysis itself: if
 
 Back to [top](#top).
 
-<a name="expand"><h2>5. Expanding on the analysis: zooming out from the basket to look a customer behaviour over longer periods and different events</h2></a>
+<a name="expand"><h2>5. Expanding on the analysis: zooming out from the basket to look a customer behavior over longer periods and different events</h2></a>
 
 In the above example, we used actual transaction events to identify associations between products for an online retailer.
 

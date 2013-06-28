@@ -17,7 +17,7 @@ Integrating your web analytics data with other data sets enables you to answer a
 | **Data source**                   | **Example business questions**                       |
 |:----------------------------------|:-----------------------------------------------------|
 | Marketing spend data e.g. AdWords, ad server data | What is the return on my ad spend? How should I optimize my return on ad spend |
-| Customer data e.g. CRM, loyalty   | How does the online behaviour of my differnet customer segments vary by segment? Do online promotions drive offline sales? (Or vice versa?) |
+| Customer data e.g. CRM, loyalty   | How does the online behavior of my differnet customer segments vary by segment? Do online promotions drive offline sales? (Or vice versa?) |
 | Product / media catalogue data    | What are my most profitable product lines? Do different types of products attract different customer segments? What are the products that drive the most visits? |
 
 Snowplow makes integrating web analytics data with other data sources easier in a two ways:
@@ -44,8 +44,8 @@ In contrast, because Snowplow gives you access to the underlying data, it is pos
 
 Machine learning tools, and [Mahout][mahout] in particular, have created some new and exciting opportunities to:
 
-1. Develop product and content recommendation engines, based on user web behaviour. (E.g. users who viewed these content items, also viewed...)
-2. Segment your audience by online behaviour
+1. Develop product and content recommendation engines, based on user web behavior. (E.g. users who viewed these content items, also viewed...)
+2. Segment your audience by online behavior
 
 Snowplow makes it easy to extract the core input data you would need to feed a machine learning algorithm in a single query. (E.g. a matrix mapping users to products by page views / add to baskets / purchases etc.) We will be exploring ways to integrate Snowplow with [Mahout][mahout] in a future blog post.
 

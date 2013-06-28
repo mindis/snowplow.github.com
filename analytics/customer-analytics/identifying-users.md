@@ -20,8 +20,8 @@ All customer analytics starts with a solid understanding of what constitutes a c
 
 Every line of Snowplow table includes placeholders for three different user IDs:
 
-1. The `domain_userid`. This is a user ID that is set via a first party cookie. It can therefore be used to track user behaviour within a particular webdomain e.g. `mynewssite.com`
-2. The `network_userid`. This is a user ID that is set via a third party cookie. It can be used to track user behaviour across a network of sites on different domains.
+1. The `domain_userid`. This is a user ID that is set via a first party cookie. It can therefore be used to track user behavior within a particular webdomain e.g. `mynewssite.com`
+2. The `network_userid`. This is a user ID that is set via a third party cookie. It can be used to track user behavior across a network of sites on different domains.
 3. A `user_id` that can be set to custom values. This can be used to assign e.g. an ID set by a CRM system to Snowplow data.
 
 There are strengths and weaknesses associated with each different type of user identifier. In many cases, we recommend using a combination of two or three of them to power the most robust set of user analytics. (More on this below.) In this introductory section, however, we'll stick to outlining the benefits and limitations of each:
@@ -108,24 +108,24 @@ Most web analytics system (notably Google's Universal Analytics) only accommodat
 
 ### 3a. Advantages of storing both a domain and network user ID
 
-For businesses that wish to track users across multiple domains (notably content networks and ad networks), there are significant advantages to using the `network_userid` over the `domain_userid`: namely that it is straightforward to analyse a user's behaviour across multiple sites.
+For businesses that wish to track users across multiple domains (notably content networks and ad networks), there are significant advantages to using the `network_userid` over the `domain_userid`: namely that it is straightforward to analyse a user's behavior across multiple sites.
 
 However, a growing proportion of browsers and users are dropping support for third party cookies. 
 
 By maintaining support for both first party cookies (`domain_userid`) and third party cookies (`network_userid`), Snowplow makes it possible to use the `network_userid` to identify users where those users have are happy to be tracked using third party cookies. For those users who are not (whom it is easy to identify because they do not have values set for `network_userid`), it is possible to fall back on `domain_userid`.
 
-This makes it possible to perform statistical analyses on network behaviour based on the subset of users who are comfortable with third party cookies. It makes it clear which users are and are not covered by the sample.
+This makes it possible to perform statistical analyses on network behavior based on the subset of users who are comfortable with third party cookies. It makes it clear which users are and are not covered by the sample.
 
 It also leaves open the possibility of joining domain identifiers from different domains using cookie sync technologies.
 
 ### 3b. Advantages of maintaining a separate user identifier for businesses to populate with their own customer IDs
 
-Enabling businesses to set their own user ID where it is available is a very powerful feature: it makes it possible, for example, to join Snowplow behavioural data with other customer data sets e.g. CRM, marketing etc.
+Enabling businesses to set their own user ID where it is available is a very powerful feature: it makes it possible, for example, to join Snowplow behavioral data with other customer data sets e.g. CRM, marketing etc.
 
-Rather then override the `domain_userid` and / or `network_userid`, however, we have a separate field `user_id` set aside for this purpose. This is to give analysts maximum flexibility when analysing user behaviour over the user's entire behaviour. To illustrate this with an example:
+Rather then override the `domain_userid` and / or `network_userid`, however, we have a separate field `user_id` set aside for this purpose. This is to give analysts maximum flexibility when analysing user behavior over the user's entire behavior. To illustrate this with an example:
 
 * Consider the case of an online retailer with a long sales cycle. (I.e. it might be common for a user to make multiple visits to the site before making a purchase.)
-* A user looking at making a purchase will typically visit the site multiple times before purchasing. In this case, it is possible to track his / her behaviour using either the `domain_userid` or `network_userid`
+* A user looking at making a purchase will typically visit the site multiple times before purchasing. In this case, it is possible to track his / her behavior using either the `domain_userid` or `network_userid`
 * Once the user has bought an item, they will have created an account. At that stage, the retailer might ascribe that user a user ID, based on the user's name / address
 * It will be possible for the company to perform attribution analytics (i.e. tracking the user from e.g. clicking on an ad to making a purchase) using e.g. the `domain_userid`
 * Going forwards, however, the user may make several more purchases. Because they use the same account, it is possible to identify that it really is the same user making multiple purchases over time, using the `user_id`. This is true even if that user makes those purchases from different computers / devices, and hence different browsers. (So different `domain_userid` and `network_userid`.)
@@ -162,7 +162,7 @@ GROUP BY domain_userid, user_id
 
 This type of mapping table is reliable and flexible, because it can accommodate many-to-many relationships between `user_id` and `domain_userid`. Consider the following two cases:
 
-1. A user logs in to his / her account from multiple devices. In that case, there would be many `domain_userid` to each `user_id`. That is fine, because we can aggregate data by `user_id` to capture the user's behaviour across all those different devices.
+1. A user logs in to his / her account from multiple devices. In that case, there would be many `domain_userid` to each `user_id`. That is fine, because we can aggregate data by `user_id` to capture the user's behavior across all those different devices.
 2. Multiple users log in and out of their account from a single shared computer. In that case, there would be many `user_id` to each `domain_userid`. In that case, we'd need to be careful to aggregate records between log in and out events and ascribe them to a single user, so that we can differentiate actions performed by different users on the same computer.
 
 ## 4. Understand how to use Snowplow to reliably identify users and customers?

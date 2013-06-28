@@ -22,7 +22,7 @@ In this section, we walk through the process of integrating Snowplow data with o
 To date many companies have become very good at using CRM, loyalty and sales data to understand, segment and serve their customer base. Typically, however, they have **not** used web analytics data to understand their customers, even though how users engage with brands and companies through their website and applications provides some of the most revealing data about who a person is, there motivation for engaging with a brand / product / service and how happy they are with that brand / product and service. To illustrate how revealing web analytics data can be, consider:
 
 * Data from online retail sites can reveal what products a user is interested in purchasing, before they potentially visit a store
-* *When* a user visits can often tell us a lot about a user: do they visit a website during office hours, as a form of distraction? Or at home? Does their browsing behaviour change based on day / time?
+* *When* a user visits can often tell us a lot about a user: do they visit a website during office hours, as a form of distraction? Or at home? Does their browsing behavior change based on day / time?
 * Purchase data can also reveal lifestyle interests: for example, someone shoppingi for nappies is most likely to have a young family
 * Data from a content or media site can reveal what specific interests a user has
 * If a user repeatedly visits a particular product page, but does not buy, it suggests that something is going wrong with the purchase flow, and the user is likely to become frustrated with the service provider. (And potentially stop being a customer)

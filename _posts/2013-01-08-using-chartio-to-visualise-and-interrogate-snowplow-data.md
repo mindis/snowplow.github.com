@@ -268,7 +268,7 @@ Our baseline data tells us an interesting story, which from the dashboard, we're
 
 For our sample data set there appears to be a rather interesting rise in engagement level (as measured by both conversion rates and page views by month) between November and December. What's driving that increase? What clues can our Snowplow data give us?
 
-We can divide drivers into two groups: those that effect all users on our website, and those that only effect some of them. If, for example, we performed a measure rearchitecture of our entire site, that is likely to effect **all** users' behaviour. But if we upgraded the site for mobile, then we would **only** expect that to impact user behaviour for people browsing from mobile sites.
+We can divide drivers into two groups: those that effect all users on our website, and those that only effect some of them. If, for example, we performed a measure rearchitecture of our entire site, that is likely to effect **all** users' behavior. But if we upgraded the site for mobile, then we would **only** expect that to impact user behavior for people browsing from mobile sites.
 
 A good approach, then, to unpick what's driving growth in engagement levels is to see if this growth is consistent across all users, or just some of them. One easy way to do this is to compare engagement rates between different types of users, to see if we can spot a difference. It makes sense to start off with factors we have a hunch might be driving those changes (e.g. because we're familiar with what has changed at those business over the months in question.) To give a specific examples:
 

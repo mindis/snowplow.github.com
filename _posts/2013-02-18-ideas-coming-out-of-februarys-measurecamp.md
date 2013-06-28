@@ -58,7 +58,7 @@ These are the slides I prepared for my session on customer lifetime value:
 
 <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/yalisassoon/customer-lifetime-value-16598692" title="Customer lifetime value" target="_blank">Customer lifetime value</a> </strong> from <strong><a href="http://www.slideshare.net/yalisassoon" target="_blank">yalisassoon</a></strong> </div>
 
-We had a very interesting discussion about the challenges both of tracking user behaviour across user lifetime, and started to explore approaches to developing predictive models for customer lifetime value. In 30 minutes we didn't get the chance to develop these very far - I hope we find another forum (maybe G+?) to continue the conversation. Many thanks to all those who attended: I learnt a lot from you.
+We had a very interesting discussion about the challenges both of tracking user behavior across user lifetime, and started to explore approaches to developing predictive models for customer lifetime value. In 30 minutes we didn't get the chance to develop these very far - I hope we find another forum (maybe G+?) to continue the conversation. Many thanks to all those who attended: I learnt a lot from you.
 
 ## Thank you Measurecamp
 

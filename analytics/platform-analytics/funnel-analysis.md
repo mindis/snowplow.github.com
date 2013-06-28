@@ -56,7 +56,7 @@ One of the problems, however, with these assumptions, is that in the real world,
 
 If you have a lot of users accidentally starting a workflow, it is likely that your drop off rates at each step will be much higher than you'd hope. This does not mean that there is something wrong with the steps in the workflow: instead it means that the wrong people are being pushed into the funnel. 
 
-In an ideal world, you should **only include users / visitors in a funnel analysis who have clearly (through their online behaviour) expressed a desire for the outcome of the workflow**. If you run an online shop, for example, you should include all visitors who've come to your site to buy products, but exclude users who are visiting e.g. to look up your contact details, or want to arrange a refund, for example.
+In an ideal world, you should **only include users / visitors in a funnel analysis who have clearly (through their online behavior) expressed a desire for the outcome of the workflow**. If you run an online shop, for example, you should include all visitors who've come to your site to buy products, but exclude users who are visiting e.g. to look up your contact details, or want to arrange a refund, for example.
 
 <a name="difficult-to-distinguish-workflow"><h3>Can we distinguish different workflows in our platform clearly?</h3></a>
 

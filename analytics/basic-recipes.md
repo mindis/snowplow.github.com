@@ -24,10 +24,10 @@ The following queries will work with both Hive and Infobright.
 8. [Average visitor duration](#duration)
 9. [Demographics: language](#language)
 10. [Demographics: location](#location)
-11. [Behaviour: new vs returning](#new-vs-returning)
-12. [Behaviour: frequency](#frequency)
-13. [Behaviour: recency](#recency)
-14. [Behaviour: engagement](#engagement)
+11. [Behavior: new vs returning](#new-vs-returning)
+12. [Behavior: frequency](#frequency)
+13. [Behavior: recency](#recency)
+14. [Behavior: engagement](#engagement)
 15. [Technology: browser](#browser)
 16. [Technology: operating system](#os)
 17. [Technology: mobile](#mobile)
@@ -341,7 +341,7 @@ To create a geographical plot, you'll need to use another tool like [R] [r] or [
 
 [Back to top](#top)
 
- <a name="new-vs-returning"><h2>11. Behaviour: new vs returning</h2></a>
+ <a name="new-vs-returning"><h2>11. Behavior: new vs returning</h2></a>
 
 Within a given time period, we can compare the number of new visitors (for whom `domain_sessionidx` = 1) with returning visitors (for whom `domain_sessionidx` > 1): 
 
@@ -385,7 +385,7 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="frequency"><h2>12. Behaviour: frequency</h2></a>
+ <a name="frequency"><h2>12. Behavior: frequency</h2></a>
 
 We can plot the distribution of visits in a time period by the number of visits each visitor has performed:
 
@@ -405,129 +405,114 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="recency"><h2>13. Behaviour: recency</h2></a>
+ <a name="recency"><h2>13. Behavior: recency</h2></a>
 
-We can look in a specific time period at each user who has visited, and see how many days it has been since they last visited. First, we identify all the users who have visited in our time frame:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-domain_userid,
-domain_sessionidx AS current_visit,
-IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
-FROM `events_008_cf`
-WHERE collector_dt>'2012-12-31'
-GROUP BY domain_userid, domain_sessionidx
-{% endhighlight %}
-
-We can then look up the date of each session by joining the above results with the results of a query that identifies the date by session:
+We can plot the distribution of visits by the number of days since the previous visit. To do this, we first identify all the visits in our time period:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
+/* Redshift / PostgreSQL */
+select
 domain_userid,
 domain_sessionidx,
-MIN(collector_dt)
-FROM `events_008_cf`
-GROUP BY domain_userid, domain_sessionidx
+domain_sessionidx - 1 as "previous_domain_sessionidx",
+min(collector_tstamp) as "time_first_touch"
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx
 {% endhighlight %}
 
-The combined query then looks like this:
+We can join the above table with a similar table, but join each visit to data for the previous visit, so we can calculate the number of days between visits:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-v.domain_userid, 
-v.current_visit,
-current.`date` AS `current_date`,
-previous.`date` AS `previous_date`,
-DATEDIFF(current.`date`, previous.`date`) AS difference
-FROM (
-	SELECT
-	domain_userid,
-	domain_sessionidx AS current_visit,
-	IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
-	FROM `events_008_cf`
-	WHERE collector_dt>'2012-12-31'
-	GROUP BY domain_userid, domain_sessionidx
-	HAVING previous_visit IS NOT NULL) v
-JOIN (
-	SELECT
-	domain_userid,
-	domain_sessionidx,
-	MIN(collector_dt) AS `date`
-	FROM `events_008_cf`
-	GROUP BY domain_userid, domain_sessionidx
-) current
-ON v.domain_userid = current.domain_userid
-AND v.current_visit = current.domain_sessionidx
-JOIN (
-	SELECT
+/* Redshift / PostgreSQL */
+select
+n.domain_userid,
+n.domain_sessionidx,
+extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
+case 
+	when n.domain_sessionidx = 1 then '0'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 1 then '1'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 2 then '2'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 3 then '3'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 4 then '4'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 5 then '5'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 10 then '6-10'
+	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 25 then '11-25'
+	else '25+' end as "Days between visits"
+from (
+	select
 	domain_userid,
 	domain_sessionidx,
-	MIN(collector_dt) AS `date`
-	FROM `events_008_cf`
-	GROUP BY domain_userid, domain_sessionidx
-) previous
-ON v.domain_userid = previous.domain_userid
-AND v.previous_visit = previous.domain_sessionidx
+	domain_sessionidx - 1 as "previous_domain_sessionidx",
+	min(collector_tstamp) as "time_first_touch"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx
+) n
+left join (
+	select
+	domain_userid,
+	domain_sessionidx,
+	min(collector_tstamp) as "time_first_touch"
+	from events
+	group by domain_userid, domain_sessionidx
+) p on n.previous_domain_sessionidx = p.domain_sessionidx
+and n.domain_userid = p.domain_userid
 {% endhighlight %}
 
-We can then aggregate the results by the number of days difference, to produce a frequency table:
+Finally, we group the results by the number of days between visits, to plot a frequency table:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-difference,
-count(*) as frequency
-FROM (
-	SELECT
-	v.domain_userid, 
-	v.current_visit,
-	current.`date` AS `current_date`,
-	previous.`date` AS `previous_date`,
-	DATEDIFF(current.`date`, previous.`date`) AS difference
-	FROM (
-		SELECT
-		domain_userid,
-		domain_sessionidx AS current_visit,
-		IF(domain_sessionidx >1, domain_sessionidx - 1, NULL) AS previous_visit
-		FROM `events_008_cf`
-		WHERE collector_dt>'2012-12-31'
-		GROUP BY domain_userid, domain_sessionidx
-		HAVING previous_visit IS NOT NULL) v
-	JOIN (
-		SELECT
-		domain_userid,
-		domain_sessionidx,
-		MIN(collector_dt) AS `date`
-		FROM `events_008_cf`
-		GROUP BY domain_userid, domain_sessionidx
-	) current
-	ON v.domain_userid = current.domain_userid
-	AND v.current_visit = current.domain_sessionidx
-	JOIN (
-		SELECT
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select
+"Days between visits",
+count(*) as "Number of visits"
+from (
+	select
+	n.domain_userid,
+	n.domain_sessionidx,
+	extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
+	case 
+		when n.domain_sessionidx = 1 then '0'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 1 then '1'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 2 then '2'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 3 then '3'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 4 then '4'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 5 then '5'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 10 then '6-10'
+		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 25 then '11-25'
+		else '25+' end as "Days between visits"
+	from (
+		select
 		domain_userid,
 		domain_sessionidx,
-		MIN(collector_dt) AS `date`
-		FROM `events_008_cf`
-		GROUP BY domain_userid, domain_sessionidx
-	) previous
-	ON v.domain_userid = previous.domain_userid
-	AND v.previous_visit = previous.domain_sessionidx
-) r
-GROUP BY difference
-ORDER BY difference
+		domain_sessionidx - 1 as "previous_domain_sessionidx",
+		min(collector_tstamp) as "time_first_touch"
+		from events
+		where collector_tstamp > current_date - integer '31'
+		group by domain_userid, domain_sessionidx
+	) n
+	left join (
+		select
+		domain_userid,
+		domain_sessionidx,
+		min(collector_tstamp) as "time_first_touch"
+		from events
+		group by domain_userid, domain_sessionidx
+	) p on n.previous_domain_sessionidx = p.domain_sessionidx
+	and n.domain_userid = p.domain_userid
+) t
+group by "Days between visits"
+order by "Days between visits"
 {% endhighlight %}
 
-And plot the results in ChartIO:
+In ChartIO:
 
 ![days-since-last-visit-in-chartio][days-since-last-visit-in-chartio]
 
 [Back to top](#top)
 
- <a name="engagement"><h2>14. Behaviour: engagement</h2></a>
+ <a name="engagement"><h2>14. Behavior: engagement</h2></a>
 
 Google Analytics provides two sets of metrics to indicate *engagement*:
 
@@ -536,114 +521,91 @@ Google Analytics provides two sets of metrics to indicate *engagement*:
 
 Both of these are flakey and unsophisticated measures of engagement. Nevertheless, they are easy to report on in Snowplow. To plot visit duration, we execute the following query: 
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select
 domain_userid,
 domain_sessionidx,
-UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
-FROM events_008_cf
-WHERE collector_dt > '2012-12-31'
-GROUP BY domain_userid, domain_sessionidx ;
+case 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 1800 then 'g. 1801+ seconds' 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 600 then 'f. 601-1800 seconds' 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 180 then 'e. 181-600 seconds' 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 60 then 'd. 61 - 180 seconds' 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 30 then 'c. 31-60 seconds' 
+	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 10 then 'b. 11-30 seconds' 
+	else 'a. 0-10 seconds' end as "Visit duration"
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx;
 {% endhighlight %}
 
-We then need to classify each visit into a finite set of buckets based on their duration:
+Then we aggregate the results for each bucket, so we have frequency by bucket:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-v.domain_userid,
-v.domain_sessionidx,
-CASE 
-	WHEN duration > 1800 THEN 'g. 1801+ seconds'
-	WHEN duration > 600 THEN 'f. 601-1800 seconds'
-	WHEN duration > 180 THEN 'e. 181-600 seconds'
-	WHEN duration > 60 THEN 'd. 61 - 180 seconds'
-	WHEN duration > 30 THEN 'c. 31-60 seconds'
-	WHEN duration > 10 THEN 'b. 11-30 seconds'
-	ELSE 'a. 0-10 seconds'
-	END AS duration
-FROM (
-	SELECT
+/* Redshift / PostgreSQL */
+select
+"Visit duration",
+count(*) as "Number of visits"
+from (
+	select
 	domain_userid,
 	domain_sessionidx,
-	UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
-	FROM events_008_cf
-	WHERE collector_dt > '2012-12-31'
-	GROUP BY domain_userid, domain_sessionidx ) v;
-{% endhighlight %}
-
-Then aggregate the results for each bucket, so we have frequency by bucket:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-duration,
-COUNT(*) as frequency
-FROM (
-	SELECT 
-	v.domain_userid,
-	v.domain_sessionidx,
-	CASE 
-		WHEN duration > 1800 THEN 'g. 1801+ seconds'
-		WHEN duration > 600 THEN 'f. 601-1800 seconds'
-		WHEN duration > 180 THEN 'e. 181-600 seconds'
-		WHEN duration > 60 THEN 'd. 61 - 180 seconds'
-		WHEN duration > 30 THEN 'c. 31-60 seconds'
-		WHEN duration > 10 THEN 'b. 11-30 seconds'
-		ELSE 'a. 0-10 seconds'
-		END AS duration
-	FROM (
-		SELECT
-		domain_userid,
-		domain_sessionidx,
-		UNIX_TIMESTAMP(MAX(CONCAT(collector_dt," ",collector_tm)))-UNIX_TIMESTAMP(MIN(CONCAT(collector_dt," ",collector_tm))) AS duration
-		FROM events_008_cf
-		WHERE collector_dt > '2012-12-31'
-		GROUP BY domain_userid, domain_sessionidx ) v ) r
-GROUP BY duration
-ORDER BY duration;
+	case 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 1800 then 'g. 1801+ seconds' 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 600 then 'f. 601-1800 seconds' 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 180 then 'e. 181-600 seconds' 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 60 then 'd. 61 - 180 seconds' 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 30 then 'c. 31-60 seconds' 
+		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 10 then 'b. 11-30 seconds' 
+		else 'a. 0-10 seconds' end as "Visit duration"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx
+) t
+group by "Visit duration"
+order by "Visit duration"
 {% endhighlight %}
 
 We can then plot the results in ChartIO:
 
 ![visits-by-duration-chartio][visits-by-duration-chartio]
 
-We can also look at the number of page views per visit
+We can also look at the number of page views per visit:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
+{% highlight sql %}
+/* Redshift / PostgreSLQ */ 
+select
 domain_userid,
 domain_sessionidx,
-COUNT(event_id) AS page_depth
-FROM events_008_cf
-WHERE event = 'page_view'
-AND collector_dt > CURDATE() - 31
-GROUP BY domain_userid, domain_sessionidx ;
+count(*) as "Page views per visit"
+from events
+where collector_tstamp > current_date - integer '31'
+and event = 'page_view'
+group by domain_userid, domain_sessionidx;
 {% endhighlight %}
 
-Then aggregate sessions by page depth into a frequency table:
+We then aggregate those results together by the number of page views per visit
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-page_depth,
-COUNT(*) AS frequency
-FROM (
-	SELECT
+{% highlight sql %}
+/* Redshift / PostgreSLQ */
+select
+"Page views per visit",
+count(*) as "Number of visits"
+from (
+	select
 	domain_userid,
 	domain_sessionidx,
-	COUNT(event_id)  AS page_depth
-	FROM events_008_cf
-	WHERE event = 'page_view'
-	AND collector_dt > CURDATE() - 31
-	GROUP BY domain_userid, domain_sessionidx ) v
-GROUP BY page_depth
-ORDER BY page_depth;
+	count(*) as "Page views per visit"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	and event = 'page_view'
+	group by domain_userid, domain_sessionidx
+) t
+group by "Page views per visit"
+order by "Page views per visit"
 {% endhighlight %}
 
-And plot the results in ChartIO:
+In ChartIO:
 
 ![visits-in-the-last-month-by-page-depth][visits-in-the-last-month-by-page-depth]
 
@@ -656,18 +618,17 @@ Browser details are stored in the events table in the `br_name`, `br_family`, `b
 
 Looking at the distribution of visits by browser is straightforward:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-br_name,
-COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
-FROM `events_008_cf`
-WHERE collector_dt>CURDATE() - 31
-GROUP BY br_name
-ORDER BY frequency DESC
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select
+br_family as "Browser",
+count(distinct(domain_userid || domain_sessionidx)) as "Visits"
+from events
+group by "Browser"
+order by "Visits" desc;
 {% endhighlight %}
 
-Plotting the results in ChartIO:
+In ChartIO:
 
 ![visits-by-browser-type][visits-by-browser-type]
 
@@ -680,15 +641,14 @@ Operating system details are stored in the events table in the `os_name`, `os_fa
 
 Looking at the distribution of visits by operating system is straightforward:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-os_name,
-COUNT(DISTINCT(CONCAT(domain_userid,'-',domain_sessionidx))) AS frequency
-FROM `events_008_cf`
-WHERE collector_dt>CURDATE() - 31
-GROUP BY os_name
-ORDER BY frequency DESC
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select 
+os_name as "Operating System",
+count(distinct(domain_userid || domain_sessionidx)) as "Visits"
+from events
+group by "Operating System"
+order by "Visits" desc;
 {% endhighlight %}
 
 Again, we can plot the results in ChartIO:
@@ -702,12 +662,12 @@ Again, we can plot the results in ChartIO:
 To work out how the number of visits in a given time period splits between visitors on mobile and those not, simply execute the following query:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT 
-IF(dvce_ismobile=1, 'mobile', 'desktop') AS device_type,
-COUNT(DISTINCT(CONCAT(domain_userid, "-", domain_sessionidx))) as frequency
-FROM `events_008_cf`
-GROUP BY dvce_ismobile;
+/* Redshift / PostgreSQL */
+select 
+case when dvce_ismobile=1 then 'mobile' else 'desktop' end as "Device type",
+count(distinct(domain_userid || domain_sessionidx)) as "Visits"
+from events
+group by "Device type";
 {% endhighlight %}
 
 Plotting the results in ChartIO:
@@ -730,12 +690,12 @@ Plotting the results in ChartIO:
 [visitors-by-language-chartio]: /static/img/analytics/basic-recipes/visitors-by-language-chartio.png
 [new-vs-returning-visits-by-day]: /static/img/analytics/basic-recipes/new-vs-returning-visits-by-day-chartio.png
 [distribution-of-visitors-by-number-of-visits]: /static/img/analytics/basic-recipes/distribution-of-visitors-by-number-of-visits.png
-[days-since-last-visit-in-chartio]: /static/img/analytics/basic-recipes/days-since-last-visit-in-2013-chartio.png
+[days-since-last-visit-in-chartio]: /static/img/analytics/basic-recipes/days-since-last-visit-in-chartio.png
 [visits-by-duration-chartio]: /static/img/analytics/basic-recipes/visits-by-duration-chartio.png
-[visits-in-the-last-month-by-page-depth]: /static/img/analytics/basic-recipes/visits-in-the-last-month-by-page-depth-chartio.png
+[visits-in-the-last-month-by-page-depth]: /static/img/analytics/basic-recipes/visits-in-last-month-by-page-depth-chartio.png
 [visits-by-browser-type]: /static/img/analytics/basic-recipes/visits-by-browser-type-chartio.png
-[visits-by-operating-system]: /static/img/analytics/basic-recipes/visits-by-operating-system.png
-[split-in-visits-by-mobile-vs-desktop]: /static/img/analytics/basic-recipes/split-in-visits-by-mobile-vs-desktop.png
+[visits-by-operating-system]: /static/img/analytics/basic-recipes/visits-by-operating-system-chartio.png
+[split-in-visits-by-mobile-vs-desktop]: /static/img/analytics/basic-recipes/split-in-visits-by-mobile-vs-desktop-chartio.png
 [page-views-per-visit-frequency-table-chartio]: /static/img/analytics/basic-recipes/page-views-per-visit-frequency-table-chartio.png
 [visitors-by-country-chartio]: /static/img/analytics/basic-recipes/visitors-by-country-chartio.png 
 [tableau]: http://www.tableausoftware.com/

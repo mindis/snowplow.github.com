@@ -19,7 +19,7 @@ Thanks Alex! Quick bit about me: I've been in software development since the mid
 
 <!--more-->
 
-Our ads report a significant amount of information around user behaviour which we then use in decisioning, pricing and insight derivation (e.g. “Do people share videos before watching them?”).  In the early days, we were handling what we now consider a small volume of logs (1GB/day) with a correspondingly quick and dirty ETL: a log parser that updated the MySQL instance backing our reporting dashboards.  Fast forward to 2013 and our log intake is north of 30GB/day.  With this volume of data and with the insights we wanted to derive, that process didn’t cut it and we determined that the quickest way for us to begin deriving value from our data was via [Amazon Elastic MapReduce] [amazon-emr] (hereon referred to as EMR).
+Our ads report a significant amount of information around user behavior which we then use in decisioning, pricing and insight derivation (e.g. “Do people share videos before watching them?”).  In the early days, we were handling what we now consider a small volume of logs (1GB/day) with a correspondingly quick and dirty ETL: a log parser that updated the MySQL instance backing our reporting dashboards.  Fast forward to 2013 and our log intake is north of 30GB/day.  With this volume of data and with the insights we wanted to derive, that process didn’t cut it and we determined that the quickest way for us to begin deriving value from our data was via [Amazon Elastic MapReduce] [amazon-emr] (hereon referred to as EMR).
 
 If you’re unfamiliar with AWS service interaction and evolution, it often follows this pattern (using EMR as an example):
 

@@ -48,7 +48,7 @@ Traditionally, web analytics tools have sucked at enabling analysts to calculate
 
 1. They don't make it easy to capture value outside of transaction-based businesses e.g. ecommerce
 2. They don't make it easy (or often possible) to slice all historical data by customer. (Because they typically only expose session-level data.)
-3. They don't integrate with other systems used in other channels, to enable a holistic view of customer behaviour and value across online and offline channels
+3. They don't integrate with other systems used in other channels, to enable a holistic view of customer behavior and value across online and offline channels
 4. They don't provide the granular data required to build sophisticated models to forecast customer value going forwards
 
 Fortunately, Snowplow addresses the above limitations, enabling analysts to calculate customer lifetime value as detailed below.

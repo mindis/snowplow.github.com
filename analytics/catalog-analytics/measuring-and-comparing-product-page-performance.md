@@ -297,7 +297,7 @@ There are a variety of ways of identifying which of the above buckets a user is 
 
 Identifying if the user is in the market to buy *something* or not is a bit tricker. If they are systematically viewing a range of products, then the chances are that they belong in Bucket Two. If they have come to the website to enter a competition or read a blog post, on the other hand, they probably belong in bucket three.
 
-*Note: there are more rigorous ways of identifying which bucket a user belong in e.g. using machine learning to identify behaviours that are indicative of a user belonging in each bucket. We will be covering these in a future set of recipes in the [customer analytics] [customer-analytics] section of the cookbook.*
+*Note: there are more rigorous ways of identifying which bucket a user belong in e.g. using machine learning to identify behaviors that are indicative of a user belonging in each bucket. We will be covering these in a future set of recipes in the [customer analytics] [customer-analytics] section of the cookbook.*
 
 Once we have categorised our users into different buckets, we should compare conversion rates for each product page against each audience segment. It is especially instructive to identify low conversion rates for Buckets One and Two. For example, if a product page is relatively poor at converting users in Bucket One, that suggests that maybe:
 

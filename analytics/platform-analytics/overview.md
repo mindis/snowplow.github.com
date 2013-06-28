@@ -60,7 +60,7 @@ Platform analysis is fundamentally difficult because although we can use data to
 1. What the user *wanted* to accomplish
 2. The way the platform currently works
 
-Trying to unpick the causes of user behaviour is an art, not a science. The good platform analyst needs to be aware of this ambiguity, and draw on a combination of intuition and statistics to make hypotheses about the interaction of the two above factors, that can then be tested in a rigorous way using the data.
+Trying to unpick the causes of user behavior is an art, not a science. The good platform analyst needs to be aware of this ambiguity, and draw on a combination of intuition and statistics to make hypotheses about the interaction of the two above factors, that can then be tested in a rigorous way using the data.
 
 <a name="recipes"><h2>Platform analytics recipes</h2></a>
 
