@@ -345,38 +345,41 @@ To create a geographical plot, you'll need to use another tool like [R] [r] or [
 
 Within a given time period, we can compare the number of new visitors (for whom `domain_sessionidx` = 1) with returning visitors (for whom `domain_sessionidx` > 1): 
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-MIN(collector_dt) AS `date`,
-CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-IF(domain_sessionidx = 1, 1, 0)  AS new_visitor,
-IF(domain_sessionidx >1, 1,0) AS returning_visitor
-FROM `events_008_cf`
-GROUP BY `session`
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select
+domain_userid,
+domain_sessionidx,
+min(collector_tstamp) as time_first_touch,
+case when domain_sessionidx = 1 then 'new' else 'returning' end as "new_vs_returning"
+from events
+where collector_tstamp > current_date - integer '31'
+group by domain_userid, domain_sessionidx
 {% endhighlight %}
 
 Then we can aggregate them by time period, to get the total new vs returning e.g. by day:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-`date`,
-SUM(new_visitor) AS new_visits,
-SUM(returning_visitor) AS returning_visits
-FROM (
-	SELECT
-	MIN(collector_dt) AS `date`,
-	CONCAT(domain_userid, "-", domain_sessionidx) AS `session`,
-	IF(domain_sessionidx = 1, 1, 0)  AS new_visitor,
-	IF(domain_sessionidx >1, 1,0) AS returning_visitor
-	FROM `events_008_cf`
-	GROUP BY `session` ) v
-GROUP BY `date`
-ORDER BY `date`
+{% highlight sql %}
+/* Redshift / PostgreSQL */
+select
+to_char(time_first_touch, 'YYYY-MM-DD') AS "Date",
+"new_vs_returning" As "New vs returning",
+count(*) AS "Number of visits"
+from (
+	select
+	domain_userid,
+	domain_sessionidx,
+	min(collector_tstamp) AS time_first_touch,
+	case when domain_sessionidx = 1 then 'new' else 'returning' end as "new_vs_returning"
+	from events
+	where collector_tstamp > current_date - integer '31'
+	group by domain_userid, domain_sessionidx
+) v
+group by "Date", "New vs returning"
+order by "Date", "New vs returning"
 {% endhighlight %}
 
-In ChartIO we would plot this by creating two layers: one for "new visits" and the other for "returning visits". The combined graph would then look like:
+In ChartIO:
 
 ![new-vs-returning-visits-by-day][new-vs-returning-visits-by-day]
 
@@ -384,34 +387,16 @@ In ChartIO we would plot this by creating two layers: one for "new visits" and t
 
  <a name="frequency"><h2>12. Behaviour: frequency</h2></a>
 
-We can look at the distribution of users by number of visits they have performed in a given time period. First, we count the number of visits each user has performed in the specific time period:
+We can plot the distribution of visits in a time period by the number of visits each visitor has performed:
 
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-domain_userid,
-count(distinct(domain_sessionidx)) AS visits
-FROM `events_008_cf`
-WHERE collector_dt>'2012-12-31'
-GROUP BY domain_userid;
-{% endhighlight %}
-
-Now we aggregate that data set by the number of visits in the time period:
-
-{% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-`visits`,
-COUNT(DISTINCT(domain_userid))
-FROM (
-	SELECT
-	domain_userid,
-	count(distinct(domain_sessionidx)) AS visits
-	FROM `events_008_cf`
-	WHERE collector_dt>'2012-12-31'
-	GROUP BY domain_userid ) v
-GROUP BY `visits`
-ORDER BY `visits`; 
+{% highlight sql %}
+select
+domain_sessionidx as "Number of visits",
+count(distinct(domain_userid)) as "Frequency"
+from events
+where collector_tstamp > current_date - integer '31'
+group by "Number of visits"
+order by "Number of visits"
 {% endhighlight %}
 
 In ChartIO:
@@ -743,8 +728,8 @@ Plotting the results in ChartIO:
 [fraction-of-visits-per-day-where-the-visitor-is-new]: /static/img/analytics/basic-recipes/fraction-of-visits-per-day-where-the-visitor-is-new-chartio.png
 [average-duration-by-month]: /static/img/analytics/basic-recipes/average-visit-duration-by-month-chartio.png
 [visitors-by-language-chartio]: /static/img/analytics/basic-recipes/visitors-by-language-chartio.png
-[new-vs-returning-visits-by-day]: /static/img/analytics/basic-recipes/new-vs-returning-visits-by-day.png
-[distribution-of-visitors-by-number-of-visits]: /static/img/analytics/basic-recipes/distribution-of-visitors-by-number-of-visits-chartio.png
+[new-vs-returning-visits-by-day]: /static/img/analytics/basic-recipes/new-vs-returning-visits-by-day-chartio.png
+[distribution-of-visitors-by-number-of-visits]: /static/img/analytics/basic-recipes/distribution-of-visitors-by-number-of-visits.png
 [days-since-last-visit-in-chartio]: /static/img/analytics/basic-recipes/days-since-last-visit-in-2013-chartio.png
 [visits-by-duration-chartio]: /static/img/analytics/basic-recipes/visits-by-duration-chartio.png
 [visits-in-the-last-month-by-page-depth]: /static/img/analytics/basic-recipes/visits-in-the-last-month-by-page-depth-chartio.png
