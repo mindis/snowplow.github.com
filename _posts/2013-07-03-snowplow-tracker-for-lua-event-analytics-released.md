@@ -87,10 +87,10 @@ For setting up the tracker in various Lua environments (including [LuaRocks] [lu
 
 To check out the code itself, please see our [snowplow-lua-tracker] [snowplow-lua-tracker] repository in GitHub.
 
-[snowplow-lua-tracker]: 
-[snowplow-js-tracker]: 
-[snowplow-no-js-tracker]: 
-[snowplow-arduino-tracker]: 
+[snowplow-lua-tracker]: https://github.com/snowplow/snowplow-lua-tracker
+[snowplow-js-tracker]: https://github.com/snowplow/snowplow/tree/master/1-trackers/javascript-tracker
+[snowplow-no-js-tracker]: https://github.com/snowplow/snowplow/tree/master/1-trackers/no-js-tracker
+[snowplow-arduino-tracker]: https://github.com/snowplow/snowplow-arduino-tracker
 
 [lua]: http://www.lua.org/
 
@@ -98,8 +98,8 @@ To check out the code itself, please see our [snowplow-lua-tracker] [snowplow-lu
 [openresty]: http://openresty.org/
 [lightroom]: http://www.adobe.com/devnet/photoshoplightroom.html
 
-[busted]: xxx
-[luarocks]: 
+[busted]: http://olivinelabs.com/busted/
+[luarocks]: http://luarocks.org/repositories/rocks/
 
-[lua-tracker-wiki]: xxx
-[lua-tracker-setup-wiki]: xxx
+[lua-tracker-wiki]: https://github.com/snowplow/snowplow/wiki/Lua-Tracker
+[lua-tracker-setup-wiki]: https://github.com/snowplow/snowplow/wiki/Lua-tracker-setup
