@@ -22,7 +22,7 @@ To build that model, though, we need **your help**. In order to ensure that our 
 
 We will then share this data back, in an anonymized form, with the community, as part of the model.
 
-We recognise that that is a fair few data points! To thank Snowplow users for their trouble in providing them (as well as building a model for you). we will *also* send each person that provides data a **free Snowplow T-shirt** in their size.
+We recognise that that is a fair few data points! To thank Snowplow users for their trouble in providing them (as well as building a model for you), we will *also* send each person that provides data a **free Snowplow T-shirt** in their size.
 
 In the rest of this post, we provide simple instructions for pulling the relevant data from Amazon.
 
@@ -250,7 +250,7 @@ from stv_partitions
 order by 1, 2, 3, 4;
 {% endhighlight %}
 
-The amount of used capacity (in MB) is given in the "used" column: it is 1941MB in the below example. The total capacity is given at 1906184 i.e. 1.8TB: that is because we are running a single (2TB) node.
+The amount of used capacity (in MB) is given in the "used" column: it is 1,941MB in the below example. The total capacity is given at 1906184 i.e. 1.8TB: that is because we are running a single (2TB) node.
 
 ![redshift-example][redshift-disk-space]
 
@@ -261,13 +261,11 @@ For our purposes, we only need one of the lines of data to calculate the relatio
 We realize that you, our users, are busy people who have plenty to do aside from spending 20-30 minutes fetching data points related to your Snowplow installation, and sending them to us. We really hope, however, that many of you do, because:
 
 1. A Total Cost of Ownership Model will be really useful for all of us!
-2. We'll send you a Snowplow T-shirt, by way of thanks.
+2. We'll send you a Snowplow T-shirt, by way of thanks
 
 If you can pop the above data points (in whatever format is most convenient), and email them to me on `yali at snowplowanalytics dot com`, along with your T-shirt size, we will send you through your T-shirts as soon as they are printed. 
 
 So please help us help you, and keep plowing!
-
-
 
 [tco-google-group]: https://groups.google.com/forum/#!searchin/snowplow-user/cloudfront$20cost/snowplow-user/b_HPkt3nwzo/Ms-J54e8bUYJ
 [scalding-etl]: /blog/2013/04/03/snowplow-0.8.0-released-with-all-new-scalding-based-data-enrichment/
