@@ -7,8 +7,7 @@ author: Yali
 category: Other
 ---
 
-
-Back in March, [Robert Kingston suggested] [tco-google-group] that we develop a Total Cost of Ownership model for Snowplow: something that would enable a user or prospective user to accurately estimate their Amazon monthly charges going forwards, and see how those costs vary with different traffic levels. We thought that was an excellent idea.
+Back in March, [Robert Kingston suggested] [tco-google-group] that we develop a Total Cost of Ownership model for Snowplow: something that would enable a user or prospective user to accurately estimate their Amazon Web Services monthly charges going forwards, and see how those costs vary with different traffic levels. We thought this was an excellent idea.
 
 Since Rob's suggestion, we've made a number of important changes to the Snowplow platform that have changed the way Snowplow costs scale with the number of events served:
 
@@ -16,16 +15,16 @@ Since Rob's suggestion, we've made a number of important changes to the Snowplow
 2. We dealt with the [small files problem] [small-files-problem], dramatically reducing EMR costs
 3. We enabled support for [task and spot instances] [spot-instances]
 
-As a result of the updates, we held off building the model. Now that they have been delivered, we have started putting together the model in earnest. In this post we'll cover:
+As a result of the pending updates, we held off building the model. But now that they have been delivered, we have started putting together the model. In this post we'll cover:
 
-1. [How the model will work: what drives AWS costs for Snowplow users] (/blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model#details)
-2. [How you can help] (/blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model#help)
+1. [How the model will work: what drives AWS costs for Snowplow users](/blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model#details)
+2. [How you can help](/blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model#help)
 
-We think walking through the [mechanics of the model] (#details) should be useful both to help Snowplow users understand the drivers of their AWS fees, and also an interesting exercise in mathematical modelling. (We will open source the model that we build, and use it to power a calculator on our website, so that anyone can use it to estimate their Snowplow AWS costs.)
+We think walking through the [mechanics of the model](#details) should be useful both to help Snowplow users understand the drivers of their AWS fees, and also an interesting exercise in mathematical modelling: we will open source the model that we build, and use it to power a calculator on our website, so that anyone can use it to estimate their Snowplow AWS costs.
 
 ![your-country-needs-you-image] [your-country-needs-you]
 
-We hope Snowplow users will help us build the model by sharing with us some sample data points (related to the number size of files processed by the Snowplow data pipeline), so that we can build a bottom-up model that is as accurate at low volumes as at estimating the costs associated with processing billions of lines of rows per day. (And can easily be updated as Amazon reduce their AWS pricing, as is becoming increasingly frequent.)
+We hope Snowplow users will help us build the model by sharing with us some sample data points (related to the number size of files processed by the Snowplow data pipeline), so that we can build a bottom-up model that is as accurate at low volumes as it is at estimating the costs associated with processing billions of lines of rows per day. And we intend that the model can easily be updated as Amazon reduce their AWS pricing, as is becoming increasingly frequent.
 
 As an extra incentive, we're offering every Snowplow user who shares some of the data requested below a **free Snowplow T-shirt** :-).
 
@@ -33,32 +32,32 @@ As an extra incentive, we're offering every Snowplow user who shares some of the
 
 <h2><a name="details">1. How the model will work: what drives AWS costs for Snowplow users</a></h2>
 
-It is worth distinguishing the different AWS services, and examining how each scales with volume of events per day, and over time. If we take a *typical* Snowplow user (i.e. one running the [Cloudfront collector] [cloudfront-collector] rather than the [Clojure collector] [clojure-collector]), and storing their data on Redshift for analysis, rather than analyse the data in S3 using EMR) then we need to account for:
+It is worth distinguishing the different AWS services, and examining how each scales with volume of events per day, and over time. If we take a *typical* Snowplow user (i.e. one running the [Cloudfront collector] [cloudfront-collector] rather than the [Clojure collector] [clojure-collector]), and storing their data on Redshift for analysis, rather than analyzing their data in S3 using EMR) then we need to account for:
 
-1 [Cloudfront costs] (#cloudfront),  
-2 [S3 costs] (#s3),  
-3 [EMR costs] (#emr) and  
-4 [Redshift costs] (#redshift).  
+1. [Cloudfront costs](#cloudfront),  
+2. [S3 costs](#s3),  
+3. [EMR costs](#emr) and
+4. [Redshift costs](#redshift)
 
 <h3><a name="cloudfront">1.1 Cloudfront costs</a></h3>
 
 Snowplow uses Cloudfront to serve both `sp.js`, the Snowplow Javascript, and the Snowplow pixel `i`. Broadly, Cloudfront costs scale linearly with the volume of data served out of Cloudfront, with a couple of provisos:
 
-* The cost per MB served goes down, as volumes rise. (Amazon tier the pricing.)
-* The exact cost varies by AWS account region, and the region the browser that loads the content served by Cloudfront is in. (So the exact cost depends on the distribution of your visitors geographically.)
+* The cost per MB served goes down, as volumes rise (because Amazon tier their pricing)
+* The exact cost varies by AWS account region, and the region the browser that loads the content served by Cloudfront is in (so the exact cost depends on the distribution of your visitors geographically)
 
 Modelling the costs is therefore reasonably straightforward. The `i` pixel is served with every event tracked: so we can calculate the cost of serving `i` based on the size of `i` (it is 37 bytes), the number of events, and the geographic split of visitors by Amazon region. The costs scale almost linearly with the number of events tracked per day.
 
-Modelling the cost of serving `sp.js` is a little trickier. As discussed in our blog post on [browser caching] [browser-caching], it is possible to set `sp.js` so that it is only served once per unique visitor, rather than once per event. Because `sp.js` is 37KB (so a lot larger than `i`), this has a significant impact on your Cloudfront costs. From a modelling perspective, however, it makes it easy to estimate costs, based on the number of unique visitors per month, and their geographic distribution by Amazon regions. The costs scale almost linearly with the number of unique visitors to the site / network.
+Modelling the cost of serving `sp.js` is a little trickier. As discussed in our blog post on [browser caching] [browser-caching], it is possible to set `sp.js` so that it is only served once per unique visitor, rather than once per event. Because `sp.js` is 37KB (so a lot larger than `i`), this has a significant impact on your Cloudfront costs. From a modelling perspective, then, we should estimate costs, based on the number of unique visitors per month, and their geographic distribution by Amazon regions. The costs scale almost linearly with the number of unique visitors to the site / network.
 
 <h3><a name="s3">1.2 S3 costs</a></h3>
 
 Snowplow uses S3 to store event data. Amazon charges for S3 based on:
 
 * The volume of data stored in S3
-* The number of requests for that data. (In the form of `GET` / `PUT` / `COPY` requests.)
+* The number of requests for that data (in the form of `GET` / `PUT` / `COPY` requests)
 
-Modelling how the volume of data grows with increasing numbers of events, and over time (as the amount of data stored in S3 grows, because Snowplow users generally never throw data away) is straightforward: we calculate how long a 'typical' row of Snowplow data is in the raw collector logs, and then in the enriched Snowplow event files. We then assume one row of each type for every event that has been tracked, sum to find the total required storage space, and multiply by Amazon S3's cost per GB. 
+Modelling how the volume of data grows with increasing numbers of events, and over time (as the amount of data stored in S3 grows, because Snowplow users generally never throw data away) is straightforward: we calculate how large a 'typical' row of Snowplow data is in the raw collector logs, and then in the enriched Snowplow event files. We then assume one row of each type for every event that has been tracked, sum to find the total required storage space, and then multiply by Amazon S3's cost per GB. 
 
 What is more tricky is modelling the number of requests to S3 for the files. To understand why, we need to examine the Snowplow data pipeline, and in particular, the part of the pipeline that takes the raw data generated by the Snowplow collector, cleans that data, enriches it, and uploads the enriched data into Amazon Redshift for analysis.
 
@@ -68,8 +67,8 @@ The first part of the data pipeline is orchestrated by [EmrEtlRunner][emr-etl-ru
 
 This encapsulates the bulk of the data processing:
 
-* Raw collector log files that need to be processed are identified in the in-bucket, and moved to the processing bucket.
-* EmrEtlRunner then triggers the Enrichment process to run. This spins up an EMR cluster, loads the data in the processing bucket into HDFS, loads Scalding Enrichment process (as a JAR) and uses that JAR to process the raw logs uploaded into HDFS. The output of that processing is written back, into HDFS.
+* Raw collector log files that need to be processed are identified in the in-bucket, and moved to the processing bucket
+* EmrEtlRunner then triggers the Enrichment process to run. This spins up an EMR cluster, loads the data in the processing bucket into HDFS, loads Scalding Enrichment process (as a JAR) and uses that JAR to process the raw logs uploaded into HDFS. The output of that processing is written back, into HDFS
 * The output of that Scalding Enrichment is then copied from HDFS into the out-bucket in S3. The EMR cluster is then shut down.
 * Once the job has completed, the raw logs are moved from the processing bucket to the archive bucket.
 
