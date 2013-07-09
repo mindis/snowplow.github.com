@@ -57,8 +57,8 @@ The first part of the data pipeline is orchestrated by [EmrEtlRunner][emr-etl-ru
 This encapsulates the bulk of the data processing:
 
 * Raw collector log files that need to be processed are identified in the in-bucket, and moved to the processing bucket
-* EmrEtlRunner then triggers the Enrichment process to run. This spins up an EMR cluster, loads the data in the processing bucket into HDFS, loads Scalding Enrichment process (as a JAR) and uses that JAR to process the raw logs uploaded into HDFS. The output of that processing is written back, into HDFS
-* The output of that Scalding Enrichment is then copied from HDFS into the out-bucket in S3. The EMR cluster is then shut down.
+* EmrEtlRunner then triggers the Enrichment process to run. This spins up an EMR cluster, loads the data in the processing bucket into HDFS, loads Scalding Enrichment process (as a JAR) and uses that JAR to process the raw logs uploaded into HDFS.
+* The output of that Scalding Enrichment process is then written straight into S3. The EMR cluster is then shut down.
 * Once the job has completed, the raw logs are moved from the processing bucket to the archive bucket.
 
 For modelling AWS costs (and S3 costs in particular), we need to note that two `COPY` requests are executed for each collector log file written to S3: one to move that data from the in-bucket to the processing-bucket, and then another one to move the same file from the processing-bucket to the archive bucket. 
