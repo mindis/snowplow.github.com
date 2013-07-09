@@ -19,7 +19,7 @@ Here is a taster for using the library from C Sharp:
 using RefererParser;
 
 string refererUrl = "http://www.google.com/search?q=gateway+oracle+cards+denise+linn&hl=en&client=safari";
-string pageUrl    = "http:/www.psychicbazaar.com/shop" // Our current URL
+string pageUrl    = "http:/www.psychicbazaar.com/shop"; // Our current URL
 
 var referer = Parser.Parse(new Uri(refererUrl), pageUrl);
 
@@ -34,7 +34,7 @@ After the jump we will hear from author Sepp Wijnands and then provide some brie
 
 ## A brief interview with author Sepp Wijnands
 
-We asked [Sipp] [swijnands] to tell us a little bit about himself, iPerform Software and why he ported referer-parser to the Dot Net platform:
+We asked [Sepp] [swijnands] to tell us a little bit about himself, iPerform Software and why he ported referer-parser to the Dot Net platform:
 
 _[iPerform Software] [iperform] (website in Dutch) helps companies in the Benelux succeed with their integration and web application needs. Our focus lies on modern Line of Business web applications, and pride ourselves with the ability to integrate almost anything and everything._
 
