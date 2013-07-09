@@ -21,14 +21,14 @@ As a result of the pending updates, we held off building the model. But now that
 
 It is worth distinguishing the different AWS services, and examining how each scales with volume of events per day, and over time. If we take a *typical* Snowplow user (i.e. one running the [Cloudfront collector] [cloudfront-collector] rather than the [Clojure collector] [clojure-collector]), and storing their data on Redshift for analysis, rather than analyzing their data in S3 using EMR) then we need to account for:
 
-1. [Cloudfront costs](#cloudfront),  
-2. [S3 costs](#s3),  
-3. [EMR costs](#emr) and
-4. [Redshift costs](#redshift)
+1. [Cloudfront costs](/blog/2013/07/09/understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs/#cloudfront),  
+2. [S3 costs](/blog/2013/07/09/understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs/#s3),  
+3. [EMR costs](/blog/2013/07/09/understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs/#emr) and
+4. [Redshift costs](/blog/2013/07/09/understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs/#redshift)
 
 <!--more-->
 
-<h3><a name="cloudfront">1.1 Cloudfront costs</a></h3>
+<h3><a name="cloudfront">1. Cloudfront costs</a></h3>
 
 Snowplow uses Cloudfront to serve both `sp.js`, the Snowplow Javascript, and the Snowplow pixel `i`. Broadly, Cloudfront costs scale linearly with the volume of data served out of Cloudfront, with a couple of provisos:
 
@@ -39,7 +39,7 @@ Modelling the costs is therefore reasonably straightforward. The `i` pixel is se
 
 Modelling the cost of serving `sp.js` is a little trickier. As discussed in our blog post on [browser caching] [browser-caching], it is possible to set `sp.js` so that it is only served once per unique visitor, rather than once per event. Because `sp.js` is 37KB (so a lot larger than `i`), this has a significant impact on your Cloudfront costs. From a modelling perspective, then, we should estimate costs, based on the number of unique visitors per month, and their geographic distribution by Amazon regions. The costs scale almost linearly with the number of unique visitors to the site / network.
 
-<h3><a name="s3">1.2 S3 costs</a></h3>
+<h3><a name="s3">2. S3 costs</a></h3>
 
 Snowplow uses S3 to store event data. Amazon charges for S3 based on:
 
@@ -95,7 +95,7 @@ In the case of forecasting the number of Snowplow Event files: this should be mo
 
 As we [explain below](#help), we hope to plot the above graphs with data points volunteered by Snowplow users, to see if we are correct, and then use to drive the model.
 
-<h3><a name="emr">1.3 EMR costs</a></h3>
+<h3><a name="emr">3. EMR costs</a></h3>
 
 Snowplow uses EMR to run the Enrichment process on the raw logs created by the collector. Because the process is powered by Hadoop, it should scale linearly: double the number of lines of data to be processed, the time to process should double. Double the number of machines in the cluster, the processing time should be halved.
 
@@ -119,7 +119,7 @@ One of the things we realised when we started the modelling exercise, was that w
 
 We also hope this post is interesting for anyone with an interest in modelling technology costs (and AWS costs in particular).
 
-Lastly, we hope that this has piqued the interest of any Snowplow user who would value the Total Cost of Ownership model. As alluded to above, [you can help us build that model][help], by providing us with the data points we need to validate the above hypothesised relationships, and model them accurately. We detail how you can help, exactly, in a [follow on post][follow-on-post].
+Lastly, we hope that this has piqued the interest of any Snowplow user who would value the Total Cost of Ownership model. As alluded to above, [you can help us build that model][follow-on-post], by providing us with the data points we need to validate the above hypothesised relationships, and model them accurately. We detail how you can help, exactly, in a [follow on post][follow-on-post].
 
 [tco-google-group]: https://groups.google.com/forum/#!searchin/snowplow-user/cloudfront$20cost/snowplow-user/b_HPkt3nwzo/Ms-J54e8bUYJ
 [scalding-etl]: /blog/2013/04/03/snowplow-0.8.0-released-with-all-new-scalding-based-data-enrichment/
@@ -149,4 +149,4 @@ Lastly, we hope that this has piqued the interest of any Snowplow user who would
 [tech-doc]: https://github.com/snowplow/snowplow/wiki/Snowplow-technical-documentation
 [snowplow-wiki]: https://github.com/snowplow/snowplow/wiki
 [help]: /blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model/
-[follow-on-post]: /blog/2013/07/08/help-us-build-out-the-snowplow-total-cost-of-ownership-model/
+[follow-on-post]: /blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/

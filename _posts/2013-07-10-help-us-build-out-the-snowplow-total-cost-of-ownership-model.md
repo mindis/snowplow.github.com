@@ -13,12 +13,12 @@ In a [previous blog post][previous-post], we described how we were in the proces
 
 To build that model, though, we need **your help**. In order to ensure that our model is accurate and robust, we need to make sure that the relationships we believe exist between the number of events tracked, and the number and size of files generated, as detailed in the [last post][previous-post], are correct, and that we have modelled them accurately. To that end, we are asking Snowplow users to help us by providing the following data:
 
-1. [The number of events tracked per day](/blog/2013/07/09/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#events-per-day)
-2. [The number of times the enrichment process is run per day](/blog/2013/07/09/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#runs-per-day)
-3. [The number of Cloudfront log files generated per day, and the volume of data](/blog/2013/07/09/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#log-files-per-day)
-4. [The amount of time taken to enrich the data in EMR (and the size of cluster used to perform the enrichment)](#emr-details)
-5. [The number of files outputted back to S3, and the size of those files](/blog/2013/07/09/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#output-back-to-s3)
-6. [The total number of lines of data in Redshift, and the amount of Redshift capacity used](/blog/2013/07/09/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#redshift-data-points)
+1. [The number of events tracked per day](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#events-per-day)
+2. [The number of times the enrichment process is run per day](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#runs-per-day)
+3. [The number of Cloudfront log files generated per day, and the volume of data](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#log-files-per-day)
+4. [The amount of time taken to enrich the data in EMR (and the size of cluster used to perform the enrichment)](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#emr-details)
+5. [The number of files outputted back to S3, and the size of those files](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#output-back-to-s3)
+6. [The total number of lines of data in Redshift, and the amount of Redshift capacity used](/blog/2013/07/10/help-us-build-out-the-snowplow-total-cost-of-ownership-model/#redshift-data-points)
 
 We will then share this data back, in an anonymized form, with the community, as part of the model.
 
@@ -28,7 +28,7 @@ In the rest of this post, we provide simple instructions for pulling the relevan
 
 <!--more-->
 
-<h3><a name="events-per-day">2.1 Calculating the number of events tracked per day</a></h3>
+<h3><a name="events-per-day">1. Calculating the number of events tracked per day</a></h3>
 
 Simply execute the following SQL statement in Redshift
 
@@ -42,7 +42,7 @@ AND collector_tstamp< {$START-DATE}
 GROUP BY "Day"
 {% endhighlight %}
 
-<h3><a name="runs-per-day">2.2 Calculating the number of times the enrichment process is run per day</a></h3>
+<h3><a name="runs-per-day">2. Calculating the number of times the enrichment process is run per day</a></h3>
 
 Most Snowplow users run the enrichment process once per day.
 
@@ -50,7 +50,7 @@ You can confirm how many times you run Snowplow by logging into the AWS S3 conso
 
 ![aws-s3-screenshot][number-of-runs-per-day]
 
-<h3><a name="log-files-per-day">2.3 Measuring The number of Cloudfront log files generated per day, adn the volume of data</a></h3>
+<h3><a name="log-files-per-day">3. Measuring The number of Cloudfront log files generated per day, adn the volume of data</a></h3>
 
 This is most easily done using an S3 front end, as the AWS S3 console is a bit limited. We use [Cloudberry][cloudberry]. On Cloudberry, you can read the number of files generated per day, and their size, directly, by simply right clicking on the folder with the day's worth of log file archives and selecting properties:
 
@@ -58,7 +58,7 @@ This is most easily done using an S3 front end, as the AWS S3 console is a bit l
 
 In the above case we see there were 370 files generated on 2013-07-08, which occupied a total of 366.5KB.
 
-<h3><a name="emr-details">2.4 The amount of time taken to enrich the data in EMR (and the size of cluster used to perform the enrichment)</a></h3>
+<h3><a name="emr-details">4. The amount of time taken to enrich the data in EMR (and the size of cluster used to perform the enrichment)</a></h3>
 
 You can use the EMR command line tools to generate a JSON with details of each EMR job. In the below example, we pull a JSON for a specific job:
 
@@ -224,7 +224,7 @@ Or all the data for every job in the last fortnight:
 $ ./elastic-mapreduce --describe all > emr-job-data.json
 {% endhighlight %}
 
-<h3><a name="output-back-to-s3">2.5 Measuring the number of files written back to S3, and their size</a></h3>
+<h3><a name="output-back-to-s3">5. Measuring the number of files written back to S3, and their size</a></h3>
 
 We can use Cloudberry again. Simply identify a folder in the archive bucket specified in the [StorageLoader config][storage-loader-config-file], right click on it and select properties:
 
@@ -232,7 +232,7 @@ We can use Cloudberry again. Simply identify a folder in the archive bucket spec
 
 In the above example, 3 files were generated for a single run, with a total size of 981.4KB.
 
-<h3><a name="redshift-data-points">2.6 The total number of lines of data in Redshift, and the amount of Redshift capacity used</a></h3>
+<h3><a name="redshift-data-points">6. The total number of lines of data in Redshift, and the amount of Redshift capacity used</a></h3>
 
 Measuring the amount of space occupied by your events in Redshift is very easy.
 
@@ -258,10 +258,12 @@ For our purposes, we only need one of the lines of data to calculate the relatio
 
 ## Help us build an accurate, robust model, that we all can use to forecast Snowplow AWS costs
 
-We realise that you, our users, are busy people who have plenty to do aside from spending 20-30 minutes fetching data points related to your Snowplow installation, and sending them to us. We really hope, however, that many of you do, because:
+We realize that you, our users, are busy people who have plenty to do aside from spending 20-30 minutes fetching data points related to your Snowplow installation, and sending them to us. We really hope, however, that many of you do, because:
 
 1. A Total Cost of Ownership Model will be really useful for all of us!
 2. We'll send you a Snowplow T-shirt, by way of thanks.
+
+If you can pop the above data points (in whatever format is most convenient), and email them to me on `yali at snowplowanalytics dot com`, along with your T-shirt size, we will send you through your T-shirts as soon as they are printed. 
 
 So please help us help you, and keep plowing!
 
@@ -292,4 +294,4 @@ So please help us help you, and keep plowing!
 [number-of-collector-logs-and-size]: /static/img/blog/2013/07/number-of-collector-logs-and-size.JPG
 [redshift-disk-space]: /static/img/blog/2013/07/redshift-disk-space.JPG 
 [number-of-snowplow-event-files-and-size]: /static/img/blog/2013/07/number-of-snowplow-event-files-and-size.JPG
-[previous-post]: /blog/2013/07/09/2013-07-08-understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs.html
+[previous-post]: /blog/2013/07/09/understanding-how-different-parts-of-the-Snowplow-data-pipeline-drive-AWS-costs/
