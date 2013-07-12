@@ -300,5 +300,5 @@ Back to [top](#top).
 [association-rule-learning]: http://en.wikipedia.org/wiki/Association_rule_learning
 [arules-r-package]: http://cran.r-project.org/web/packages/arules/index.html
 [apriori]: http://en.wikipedia.org/wiki/Apriori_algorithm
-[r-setup-guide]: https://github.com/snowplow/snowplow/wiki/Setting-up-R-to-perform-more-sophisticated-analysis-on-your-data
+[r-setup-guide]: https://github.com/snowplow/snowplow/wiki/Setting-up-R-to-perform-more-sophisticated-analysis-on-your-Snowplow-data
 [r]: http://www.r-project.org/

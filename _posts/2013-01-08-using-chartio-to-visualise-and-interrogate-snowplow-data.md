@@ -432,7 +432,7 @@ We're going to continue to use ChartIO (and blog about the results). We'd love t
 [setup]: /blog/2013/01/08/using-chartio-to-visualise-and-interrogate-snowplow-data#setup
 [engagement]: /blog/2013/01/08/using-chartio-to-visualise-and-interrogate-snowplow-data#engagement
 [olap]: /analytics/tools-and-techniques/converting-snowplow-data-into-a-format-suitable-for-olap.html
-[setup-chartio]: https://github.com/snowplow/snowplow/wiki/ChartIO-setup
+[setup-chartio]: https://github.com/snowplow/snowplow/wiki/Setting-up-ChartIO-to-visualize-Snowplow-data
 [pbz]: http://www.psychicbazaar.com/
 [measuring-engagement]: /analytics/customer-analytics/user-engagement.html
 [chartio-pic-0]: /static/img/blog/2013/01/chartio-0.png

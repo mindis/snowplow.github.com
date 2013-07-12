@@ -320,7 +320,7 @@ In this recipe, we've covered how we can measure how much individual items in ou
 [content-page-performance]: /analytics/catalog-analytics/measuring-and-comparing-content-page-performance.html
 [snowplow-website]: http://snowplowanalytics.com/
 [pbz-website]: http://www.psychicbazaar.com/
-[tableau-redshift-setup]: https://github.com/snowplow/snowplow/wiki/Setting-up-Tableau-to-analyse-data-in-Redshift
+[tableau-redshift-setup]: https://github.com/snowplow/snowplow/wiki/Setting-up-Tableau-to-analyze-your-Snowplow-data
 [where-does-your-traffic-really-come-from]: /blog/2013/05/10/where-does-your-traffic-really-come-from/
 [r]: http://www.r-project.org/
 [powerpivot]: http://www.microsoft.com/en-us/bi/PowerPivot.aspx

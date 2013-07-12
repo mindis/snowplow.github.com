@@ -634,7 +634,7 @@ Back to [top](#top).
 
 
 
-[install-r]: https://github.com/snowplow/snowplow/wiki/Setting-up-R-to-perform-more-sophisticated-analysis-on-your-data
+[install-r]: https://github.com/snowplow/snowplow/wiki/Setting-up-R-to-perform-more-sophisticated-analysis-on-your-Snowplow-data
 [graph-1]: /static/img/analytics/tools/r/uniques-by-day.png
 [graph-2]: /static/img/analytics/tools/r/breadth-and-depth-engagement.png
 [graph-3]: /static/img/analytics/tools/r/jitter-with-transparency.png
