@@ -19,7 +19,7 @@ Granular data means you can drill down and slice your data by customers, article
 
 ### Every type of analysis, using *any* analysis tool
 
-* BI tools e.g. [ChartIO] [chartio], [Tableau] [tableau], [Microstrategy] [microstrategy]
+* BI tools e.g. [Excel][excel], [ChartIO] [chartio], [Tableau] [tableau], [Microstrategy] [microstrategy]
 * Machine learning tools e.g. [Mahout] [mahout], [Weka] [weka]
 * Statistical tools e.g. [R] [r], [SPSS] [spss]
 
@@ -47,3 +47,4 @@ Granular data means you can join e.g. customer-data at an individual customer le
 [customer-analytics]: /analytics/customer-analytics/overview.html
 [catalog-analytics]: /analytics/catalog-analytics/overview.html
 [platform-analytics]: /analytics/platform-analytics/overview.html
+[excel]: http://office.microsoft.com/en-gb/excel-help/what-s-new-in-excel-2013-HA102809308.aspx
