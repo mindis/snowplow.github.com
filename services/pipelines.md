@@ -11,6 +11,12 @@ The last few years have seen the development of a new breed of ETL tools that en
 
 We use that experience to assist clients develop and implement sophisticated data pipelines using these new technologies and cloud based services. 
 
+## Experts in developing and delivering data processing infrastructure on AWS
+
+<img src="/static/img/APN_Standard_Technology_Partner.png" title="Amazon Web Services Technology Partner" width="250" />
+
+*Snowplow Analytics is proud to be an Amazon Web Services Technology Partner.*
+
 ## Sounds interesting?
 
 [Get in touch] [contact] to discuss your requirements with the Snowplow Professional Services team.

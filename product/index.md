@@ -11,7 +11,7 @@ Snowplow is the most powerful, flexible, scalable web analytics platform in the 
 
 * Direct access to all your customer-level and event-level data
 * Data is structured in an easy-to-query format
-* Data stored on your own Amazon account (S3 and Infobright) 
+* Data stored on your own Amazon Web Services account (in S3 and optionally Redshift), so you can query it using *any* tool you want 
 * Enterprise-strength. Scales to 100Ms of events per day
 
 Open source
@@ -23,7 +23,10 @@ Snowplow lets you [do more with your data] [do-more-with-your-data]. Find out [w
 
 [Get started with Snowplow today] [get-started].
 
+<img src="/static/img/APN_Standard_Technology_Partner.png" title="Amazon Web Services Technology Partner" width="250" />
 
+*Snowplow Analytics is proud to be an Amazon Web Services Technology Partner.*
 
 [do-more-with-your-data]: do-more-with-your-data.html
 [get-started]: get-started.html
+[amazon-logo]: /static/img/APN_Standard_Technology_Partner.png 

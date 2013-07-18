@@ -21,6 +21,13 @@ We offer four services:
 In addition to the services offered above, we offer a premium support package called [Snowplow Care] [care]. Click [here] [care] for more information.
 
 
+## Experts at designing, developing, deploying and using data processing infrastructure
+
+<img src="/static/img/APN_Standard_Technology_Partner.png" title="Amazon Web Services Technology Partner" width="250" />
+
+*Snowplow Analytics is proud to be an Amazon Web Services Technology Partner.*
+
+
 
 
 

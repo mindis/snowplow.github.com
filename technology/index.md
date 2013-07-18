@@ -53,6 +53,10 @@ Once your Snowplow data is available in storage, you can plug it into multiple d
 * View the [technical documentation] [tech-docs] to learn more about each subsystem.
 * View the [setup guide] [setup-guide] for step-by-step instructions on installing individual subsystems, and Snowplow as a whole.
 
+<img src="/static/img/APN_Standard_Technology_Partner.png" title="Amazon Web Services Technology Partner" width="250" />
+
+*Snowplow Analytics is proud to be an Amazon Web Services Technology Partner.*
+
 
 [js-tracker]: https://github.com/snowplow/snowplow/tree/master/1-trackers/javascript-tracker
 [no-js-tracker]: https://github.com/snowplow/snowplow/tree/master/1-trackers/no-js-tracker
