@@ -29,6 +29,11 @@ permalink: index.html
 	<div class="big-button" id="right-button"><a href="/product/get-started.html">Setup Snowplow today</a></div>
 </div>
 
+<div id="testimonial">
+	<div class="quote">We see great promise in Snowplow Analytics, an open source platform that derives intelligent information from regular web analytics, based on open data principles and cloud storage</div>
+	<div class="auth"><a href="http://thoughtworks.fileburst.com/assets/technology-radar-may-2013.pdf" target="_blank">Thoughtworks Tech Radar, May 2013</a></div>
+</div>
+
 <div class="column">
 	<h2>Open source</h2>
 	<ul>
