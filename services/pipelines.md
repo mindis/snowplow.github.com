@@ -5,11 +5,13 @@ title: Data pipelines and algorithms
 weight: 5
 ---
 
-# Data pipelines and algorithms
+# Data pipelines and analytics infrastructure
 
-The last few years have seen the development of a new breed of ETL tools that enable the construction of sophisticated, fault tolerent, scalable data pipelines. We employ many of those tools in the Snowplow data pipeline, including software tools [Hadoop] [hadoop], [Hive] [hive] [Cascading] [cascading] and [Scalding] [scalding], and cloud computing based tools e.g. [Elastic Mapreduce] [emr] and [Amazon Redshift] [redshift]. 
+Want to leverage Amazon Web Services and big data technologies to help you get get value out of your company-specific data?
 
-We use that experience to assist clients develop and implement sophisticated data pipelines using these new technologies and cloud based services. 
+We have significant experience using Amazon Web Services including EMR, Redshift and Dynamo DB to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We often use that experience to help clients implement custom data pipelines and analytic infrastructure to match their particular event models and data sets.
+
+We are familiar not just with AWS, but a range of open source data processing technologies including  [Hadoop] [hadoop], [Hive] [hive] [Cascading] [cascading] and [Scalding] [scalding], and BI and analysis tools including [Tableau] [tableau], [ChartIO] [chartio] and [R] [r], all of which we can stitch together to deliver agile datawarehousing and reporting solutions for fast-movign, data-driven companies.
 
 ## Experts in developing and delivering data processing infrastructure on AWS
 
@@ -28,3 +30,6 @@ We use that experience to assist clients develop and implement sophisticated dat
 [emr]: http://aws.amazon.com/elasticmapreduce/
 [redshift]: http://aws.amazon.com/redshift/
 [hive]: http://hive.apache.org/
+[tableau]: http://www.tableausoftware.com/
+[chartio]: https://chartio.com/
+[r]: http://cran.r-project.org/
