@@ -10,25 +10,26 @@ $(function() {
       var company = $("input#company").val();
       var size = $("select#size").val();
 
+      var entry = {
+        'question': $("textarea#question").val(),
+        'name': $("input#name").val(), 
+        'email': $("input#email").val(),
+        'telephone': $("input#phone").val(),
+        'company': $("input#company").val(),
+        'size': $("select#size").val()
+      };
+
       // alert("Question is " + question + " name: " + name + " email: " + email + " telephone: " + phone + " company: " + company + " domain: " + domain + " size: " + size);
       
     	// validate the form
-      if(inputIsValid(question, name, email, telephone, company, size)) {
+      if(inputIsValid(entry)) {
         // Process the form
-        var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
         $.ajax({
-          type: "POST",
-          url: "http://ping.snowplowanalytics.com",
-          dataType: 'jsonp',
+          type: 'POST',
+          url: 'http://ping.snowplowanalytics.com',
+          dataType: 'json',
           async: false,
-          data: {
-            'request': 'pro-services',
-            'name': name,
-            'email': email,
-            'telephone_number': telephone,
-            'company': company,
-            'events_per_month': size
-          },
+          data: JSON.stringify({ Entry: entry }),
           success: function () {
             $('#contact_form').html("<div_id='message'></div>");
             $('#message').html("<h2>Contact Form Submitted!</h2>")
@@ -36,9 +37,7 @@ $(function() {
             .hide();
           },
           error: function (msg, url, line) {
-            alert('error trapped in error: function(msg, url, line)');
-            alert('msg = ' + msg + ', url = ' + url + ', line = ' + line);
-
+            alert('Not submitted');
           }
         });
         return false;
@@ -49,20 +48,20 @@ $(function() {
   /* 
    * Validate the fields inputted
    */ 
-  function inputIsValid(question, name, email, telephone, company, size) {
-    if (question == "") {
+  function inputIsValid(entry) {
+    if (entry.question == "") {
       $("label#question_error").show();
       $("textarea#question").focus();
       return false;
     }
 
-    if (name == "") {
+    if (entry.name == "") {
       $("label#name_error").show();
       $("input#name").focus();
       return false;
       }
 
-    if (isRFC822ValidEmail(email) == false) {
+    if (isRFC822ValidEmail(entry.email) == false) {
       $("label#email_error").show();
       $("input#email").focus();
       return false;
