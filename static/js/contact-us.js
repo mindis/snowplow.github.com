@@ -8,27 +8,37 @@ $(function() {
       var email = $("input#email").val();
       var telephone = $("input#phone").val();
       var company = $("input#company").val();
-      var domain = $("input#domain").val();
       var size = $("select#size").val();
 
       // alert("Question is " + question + " name: " + name + " email: " + email + " telephone: " + phone + " company: " + company + " domain: " + domain + " size: " + size);
       
     	// validate the form
-      if(inputIsValid(question, name, email, telephone, company, domain, size)) {
+      if(inputIsValid(question, name, email, telephone, company, size)) {
         // Process the form
         var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
         $.ajax({
           type: "POST",
-          url: "bin/process.py",
-          data: dataString,
+          url: "http://ping.snowplowanalytics.com",
+          dataType: 'jsonp',
+          async: false,
+          data: {
+            'request': 'pro-services',
+            'name': name,
+            'email': email,
+            'telephone_number': telephone,
+            'company': company,
+            'events_per_month': size
+          },
           success: function () {
             $('#contact_form').html("<div_id='message'></div>");
             $('#message').html("<h2>Contact Form Submitted!</h2>")
-            .append("<p>We will be in touch soon.</p>")
-            .hide()
-            .fadeIn(1500, function() {
-              $('#message').append("<img id='checkmark' src='images/check.png' />");
-            });
+            .append("<p>Many thanks. We will be in touch soon.</p>")
+            .hide();
+          },
+          error: function (msg, url, line) {
+            alert('error trapped in error: function(msg, url, line)');
+            alert('msg = ' + msg + ', url = ' + url + ', line = ' + line);
+
           }
         });
         return false;
@@ -39,7 +49,7 @@ $(function() {
   /* 
    * Validate the fields inputted
    */ 
-  function inputIsValid(question, name, email, telephone, company, domain, size) {
+  function inputIsValid(question, name, email, telephone, company, size) {
     if (question == "") {
       $("label#question_error").show();
       $("textarea#question").focus();

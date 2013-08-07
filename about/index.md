@@ -35,16 +35,14 @@ Then get in touch!
 	  <label for="company" id="company_label">Company</label>
 	  <input type="text" name="company" id="company" size="30" value="" class="text-input" />
 
-	  <label for="domain" id="domain_label">Domain</label>
-	  <input type="text" name="domain" id="domain" size="30" value="" class="text-input" />
-
 	  <label for="size" id="size_label">Number of events per month</label>
 	  <select name="size" id="size">
-	  	<option>Less than 10M</option>
+	  	<option>Less than 1M</option>
+	  	<option>1M - 10M</option>
 	  	<option>10M - 100M</option>
 	  	<option>100M - 1B</option>
 	  	<option>1B - 10B</option>
-	  	<option>10B+</option>
+	  	<option>More than 10Bn</option>
 	  </select>
 	  <br />
 	  <input type="submit" name="submit" class="button" id="submit_btn" value="Send" />
