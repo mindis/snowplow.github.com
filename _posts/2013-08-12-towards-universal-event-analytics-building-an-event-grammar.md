@@ -42,8 +42,8 @@ All of the human languages mentioned above (and many, many others) share the sam
 To go through these in turn:
 
 * **Subject**, sometimes known as the _nominative_. This is the entity which is carrying out the action: "**I** wrote a sentence"
-* **Verb**, this describes the action being done by the Subject. Verbs can be in the _active_ or _passive voice_ - but we are only concerned with the active voice in this post. Verbs conjugate in lots of other ways (tense, person, mood etc), but we don't need to worry about these here
-* **Object**, or _accusative_. This is the entity to which the action is being done
+* **Verb**, this describes the action being done by the Subject. Verbs can be in the _active_ or _passive voice_ - but we are only concerned with the active voice in this post. Verbs conjugate in lots of other ways (tense, person, mood etc), but we don't need to worry about these here: "I **wrote** a sentence"
+* **Object**, or _accusative_. This is the entity to which the action is being done: "I wrote **a sentence**"
 * **Indirect object**, or alternatively the _dative_. A slightly more tricky concept: this is the entity indirectly affected by the action
 * ****
 
