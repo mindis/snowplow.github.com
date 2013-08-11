@@ -80,16 +80,16 @@ In a gifting screen within the game (Context), the player (Subject) gifts (Verb)
 
 ![videogame2] [videogame2]
 
-During a two-player skirmish (Context), the first player (Subject) kills (Verb) the second player (Object) using a nailgun (Prepositional Object). This illustrates how your end-users can be the object of events, not just their subjects
+During a two-player skirmish (Context), the first player (Subject) kills (Verb) the second player (Object) using a nailgun (Prepositional Object). This illustrates how your end-users can be the object of events, not just their subjects.
 
 ![videogame3] [videogame3]
 
-Here we illustrate a reflective verb: through a grinding experience (Context), the player (Subject) levels herself up (Verb, reflexive). A reflexive verb is one where the subject and the direct object are the same.
+Here we illustrate a reflexive verb: through grinding (Context), the player (Subject) levels herself up (Verb, reflexive). A reflexive verb is one where the Subject and the Object are the same.
 
 <a name="media"> </a>
 <h2>4. Modelling some digital media events</h2>
 
-Finally, let's map our new event grammar onto media and publishing:
+This seems to be working well! Finally, let's map our new event grammar onto the world of digital media and publishing:
 
 ![media1] [media1]
 
@@ -97,16 +97,16 @@ While consuming media on your site (Context), a user (Subject) reads (Verb) an a
 
 ![media2] [media2]
 
-Wanting to share content socially (Context), a user (Subject) shares (Verb) a Video (Object) on Twitter (Prepositional Object).
+Wanting to share content socially (Context), a user (Subject) shares (Verb) a video (Object) on Twitter (Prepositional Object).
 
 ![media3] [media3]
 
-Working from the moderation UI (Context), an administrator (Subject) bans (Verb) user #23 (Object). This illustrates how an end-user can be the direct object of an event, and how someone other than an end-user can be the subject of the event.
+Working from the moderation UI (Context), an administrator (Subject) bans (Verb) user #23 (Object). This illustrates how an end-user can be the Object of an event, and how someone other than an end-user can be the Subject of the event.
 
 <a name="learnings"> </a>
 <h2>5. What have we learnt</h2>
 
-As you can see, it is relatively straightforward to map any digital event into these 6 "slots" of: Subject, Verb, Object, Indirect Object, Prepositional Object and Context. This is unsurprising: this fundamental grammar has been accurately modelling events across many human languages across thousands of years.
+As you can see, it is relatively straightforward to map any of the digital events above into these six "slots" of: Subject, Verb, Object, Indirect Object, Prepositional Object and Context. This is unsurprising: this core grammar has been unambiguously describing events in many different human languages across thousands of years.
 
 Going through the above exercise, several further things have become clear to us that we will want to factor into the Snowplow event grammar going forwards:
 
@@ -117,7 +117,9 @@ Most web and event analytics systems make the mistake of making the Subject of t
     (End user) added product to basket
     (Admin) banned user #23
 
-This is a mistake, because as we have seen above, the Subject is a key component of our event grammar; it is particularly dangerous to assume that the Subject of every event is your end user, because that is not always the case either (as per the admin ban above).
+This is a mistake, because as we have seen above, the Subject is a key component of our event grammar.
+
+Going further, it is particularly dangerous to assume that the Subject of every event is your end user aka customer, because we have seen cases where this is not the case.
 
 ### An entity can be Subject or Object or both across multiple events
 
@@ -134,18 +136,18 @@ Most analytics systems miss the fact that an end user (for example) is not merel
 
 ### We can keep our Verbs really simple
 
-All of the events above were accomplished using verbs in the active voice, not the passive voice:
+All of the events above were modelled simply using verbs in the active voice, not the passive voice:
 
 * Active voice: I watch a video
 * Passive voice: the video was watched by Alex
 
-We don't need to use passive voice for our event model, because we can express any event using solely the active voice.
+We don't need to use passive voice for our event model, because we can always derive (if needed) a passive voice event from our active voice event.
 
-Equally, verbs conjugate in lots of other ways (tense, person, mood etc) - but we don't need to include any of this into our event model: all of this can be derived (if needed) from our event's Context.
+Going further, verbs conjugate in lots of other ways (tense, person, mood etc) - but again we don't need to include any of this into our event model: all of this can be derived (if needed) from our event's Context.
 
 ### Context is king
 
-The idea of a context surrounding each event doesn't map cleanly onto a specific grammatical context, but it's just too useful to ignore. In fact, we already have a relatively rich web context for Snowplow events in our [Canonical event model] [canonical-event-model], including:
+Our idea of Context does not map cleanly onto a singular grammatical component, but it's just too useful to exclude. In fact, de facto we already have a rich web context for Snowplow events in our [Canonical event model] [canonical-event-model], including:
 
 * When the event occurred
 * Where (geographically) the event occurred
@@ -154,31 +156,32 @@ The idea of a context surrounding each event doesn't map cleanly onto a specific
 <a name="learnings"> </a>
 <h2>6. Conclusions</h2>
 
-We hope this has been an interesting exploration of how we can potentially adapt and simplify the grammar of human languages to express a new grammar for digital events. We are really excited about the possibilities this opens up, initially around expressing such a grammar in our new Avro event model, and later hopefully in graph databases such as [Neo4J] [neo4j].
+We hope this has been an interesting exploration of how we can potentially adapt and simplify the grammar of human languages to express a new grammar for digital events. We are really excited about the possibilities this opens up - initially around expressing such a grammar in our new [Avro] [avro] event model, and later hopefully in graph databases such as [Neo4J] [neo4j].
 
-Of course, we have only just started to sketch out this new event model, and we hope that it will prompt a wider debate with the Snowplow and analytics communities. We are excited to evolve these ideas and build a model for universal event analytics with you, together - and we would love to continue the conversation on our [snowplow-user mailing list] [snowplow-user].
+Of course, we have only just started to sketch out this new event model, and we hope that it will prompt a wider debate with the Snowplow and analytics communities. We are excited to evolve these ideas and build a model for universal event analytics with you, together - and we look forward to continuing the conversation on our [snowplow-user mailing list] [snowplow-user].
 
-And finally, many thanks again to [Loïc Dias Da Silva] [loic] for sharing the original idea with us on our blog!
+And finally, many thanks again to [Loïc Dias Da Silva] [loic] for sharing his original Actor-Action-Object idea on our blog!
 
 [event-model-post]: http://snowplowanalytics.com/blog/2013/02/04/help-us-build-out-the-snowplow-event-model/
 [loic]: https://twitter.com/mglcel
 [rdf]: http://en.wikipedia.org/wiki/Resource_Description_Framework
 
-[grammar]: /static/img/blog/2013/07/event-grammar.png
+[grammar]: /static/img/blog/2013/08/event-grammar.png
 
-[ecomm1]: /static/img/blog/2013/07/grammar-ecomm1.png
-[ecomm2]: /static/img/blog/2013/07/grammar-ecomm2.png
-[ecomm3]: /static/img/blog/2013/07/grammar-ecomm3.png
+[ecomm1]: /static/img/blog/2013/08/grammar-ecomm1.png
+[ecomm2]: /static/img/blog/2013/08/grammar-ecomm2.png
+[ecomm3]: /static/img/blog/2013/08/grammar-ecomm3.png
 
-[videogame1]: /static/img/blog/2013/07/grammar-videogame1.png
-[videogame2]: /static/img/blog/2013/07/grammar-videogame2.png
-[videogame3]: /static/img/blog/2013/07/grammar-videogame3.png
+[videogame1]: /static/img/blog/2013/08/grammar-videogame1.png
+[videogame2]: /static/img/blog/2013/08/grammar-videogame2.png
+[videogame3]: /static/img/blog/2013/08/grammar-videogame3.png
 
-[media1]: /static/img/blog/2013/07/grammar-media1.png
-[media2]: /static/img/blog/2013/07/grammar-media2.png
-[media3]: /static/img/blog/2013/07/grammar-media3.png
+[media1]: /static/img/blog/2013/08/grammar-media1.png
+[media2]: /static/img/blog/2013/08/grammar-media2.png
+[media3]: /static/img/blog/2013/08/grammar-media3.png
 
 [canonical-event-model]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
 
 [snowplow-user]: https://groups.google.com/d/forum/snowplow-user
+[avro]: http://avro.apache.org/
 [neo4j]: http://www.neo4j.org/
