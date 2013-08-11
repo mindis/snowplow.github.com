@@ -9,7 +9,7 @@ category: Inside the Plow
 
 As we outgrow our "fat table" structure for Snowplow events in Redshift, we have been spending more time thinking about how we should be modelling digital events in Snowplow in the most universal, flexible and future-proof way possible.
 
-When we blogged about [building out the Snowplow event model] [event-model-post] earlier this year, a comment left on that post by Loïc Dias Da Silva made us realize that we were missing an even more fundamental point: defining a Snowplow event **grammar** to underpin our Snowplow event dictionary. Here is part of Loïc's comment - although I would encourage you to read it in full:
+When we blogged about [building out the Snowplow event model] [event-model-post] earlier this year, a comment left on that post by [Loïc Dias Da Silva] [loic] made us realize that we were missing an even more fundamental point: defining a Snowplow event **grammar** to underpin our Snowplow event dictionary. Here is part of Loïc's excellent comment - although I would encourage you to read it in full [on the blog post] [event-model-post]:
 
 _Hi, we're also working on an event model for our global eventing platform but our events currently are more macro, inspired by RDF in a sense:_
 
@@ -30,6 +30,7 @@ So, in the rest of this post we will:
 3. [Try it out on some videogame events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#videogame)
 4. [Try it out on some digital media events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#media)
 5. [Discuss what we have learnt](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#learnings)
+6. [Draw some conclusions](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#conc)
 
 <!--more-->
 
@@ -42,7 +43,7 @@ All of the human languages mentioned above (and many, many others) share the sam
 To go through these in turn:
 
 * **Subject**, sometimes known as the _nominative_ case. This is the entity which is carrying out the action: "**I** wrote a letter"
-* **Verb**, this describes the action being done by the subject. Verbs can be in the _active_ or _passive voice_ - but we are only concerned with the active voice in this post. Verbs conjugate in lots of other ways (tense, person, mood etc), but we don't need to worry about these here. "I **wrote** a letter"
+* **Verb**, this describes the action being done by the subject: "I **wrote** a letter"
 * **Object**, aka _Direct Object_ or _accusative_ case. This is the entity to which the action is being done: "I wrote **a letter**"
 * **Indirect object**, or _dative_ case. A slightly more tricky concept: this is the entity indirectly affected by the action: "I sent the letter _to_ **Tom**"
 * **Prepositional object**. An object introduced by a preposition (in, for, of etc), but not the direct or indirect object: "I put the letter _in_ **an envelope**". In a language such as German, prepositional objects will be found in the _accusative_, _dative_ or _genitive_ case depending on the preposition used
@@ -102,9 +103,75 @@ Working from the moderation UI (Context), an administrator (Subject) bans (Verb)
 
 As you can see, it is relatively straightforward to map any digital event into these 6 "slots" of: Subject, Verb, Object, Indirect Object, Prepositional Object and Context. This is unsurprising: this fundamental grammar has been accurately modelling events across many human languages across thousands of years.
 
-Going through the above exercise, 
+Going through the above exercise, several further things have become clear to us that we will want to factor into the Snowplow event grammar going forwards:
+
+### Implicit Subject is a mistake
+
+Most web and event analytics systems make the mistake of making the Subject of the event implicit:
+
+    (End user) added product to basket
+    (Admin) banned user #23
+
+This is a mistake, because as we have seen above, the Subject is a key component of our event grammar; it is particularly dangerous to assume that the Subject of every event is your end user, because that is not always the case either (as per the admin ban above).
+
+### An entity can be Subject or Object or both across multiple events
+
+As per these gaming examples:
+
+    User #1 gifts gold to user #2
+    User #2 kills user #3
+    User #2 levels up
+    Admin bans user #1
+
+As we can see from this, the same entities will be found as Subject, Object, Indirect Object or Prepositional Object depending on the event.
+
+Most analytics systems miss the fact that an end user (for example) is not merely the implicit subject of multiple events, but is in fact an entity which is the Subject and the Object of different events.
+
+### We can keep our Verbs really simple
+
+All of the events above were accomplished using verbs in the active voice, not the passive voice:
+
+* Active voice: I watch a video
+* Passive voice: the video was watched by Alex
+
+We don't need to use passive voice for our event model, because we can express any event using solely the active voice.
+
+Equally, verbs conjugate in lots of other ways (tense, person, mood etc) - but we don't need to include any of this into our event model: all of this can be derived (if needed) from our event's Context.
+
+### Context is king
+
+The idea of a context surrounding each event doesn't map cleanly onto a specific grammatical context, but it's just too useful to ignore. In fact, we already have a relatively rich web context for Snowplow events in our [Canonical event model] [canonical-event-model], including:
+
+* When the event occurred
+* Where (geographically) the event occurred
+* Properties of the device on which the event occurred
+
+<h2><a name="learnings">6. Conclusions</a></h2>
+
+We hope this has been an interesting exploration of how we can potentially adapt and simplify the grammar of human languages to express a new grammar for digital events. We are really excited about the possibilities this opens up, initially around expressing such a grammar in our new Avro event model, and later hopefully in graph databases such as [Neo4J] [neo4j].
+
+Of course, we have only just started to sketch out this new event model, and we hope it will prompt a wider debate with the Snowplow and analytics communities. We are excited to evolve these ideas and build a model for universal event analytics with you, together - and we would love to continue the conversation on our [snowplow-user mailing list] [snowplow-user].
+
+And finally, many thanks again to [Loïc Dias Da Silva] [loic] for sharing the original idea with us on our blog!
 
 [event-model-post]: http://snowplowanalytics.com/blog/2013/02/04/help-us-build-out-the-snowplow-event-model/
+[loic]: https://twitter.com/mglcel
 [rdf]: http://en.wikipedia.org/wiki/Resource_Description_Framework
 
-[grammar]: /static/img/blog/2013/07/XXX.png
+[grammar]: /static/img/blog/2013/07/event-grammar.png
+
+[ecomm1]: /static/img/blog/2013/07/grammar-ecomm1.png
+[ecomm1]: /static/img/blog/2013/07/grammar-ecomm2.png
+[ecomm1]: /static/img/blog/2013/07/grammar-ecomm3.png
+
+[videogame1]: /static/img/blog/2013/07/grammar-videogame1.png
+[videogame1]: /static/img/blog/2013/07/grammar-videogame2.png
+[videogame1]: /static/img/blog/2013/07/grammar-videogame3.png
+
+[media1]: /static/img/blog/2013/07/grammar-media1.png
+[media1]: /static/img/blog/2013/07/grammar-media2.png
+[media1]: /static/img/blog/2013/07/grammar-media3.png
+
+[canonical-event-model]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
+
+[snowplow-user]: https://groups.google.com/d/forum/snowplow-user
