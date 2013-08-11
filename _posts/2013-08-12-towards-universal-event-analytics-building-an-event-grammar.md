@@ -21,7 +21,7 @@ _The context itself, owned by the action, is a k/v dictionary._
 
 So in designing his event grammar, Loïc was influenced by the [Resource Description Framework] [rdf], the W3C specifications for modelling relationships to web resources.
 
-An event grammar inspired by RDF is certainly interesting, but I am using a much older, more sophisticated and more tested "event grammar" to write this sentence: the **grammar of human language**. Why not start, then, from the core grammar underpinning English, Latin, Greek, German et al and see just how far this approach can take us in modelling events in the digital world?
+An event grammar inspired by RDF is certainly interesting, but I am using a much older, more sophisticated and more tested "event grammar" to write this sentence: the **grammar of human language**. Why not start, then, from the core grammar underpinning English, Latin, Greek, German and other languages to see just how far this approach can take us in modelling events in the digital world?
 
 So, in the rest of this post we will:
 
@@ -44,8 +44,8 @@ All of the human languages mentioned above (and many, many others) share the sam
 To go through these in turn:
 
 * **Subject**, or noun in the _nominative_ case. This is the entity which is carrying out the action: "**I** wrote a letter"
-* **Verb**, this describes the action being done by the subject: "I **wrote** a letter"
-* **Direct Object**, or simply _object_ or noun in the _accusative_ case. This is the entity to which the action is being done: "I wrote **a letter**"
+* **Verb**, this describes the action being done by the Subject: "I **wrote** a letter"
+* **Direct Object**, or simply _Object_ or noun in the _accusative_ case. This is the entity to which the action is being done: "I wrote **a letter**"
 * **Indirect Object**, or noun in the _dative_ case. A slightly more tricky concept: this is the entity indirectly affected by the action: "I sent the letter _to_ **Tom**"
 * **Prepositional Object**. An object introduced by a preposition (in, for, of etc), but not the direct or indirect object: "I put the letter _in_ **an envelope**". In a language such as German, prepositional objects will be found in the _accusative_, _dative_ or _genitive_ case depending on the preposition used
 * **Context**. Not a grammatical term, but we will use context to describe the phrases of time, manner, place and so on which provide additional information about the action being performed: "I posted the letter **on Tuesday from Boston**"
@@ -63,11 +63,11 @@ In this event, a shopper (Subject) views (Verb) a t-shirt (Direct Object) while 
 
 ![ecomm2] [ecomm2]
 
-Here we introduce an indirect object which has been affected by the event: the shopper (Subject) adds (Verb) a t-shirt (Direct Object) to her shopping basket (Indirect Object). Again, this is while browsing (Context).
+Here we introduce an Indirect Object which has been affected by the event: the shopper (Subject) adds (Verb) a t-shirt (Direct Object) to her shopping basket (Indirect Object). Again, this is while browsing the online store (Context).
 
 ![ecomm3] [ecomm3]
 
-Here we have an object introduced by preposition: the shopper (Subject) pays (Verb) for his order (Prepositional Object). This is all within the checkout flow (Context).
+Here we have an Object introduced by preposition: the shopper (Subject) pays (Verb) for his order (Prepositional Object). This is all within the checkout flow (Context).
 
 <a name="videogame"> </a>
 <h2>3. Modelling some videogame events</h2>
@@ -80,11 +80,11 @@ In a gifting screen within the game (Context), the player (Subject) gifts (Verb)
 
 ![videogame2] [videogame2]
 
-During a two-player skirmish (Context), the first player (Subject) kills (Verb) the second player (Direct Object) using a nailgun (Prepositional Object). This illustrates how your end-users can be the object of events, not just their subjects.
+During a two-player skirmish (Context), the first player (Subject) kills (Verb) the second player (Direct Object) using a nailgun (Prepositional Object). This illustrates how your end-users can be the Object of events, not just their Subjects.
 
 ![videogame3] [videogame3]
 
-Here we illustrate a reflexive verb: through grinding (Context), the player (Subject) levels herself up (Verb, reflexive). A reflexive verb is one where the Subject and the Object are the same.
+Here we illustrate a reflexive verb: through grinding (Context), the player (Subject) levels herself up (Verb, reflexive). A reflexive Verb is one where the Subject and the Object are the same.
 
 <a name="media"> </a>
 <h2>4. Modelling some digital media events</h2>
@@ -97,7 +97,7 @@ While consuming media on your site (Context), a user (Subject) reads (Verb) an a
 
 ![media2] [media2]
 
-Wanting to share content socially (Context), a user (Subject) shares (Verb) a video (Direct Object) on Twitter (Prepositional Object). Also note that Twitter here is a proper noun, not a common noun.
+Wanting to share content socially (Context), a user (Subject) shares (Verb) a video (Direct Object) on Twitter (Prepositional Object). Also note that Twitter here is a proper noun (not a common noun).
 
 ![media3] [media3]
 
@@ -106,7 +106,7 @@ Working from the moderation UI (Context), an administrator (Subject) bans (Verb)
 <a name="learnings"> </a>
 <h2>5. What have we learnt</h2>
 
-As you can see, it is relatively straightforward to map any of the digital events above into these six "slots" of: Subject, Verb, Object, Indirect Object, Prepositional Object and Context. This is unsurprising: this core grammar has been unambiguously describing events in many different human languages across thousands of years.
+As you can see, it is relatively straightforward to map any of the digital events above into these six "slots" of: Subject, Verb, Object, Indirect Object, Prepositional Object and Context. This is unsurprising: our core grammar has been unambiguously describing events in many different human languages across thousands of years.
 
 Going through the above exercise, several further things have become clear to us that we will want to factor into the Snowplow event grammar going forwards:
 
@@ -114,12 +114,12 @@ Going through the above exercise, several further things have become clear to us
 
 Most web and event analytics systems make the mistake of making the Subject of the event implicit:
 
-    (End user) added product to basket
-    (Admin) banned user #23
+    (End user) adds product to basket
+    (Admin) bans user #23
 
 This is a mistake, because as we have seen above, expressing the Subject is a key component of our event grammar.
 
-Going further, it is particularly dangerous to assume that the Subject of every event is your end-user aka customer, because we have seen cases where this is not the case.
+Going further, it is particularly dangerous to assume that the Subject of every event is your end-user or customer, because we have seen cases where this is not the case.
 
 ### An entity can be Subject or Object or both across multiple events
 
@@ -132,22 +132,22 @@ As per these gaming examples:
 
 As we can see from this, the same entities will be found as Subject, Direct Object, Indirect Object or Prepositional Object depending on the event.
 
-Most analytics systems miss the fact that an end-user (for example) is not merely the implicit subject of multiple events, but is in fact an entity which is the Subject and the Object of different events.
+Most analytics systems miss the fact that an end-user (for example) is not merely the implicit Subject of multiple events, but is in fact an entity which is the Subject and the Object of different events.
 
 ### We can keep our Verbs really simple
 
-All of the events above were modelled simply using verbs in the active voice, not the passive voice:
+All of the events above were modelled simply using verbs in the _active voice_, not the _passive voice_:
 
-* Active voice: I watch a video
-* Passive voice: the video was watched by Alex
+* Active voice: "I watch a video"
+* Passive voice: "the video was watched by Alex"
 
 We don't need to use passive voice for our event model, because we can always derive (if needed) a passive voice event from our active voice event.
 
-Going further, verbs conjugate in lots of other ways (tense, person, mood etc) - but again we don't need to include any of this into our event model: all of this can be derived (if needed) from our event's Context.
+Going further, Verbs conjugate in lots of other ways (tense, person, mood etc) - but again we don't need to include any of this into our event model: all of this can be derived (if needed) from our event's Context.
 
 ### Context is king
 
-Our idea of Context does not map cleanly onto a singular grammatical component, but it's just too useful to exclude. In fact, de facto we already have a rich web context for Snowplow events in our [Canonical event model] [canonical-event-model], including:
+Our idea of Context does not map cleanly onto a singular grammatical component, but it is just too useful to exclude. In fact, de facto we already have a rich web context for Snowplow events in our [Canonical event model] [canonical-event-model], including:
 
 * When the event occurred
 * Where (geographically) the event occurred
