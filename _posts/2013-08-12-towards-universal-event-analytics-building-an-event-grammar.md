@@ -1,13 +1,13 @@
 ---
 layout: blog-post
-shortenedlink: Towards universal event analytics: building an event grammar
-title: Towards universal event analytics: building an event grammar
+shortenedlink: Towards universal event analytics - building an event grammar
+title: Towards universal event analytics - building an event grammar
 tags: event analytics grammar model
 author: Alex
 category: Inside the Plow
 ---
 
-As we outgrow our "fat table" structure for Snowplow events in Redshift, we have been spending more time thinking about how we should be modelling digital events in Snowplow in the most universal, flexible and future-proof way possible.
+As we outgrow our "fat table" structure for Snowplow events in Redshift, we have been spending more time thinking about how we can model digital events in Snowplow in the most universal, flexible and future-proof way possible.
 
 When we blogged about [building out the Snowplow event model] [event-model-post] earlier this year, a comment left on that post by [Loïc Dias Da Silva] [loic] made us realize that we were missing an even more fundamental point: defining a Snowplow event **grammar** to underpin our Snowplow event dictionary. Here is part of Loïc's excellent comment - although I would encourage you to read it in full [on the blog post] [event-model-post]:
 
@@ -19,16 +19,16 @@ _Each Actor, Action and Object can hold k/v properties._
 
 _The context itself, owned by the action, is a k/v dictionary._
 
-So in designing his event grammar, Loïc was influenced by RDF, the [Resource Description Framework] [rdf], the W3C specifications for modelling relationships to web resources.
+So in designing his event grammar, Loïc was influenced by the [Resource Description Framework] [rdf], the W3C specifications for modelling relationships to web resources.
 
-An event grammar inspired by RDF is certainly interesting, but I am using a much older, more sophisticated and more tested grammar to write this sentence: the **grammar of human language**. Why not start, then, from the core grammar underpinning English, Latin, Greek, German et al and see how far this approach can take us in modelling events in the digital world?
+An event grammar inspired by RDF is certainly interesting, but I am using a much older, more sophisticated and more tested "event grammar" to write this sentence: the **grammar of human language**. Why not start, then, from the core grammar underpinning English, Latin, Greek, German et al and see just how far this approach can take us in modelling events in the digital world?
 
 So, in the rest of this post we will:
 
 1. [Introduce the components of our grammar](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#grammar)
-2. [Try it out on some ecommerce events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#ecommerce)
-3. [Try it out on some videogame events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#videogame)
-4. [Try it out on some digital media events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#media)
+2. [Model some ecommerce events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#ecommerce)
+3. [Model some videogame events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#videogame)
+4. [Model some digital media events](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#media)
 5. [Discuss what we have learnt](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#learnings)
 6. [Draw some conclusions](/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar#conc)
 
@@ -42,14 +42,14 @@ All of the human languages mentioned above (and many, many others) share the sam
 
 To go through these in turn:
 
-* **Subject**, sometimes known as the _nominative_ case. This is the entity which is carrying out the action: "**I** wrote a letter"
+* **Subject**, or noun in the _nominative_ case. This is the entity which is carrying out the action: "**I** wrote a letter"
 * **Verb**, this describes the action being done by the subject: "I **wrote** a letter"
-* **Object**, aka _Direct Object_ or _accusative_ case. This is the entity to which the action is being done: "I wrote **a letter**"
-* **Indirect object**, or _dative_ case. A slightly more tricky concept: this is the entity indirectly affected by the action: "I sent the letter _to_ **Tom**"
+* **Object**, aka _direct object_ or noun in the _accusative_ case. This is the entity to which the action is being done: "I wrote **a letter**"
+* **Indirect object**, or noun in the _dative_ case. A slightly more tricky concept: this is the entity indirectly affected by the action: "I sent the letter _to_ **Tom**"
 * **Prepositional object**. An object introduced by a preposition (in, for, of etc), but not the direct or indirect object: "I put the letter _in_ **an envelope**". In a language such as German, prepositional objects will be found in the _accusative_, _dative_ or _genitive_ case depending on the preposition used
 * **Context**. Not a grammatical term, but we will use context to describe the phrases of time, manner, place and so on which provide additional information about the action being performed: "I posted the letter **on Tuesday from Boston**"
 
-With these grammatical building blocks defined, let's put them through their paces modelling some digital events - starting with some online retail events:
+With these grammatical building blocks defined, let's now put them through their paces modelling some digital events - starting with some online retail events:
 
 <h2><a name="ecommerce">2. Modelling some ecommerce events</a></h2>
 
@@ -161,17 +161,18 @@ And finally, many thanks again to [Loïc Dias Da Silva] [loic] for sharing the o
 [grammar]: /static/img/blog/2013/07/event-grammar.png
 
 [ecomm1]: /static/img/blog/2013/07/grammar-ecomm1.png
-[ecomm1]: /static/img/blog/2013/07/grammar-ecomm2.png
-[ecomm1]: /static/img/blog/2013/07/grammar-ecomm3.png
+[ecomm2]: /static/img/blog/2013/07/grammar-ecomm2.png
+[ecomm3]: /static/img/blog/2013/07/grammar-ecomm3.png
 
 [videogame1]: /static/img/blog/2013/07/grammar-videogame1.png
-[videogame1]: /static/img/blog/2013/07/grammar-videogame2.png
-[videogame1]: /static/img/blog/2013/07/grammar-videogame3.png
+[videogame2]: /static/img/blog/2013/07/grammar-videogame2.png
+[videogame3]: /static/img/blog/2013/07/grammar-videogame3.png
 
 [media1]: /static/img/blog/2013/07/grammar-media1.png
-[media1]: /static/img/blog/2013/07/grammar-media2.png
-[media1]: /static/img/blog/2013/07/grammar-media3.png
+[media2]: /static/img/blog/2013/07/grammar-media2.png
+[media3]: /static/img/blog/2013/07/grammar-media3.png
 
 [canonical-event-model]: https://github.com/snowplow/snowplow/wiki/canonical-event-model
 
 [snowplow-user]: https://groups.google.com/d/forum/snowplow-user
+[neo4j]: http://www.neo4j.org/
