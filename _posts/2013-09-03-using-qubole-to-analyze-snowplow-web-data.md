@@ -14,7 +14,7 @@ We've just published a getting-started guide to using [Qubole][qubole], a manage
 Snowplow delivers event data to users in a number of different places:
 
 1. Amazon Redshift or PostgreSQL, so you can analyze the data using traditional analytics and BI tools
-2. Amazon S3, so you can analyze that data using Hadoop-backed, big data tools e.g. Mahout, Hive and Pig, on EMR
+2. Amazon S3, so you can analyze that data using Hadoop-backed, big data tools e.g. [Mahout] [mahout], [Hive] [hive] and [Pig] [pig], on EMR
 
 Since we started offering support for Amazon Redshift and more recently PostgreSQL, our focus on the blog and in the [Analytics Cookbook] [cookbook] has been on using traditional analytics tools e.g. [Tableau] [tableau], [R] [r] and [Excel] [excel] to crunch the data. However, there are a host of reasons when you might want to crunch the data using one of the new generation of big data tools. Two give two examples:
 
@@ -33,6 +33,8 @@ It's not just the UI that makes using Qubole a lot nicer than EMR. Qubole handle
 
 Qubole is a particular nice service if you want to use Apache Hive. It was developed by the same engineers who originally built Apache Hive at Facebook. In the [guide to getting started with Qubole] [qubole-wiki], which we have just published, we walk Snowplow users through the process of running their first query Apache Hive query on Snowplow data with Qubole.
 
+We intend to follow-up the getting started guide with a set of recipes for using both [Hive] [hive] and [Mahout] [mahout] via Qubole. Stay tuned!
+
 As always, we welcome comments and feedback - especially on how you find the combination of Qubole's data crunching capability, on Snowplow's granular event-level data.
 
 
@@ -46,3 +48,6 @@ As always, we welcome comments and feedback - especially on how you find the com
 [tableau]: http://www.tableausoftware.com/
 [r]: http://cran.r-project.org/
 [excel]: http://office.microsoft.com/en-gb/excel/
+[pig]: http://pig.apache.org/
+[hive]: http://hive.apache.org/
+[mahout]: http://mahout.apache.org/
