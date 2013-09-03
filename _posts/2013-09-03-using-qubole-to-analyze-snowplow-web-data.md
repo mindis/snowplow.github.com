@@ -7,6 +7,10 @@ author: Yali
 category: Analytics
 ---
 
+We've just published a getting-started guide to using [Qubole][qubole], a managed Big Data service, to query your Snowpow data. You can read the guide [here] [qubole-wiki].
+
+![qubole-logo] [qubole-logo]
+
 Snowplow delivers event data to users in a number of different places:
 
 1. Amazon Redshift or PostgreSQL, so you can analyze the data using traditional analytics and BI tools
@@ -17,11 +21,13 @@ Since we started offering support for Amazon Redshift and more recently PostgreS
 1. You may want to join you Snowplow data with other data sets, and those data sets are not structured. (E.g. they are in JSON, or custom text file formats.)
 2. You want to use specific algorithms or libraries that have been built for big data tools e.g. Mahout recommendation or clustering algorithms.
 
+<!--more-->
+
 For situations when you want to use big data tools to crunch your Snowplow and other data in S3, an increasingly attractive alternative to doing that in EMR is to use [Qubole] [qubole].
 
 ![qubole-ui] [qubole-ui]
 
-Qubole runs on top of Amazon Web Services. It interfaces directly with S3, in just the same way that EMR does. However, Qubole is a significantly more polished product than EMR. Data scientists can  explore their data in S3, create tables and query those tables all via an easy-to-use web UI. You can test queries on samples of the data, easily run and monitor multiple queries in parallel and download the results of queries directly to your local computer, so you can quickly visualize it in Excel or R.
+[Qubole] [qubole] runs on top of Amazon Web Services. It interfaces directly with S3, in just the same way that EMR does. However, Qubole is a significantly more polished product than EMR. Data scientists can  explore their data in S3, create tables and query those tables all via an easy-to-use web UI. You can test queries on samples of the data, easily run and monitor multiple queries in parallel and download the results of queries directly to your local computer, so you can quickly visualize it in Excel or R.
 
 It's not just the UI that makes using Qubole a lot nicer than EMR. Qubole handles the behind the scenes scaling of your cluster, so you don't have to. Queries that do not require map reduce jobs to produce outputs, e.g. reading data directly from S3, can be executed without spinning up clusters (and so return much faster). Clusters that are no longer used, are automatically shut down. (Am I the only person who's got in trouble for leaving a big cluster running over night?)
 
@@ -36,6 +42,7 @@ As always, we welcome comments and feedback - especially on how you find the com
 [qubole]: http://www.qubole.com/#All
 [qubole-ui]: /static/img/blog/2013/09/qubole-ui.png
 [qubole-wiki]: https://github.com/snowplow/snowplow/wiki/Setting-up-Qubole-to-analyze-Snowplow-data-using-Apache-Hive
+[qubole-logo]: /static/img/blog/2013/09/qubole-logo.png
 [tableau]: http://www.tableausoftware.com/
 [r]: http://cran.r-project.org/
 [excel]: http://office.microsoft.com/en-gb/excel/
