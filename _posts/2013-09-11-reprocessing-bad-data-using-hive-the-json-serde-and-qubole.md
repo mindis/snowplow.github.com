@@ -173,7 +173,14 @@ Bingo! When the query is complete, the data to reprocess is available in the new
 
 ![s3-pic][s3-pic]
 
-We now need to run the Snowplow Enrichment process on this new data set. We do that using EmrEtlRunner. Navigate to the server you run EmrEtlRunner from, and navigate to the directory it is installed in. Create a copy of your [EmrEtlRunner config.yml] [emretlrunner-config-file] with a suitable name e.g. `config-process-bad-rows-2013-09-11.yml` and update the `:IN:` bucket to point at the location where the data to be reprocessed is. (I.e. the location of the Hive `data_to_reprocess` table.)
+We now need to run the Snowplow Enrichment process on this new data set. We do that using EmrEtlRunner. Navigate to the server you run EmrEtlRunner from, and navigate to the directory it is installed in.
+
+Now, create a copy of your [EmrEtlRunner config.yml] [emretlrunner-config-file] with a suitable name e.g. `config-process-bad-rows-2013-09-11.yml` and update the In Bucket to point to the location of the the data to be reprocessed is (i.e. the location of the Hive `data_to_reprocess` table). Don't forget as well to update (if you haven't already done so) the ETL to the latest version, which can handle the change in Amazon's CloudFront log file format:
+
+{% highlight yaml %}
+:snowplow:
+  :hadoop_etl_version: 0.3.4 # Version of the Hadoop ETL
+{% endhighlight %}
 
 Now execute the following command at the command line:
 
@@ -181,21 +188,14 @@ Now execute the following command at the command line:
 $ bundle exec bin/snowplow-emr-etl-runner --config config/config-process-bad-rows-2013-09-11.yml
 {% endhighlight %}
 
-Make sure you update the path to point at the name of the config file you created in the previous step. This should kick off the Enrichment process in EMR. Once it has been completed, you can run the StorageLoader to load the newly processed data into Redshift / PostgreSQL, by navigating to the StorageLoader:
+Make sure you update the path to point at the name of the config file you created in the previous step. This should kick off the Enrichment process in EMR. Once it has been completed, you can run the StorageLoader to load the newly processed data into Redshift / PostgreSQL as normal:
 
 {% highlight bash %}
 $ cd ../../4-storage/storage-loader
-{% endhighlight %}
-
-And now run StorageLoader as normal:
-
-{% highlight bash %}
-$ bundle exec bin/snowplow-storage-loader
+$ bundle exec bin/snowplow-storage-loader --config config/config.yml
 {% endhighlight %}
 
 Done! The data that was previously excluded has now been added to your Snowplow database!
-
-
 
 [cloudfront-update-blog-post]: /blog/2013/09/05/snowplow-0.8.9-released-to-handle-cloudfront-log-file-format-change/
 [qubole-blog-post]: /blog/2013/09/03/using-qubole-to-analyze-snowplow-web-data/
