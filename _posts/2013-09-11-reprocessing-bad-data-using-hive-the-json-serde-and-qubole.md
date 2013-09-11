@@ -69,21 +69,19 @@ An example row generated for the Snowplow website, caused by Amazon's CloudFront
 
 There are a couple of ways to process JSON data in Hive. For this tutorial, we're going to use Roberto Congiu's [Hive-JSON-Serde] [json-serde]. This is our preferred method of working with JSONs in Hive, where your complete data set is stored as a series of JSONs. (When you have a single JSON-formatted field in a regular Hive table, we recommend using the `get_json_object` UDF to parse the JSON data.)
 
-The Hive-JSON-serde is available [on Github] [json-serde] and can be built using Maven. If you prefer not to compile it for yourself, we have made a hosted version of the compiled JAR available [here] [json-serde-compiled-jar]. Download it (or compile it from source if you prefer), and then upload it into your S3 account, in a bucket that is accessible to the AWS credentials you use to run Qubole.
+The Hive-JSON-serde is available [on Github] [json-serde] and can be built using Maven. If you prefer not to compile it for yourself, we have made a hosted version of the compiled JAR available [here] [json-serde-compiled-jar].
 
 Now that we have placed the JSON serde in an S3 location that is accessible to us when we run Hive, we are in a position to fire up Qubole and start analyzing our bad rows data. Log into Qubole via the web UI to get started and open up the **Composer** window. (If you have not tried Qubole yet, we recommend you [read our guide to getting started with Qubole] [get-started-with-qubole].)
 
-Now enter the following in the Composer:
+Now enter the following in the Qubole Composer:
 
-	ADD JAR s3://snowplow-hosted-assets/hive/serdes/json-serde-1.1.6-jar-with-dependencies.jar;
-
-Note that you will need to update the above S3 path to reflect where you have saved the copy of the json-serde-jar that you uploaded to your own S3 account.
+	ADD JAR s3://snowplow-hosted-assets/third-party/rcongiu/json-serde-1.1.6-jar-with-dependencies.jar;
 
 After a short period Qubole should alert you that the JAR has been successfully uploaded:
 
 ![qubole-pic-1] [q1-pic]
 
-Now we need to define a table so that Hive can query our bad row data in S3. Execute the following query in the Qubole composer, making sure that you update the `LOCATION` setting to point to the location in S3 where your bad rows are stored. (This can be worked out from your `EmrEtlRunner.config` file, as explained [above](#how-snowplow-handles-bad-rows)).
+Now we need to define a table so that Hive can query our bad row data in S3. Execute the following query in the Qubole Composer, making sure that you update the `LOCATION` setting to point to the location in S3 where your bad rows are stored. (This can be worked out from your EmrEtlRunner's `config.yml` file, as explained [above](#how-snowplow-handles-bad-rows)).
 
 {% highlight mysql %}
 CREATE EXTERNAL TABLE `bad_rows` (
@@ -93,7 +91,7 @@ CREATE EXTERNAL TABLE `bad_rows` (
 PARTITIONED BY (run string)
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 STORED AS TEXTFILE
-LOCATION 's3n://snowplow-saas-data-eu-west-1/snplow/bad-rows/';
+LOCATION 's3n://snowplow-data/snplow/bad-rows/';
 {% endhighlight %}
 
 ![qubole-pic-2] [q2-pic]
@@ -163,9 +161,11 @@ Note:
 
 Now that we've created our table, we need to insert into it the bad rows to reprocess:
 
+{% highlight mysql %}
 INSERT INTO TABLE `data_to_reprocess`
 SELECT line
 FROM `bad_rows`;
+{% endhighlight %}
 
 Note how we are **only** writing the actual raw line of data into the new table (and ignoring everything else in the `bad_rows` table, including both the `run` and the actual error message itself).
 
@@ -201,12 +201,15 @@ Done! The data that was previously excluded has now been added to your Snowplow 
 [qubole-blog-post]: /blog/2013/09/03/using-qubole-to-analyze-snowplow-web-data/
 [hive]: http://hive.apache.org/
 [qubole]: http://www.qubole.com/
+
 [json-serde]: https://github.com/rcongiu/Hive-JSON-Serde
 [rcongui]: https://github.com/rcongiu
+[json-serde-compiled-jar]: snowplow-hosted-assets.s3.amazonaws.com/third-party/rcongiu/json-serde-1.1.6-jar-with-dependencies.jar
+
 [emretlrunner-config-file]: https://github.com/snowplow/snowplow/blob/master/3-enrich/emr-etl-runner/config/config.yml.sample
 [black-sheep]: /static/img/blog/2013/09/black_sheep.jpg
 [flow-chart-diagram]: /static/img/blog/2013/09/snowplow-data-processing-bad-bucket-flow-chart-cropped.png
-[json-serde-compiled-jar]: snowplow-hosted-assets.s3.amazonaws.com/3rd-party/rcongiu/json-serde-1.1.6-jar-with-dependencies.jar
+
 [get-started-with-qubole]: https://github.com/snowplow/snowplow/wiki/Setting-up-Qubole-to-analyze-Snowplow-data-using-Apache-Hive
 [q1-pic]: /static/img/blog/2013/09/qubole-add-jar.png
 [q2-pic]: /static/img/blog/2013/09/qubole-create-table.png
