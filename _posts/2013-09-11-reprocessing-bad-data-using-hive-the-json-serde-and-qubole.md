@@ -16,7 +16,7 @@ This functionality was crucial in spotting that, in mid-August, Amazon made an [
 In this blog post, we will walk through:
 
 1. How to use [Apache Hive] [hive], [Qubole][qubole] and [Robert Congui's] [rcongui] [JSON serde][json-serde] to monitor the number of bad rows generated over time
-2. How to us the same tools to reprocess the bad rows of data, so that they are added to your Snowplow data in Redshift / PostgreSQL
+2. How to use the same tools to reprocess the bad rows of data, so that they are added to your Snowplow data in Redshift / PostgreSQL
 
 The steps necessary to reprocess the data will be very similar to those required regardless of the reason that the reprocessing is necessary: as a result, this blog post should be useful for anyone interested in using the bad rows functionality to debug and improve the robustness of their event data collection. It should also be useful for anyone interested in using [Hive] [hive] and the [JSON serde] [json-serde] to process JSON data in S3. (Bad row data is stored by Snowplow in JSON format.) We will use [Qubole] [qubole], our preferred platform for running Hive jobs on data in S3, which we previously introduced in [this blog post] [qubole-blog-post].
 
