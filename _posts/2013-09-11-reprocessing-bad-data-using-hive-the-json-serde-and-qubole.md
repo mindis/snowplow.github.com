@@ -29,7 +29,7 @@ The steps necessary to reprocess the data will be very similar to those required
 
 <a name="how-snowplow-handles-bad-rows"><h2>1. Understanding how Snowplow handles bad rows</h2></a>
 
-The Snowplow enrichment process takes input lines of data, in the form of collector logs. It validates the format of the data in each of those lines. If the format is as expected, it performs the relevant enrichments on that data (e.g. referer parsing, geo-ip lookups), and writes the enriched data to the `OUT` location on S3, from where it can be loaded into Redshift / PostgreSQL. If the input line of data fails the validation, it gets written to the `OUT_BAD_ROWS` location on S3.
+The Snowplow enrichment process takes input lines of data, in the form of collector logs. It validates the format of the data in each of those lines. If the format is as expected, it performs the relevant enrichments on that data (e.g. referer parsing, geo-IP lookups), and writes the enriched data to the Out Bucket on S3, from where it can be loaded into Redshift / PostgreSQL. If the input line of data fails the validation, it gets written to the Bad Rows Bucket on S3.
 
 ![flow-chart] [flow-chart-diagram]
 
@@ -49,12 +49,12 @@ The locations are specified in the [EmrEtlRunner config file] [emretlrunner-conf
     :archive: ADD HERE
 {% endhighlight %}
 
-Each bad row is a JSON with two fields:
+Each bad row is a JSON containing just two fields:
 
-1. A field called `line` (of type string), that is the raw line of data from the collector log
-2. A field called `errors` (an array of strings), that includes an error message for every validation test failed.
+1. A field called `line` (of type String), which is the *raw* line of data from the collector log
+2. A field called `errors` (an Array of Strings), which includes an error message for *every* validation test the line failed
 
-An example row generated for the Snowplow website, caused by the CloudFront log file format update, is shown below (formatted to make it easier to read):
+An example row generated for the Snowplow website, caused by Amazon's CloudFront log file format update, is shown below (formatted to make it easier to read):
 
 {% highlight json %}
 {
@@ -67,9 +67,9 @@ An example row generated for the Snowplow website, caused by the CloudFront log 
 
 <a name="processing-bad-rows-data-using-json-serde-hive-qubole"><h2>2. Processing the bad rows data using the JSON serde, Hive and Qubole</h2> </a>
 
-There are a couple of ways to process JSON data in Hive. For this tutorial, we're going to use Roberto Congiu's [Hive-JSON-Serde] [json-serde]. This is our preferred method of working with JSONs in Hive, where your complete data set is stored as a series of JSONs. (When you have a single field in a table that is JSON formatted, we recommend using the `get_json_object` function to parse the JSON data.)
+There are a couple of ways to process JSON data in Hive. For this tutorial, we're going to use Roberto Congiu's [Hive-JSON-Serde] [json-serde]. This is our preferred method of working with JSONs in Hive, where your complete data set is stored as a series of JSONs. (When you have a single JSON-formatted field in a regular Hive table, we recommend using the `get_json_object` UDF to parse the JSON data.)
 
-The Hive-JSON-serde is available as source files [on Github] [json-serde] that can be built using Maven. If you prefer not to compile it for yourself, we have made a hosted version of the compiled JAR available [here] [json-serde-compiled-jar]. Download it (or compile it from source if you prefer), and then upload it into your S3 account, in a bucket that is accessible to the AWS credentials you use to run Qubole.
+The Hive-JSON-serde is available [on Github] [json-serde] and can be built using Maven. If you prefer not to compile it for yourself, we have made a hosted version of the compiled JAR available [here] [json-serde-compiled-jar]. Download it (or compile it from source if you prefer), and then upload it into your S3 account, in a bucket that is accessible to the AWS credentials you use to run Qubole.
 
 Now that we have placed the JSON serde in an S3 location that is accessible to us when we run Hive, we are in a position to fire up Qubole and start analyzing our bad rows data. Log into Qubole via the web UI to get started and open up the **Composer** window. (If you have not tried Qubole yet, we recommend you [read our guide to getting started with Qubole] [get-started-with-qubole].)
 
@@ -206,7 +206,7 @@ Done! The data that was previously excluded has now been added to your Snowplow 
 [emretlrunner-config-file]: https://github.com/snowplow/snowplow/blob/master/3-enrich/emr-etl-runner/config/config.yml.sample
 [black-sheep]: /static/img/blog/2013/09/black_sheep.jpg
 [flow-chart-diagram]: /static/img/blog/2013/09/snowplow-data-processing-bad-bucket-flow-chart-cropped.png
-[json-serde-compiled-jar]: snowplow-hosted-assets.s3.amazonaws.com/hive/serdes/json-serde-1.1.6-jar-with-dependencies.jar
+[json-serde-compiled-jar]: snowplow-hosted-assets.s3.amazonaws.com/3rd-party/rcongiu/json-serde-1.1.6-jar-with-dependencies.jar
 [get-started-with-qubole]: https://github.com/snowplow/snowplow/wiki/Setting-up-Qubole-to-analyze-Snowplow-data-using-Apache-Hive
 [q1-pic]: /static/img/blog/2013/09/qubole-add-jar.png
 [q2-pic]: /static/img/blog/2013/09/qubole-create-table.png
