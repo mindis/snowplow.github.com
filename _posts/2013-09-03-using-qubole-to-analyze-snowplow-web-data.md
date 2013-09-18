@@ -18,7 +18,7 @@ Snowplow delivers event data to users in a number of different places:
 
 Since we started offering support for Amazon Redshift and more recently PostgreSQL, our focus on the blog and in the [Analytics Cookbook] [cookbook] has been on using traditional analytics tools e.g. [Tableau] [tableau], [R] [r] and [Excel] [excel] to crunch the data. However, there are a host of reasons when you might want to crunch the data using one of the new generation of big data tools. Two give two examples:
 
-1. You may want to join you Snowplow data with other data sets, and those data sets are not structured. (E.g. they are in JSON, or custom text file formats.)
+1. You may want to join your Snowplow data with other data sets, and those data sets are not structured. (E.g. they are in JSON, or custom text file formats.)
 2. You want to use specific algorithms or libraries that have been built for big data tools e.g. Mahout recommendation or clustering algorithms.
 
 <!--more-->
