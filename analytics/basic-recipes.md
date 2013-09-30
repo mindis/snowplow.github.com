@@ -38,13 +38,13 @@ The number of unique visitors can be calculated by summing the number of distinc
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
-count(distinct(domain_userid)) as "Uniques"
-from events
-where collector_tstamp > current_date - integer '31'
-group by Date
-order by Date;
+SELECT
+DATE_TRUNC('day', collector_tstamp) as "Date",
+COUNT(DISTINCT(domain_userid)) as "Uniques"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -59,13 +59,13 @@ Because each user might visit a site more than once, summing the number of `doma
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
-count( distinct( domain_userid || '-' || domain_sessionidx )) AS "visits"
-from events
-where collector_tstamp > current_date - integer '31'
-group by "Date" 
-order by "Date";
+SELECT
+DATE_TRUNC('day', collector_tstamp) as "Date",
+COUNT(DISTINCT(domain_userid || '-' || domain_sessionidx)) as "Visits"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -82,14 +82,14 @@ To count the number of page views by day, then we simply execute the following q
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
-count(*) AS "page_views"
-from events
-where collector_tstamp > current_date - integer '31'
-and event = 'page_view'
-group by "Date" 
-order by "Date";
+SELECT 
+DATE_TRUNC('day', collector_tstamp) AS "Date",
+COUNT(*) AS "page_views"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+AND event = 'page_view'
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -106,13 +106,14 @@ As a result, counting the total number of events (including page views but also 
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(collector_tstamp, 'YYYY-MM-DD') as "Date",
-count(*) AS "events"
-from events
-where collector_tstamp > current_date - integer '31'
-group by "Date" 
-order by "Date";
+SELECT
+DATE_TRUNC('day', collector_tstamp) AS "Date",
+event,
+COUNT(*) AS "Number"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1,2
+ORDER BY 1,2;
 {% endhighlight %}
 
 In ChartIO:
@@ -127,32 +128,34 @@ The number of pages per visit can be calculated by visit very straightforwardly:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid || '-' || domain_sessionidx AS "session",
-count(*) as "pages_visited"
-from events
-where event = 'page_view'
-and collector_tstamp > current_date - integer '31'
-group by session;
+COUNT(*) as "pages_visited"
+FROM events
+WHERE event = 'page_view'
+AND collector_tstamp > current_date - integer '31' 
+GROUP BY 1
 {% endhighlight %}
 
 We can then aggregate our data by number of pages per visit, to produce a frequency table:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+CREATE VIEW basic_recipes.pages_per_visit AS
+SELECT
 pages_visited,
-count(*) as "frequency"
-from (
-	select
+COUNT(*) as "frequency"
+FROM (
+	SELECT
 	domain_userid || '-' || domain_sessionidx AS "session",
-	count(*) as "pages_visited"
-	from events
-	where event = 'page_view'
-	group by session
-) as page_view_per_visit
-group by pages_visited
-order by pages_visited;
+	COUNT(*) as "pages_visited"
+	FROM events
+	WHERE event = 'page_view'
+	AND collector_tstamp > current_date - integer '31' 
+	GROUP BY 1
+) AS page_view_per_visit
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -161,21 +164,21 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="bounce-rate"><h2>6. Bounce rate</h2></a>
+<a name="bounce-rate"><h2>6. Bounce rate</h2></a>
 
 First we need to identify all the sessions that were 'bounces'. These are visits where there is only a single event captured: the initial page view:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid,
 domain_sessionidx,
-min(collector_tstamp) as "time_first_touch",
-count(*) as "number_of_events",
-case when count(*) = 1 then 1 else 0 end as bounces
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx
+MIN(collector_tstamp) as "time_first_touch",
+COUNT(*) as "number_of_events",
+CASE WHEN count(*) = 1 THEN 1 ELSE 0 END AS bounces
+FROM events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1,2;
 {% endhighlight %}
 
 This query returns a line of data for every session. For each, it logs a timestamp, the number of events, and a flag that is set to 1 if the visitor bounced.
@@ -184,22 +187,22 @@ To calculate bounce rate by day, we take the above table, aggregate the results 
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(time_first_touch, 'YYYY-MM-DD') AS "Date",
-sum(bounces)::real/count(*) as "Bounce rate"
-from (
-	select
+SELECT
+DATE_TRUNC('day', time_first_touch) AS "Date",
+SUM(bounces)::REAL/COUNT(*) as "Bounce rate"
+FROM (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
-	min(collector_tstamp) as "time_first_touch",
-	count(*) as "number_of_events",
-	case when count(*) = 1 then 1 else 0 end as bounces
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx
+	MIN(collector_tstamp) as "time_first_touch",
+	COUNT(*) as "number_of_events",
+	CASE WHEN count(*) = 1 THEN 1 ELSE 0 END AS bounces
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY 1,2
 ) v
-group by Date
-order by Date;
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 Note that we have to cast sum(bounces) as a 'real' number, to force Redshift / PostgreSQL to output a real number rather than an integer for the bounce rate.
@@ -210,7 +213,7 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="new-visits"><h2>7. % New visits</h2></a>
+<a name="new-visits"><h2>7. % New visits</h2></a>
 
 A new visit is easily identified as a visit where the domain_sessionidx = 1. Hence, to calculate the % of new visits, we need to sum all the visits where `domain_sessionidx` = 1 and divide by the total number of visits, in the time period.
 
@@ -218,34 +221,34 @@ First, we create a table with every visit stored, and identify which visits were
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
-min(collector_tstamp) AS "time_first_touch",
+SELECT
+MIN(collector_tstamp) AS "time_first_touch",
 domain_userid, 
 domain_sessionidx,
-case when domain_sessionidx = 1 then 1 else 0 end as "first_visit"
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx
+CASE WHEN domain_sessionidx = 1 THEN 1 ELSE 0 END AS "first_visit"
+FROM events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY domain_userid, domain_sessionidx;
 {% endhighlight %}
 
 Then we aggregate the visits over our desired time period, and calculate the fraction of them that are new:
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
-to_char(time_first_touch, 'YYYY-MM-DD') as "Date",
-sum(first_visit)::real/count(*) as "fraction_of_visits_that_are_new"
-from (
-	select
-	min(collector_tstamp) AS "time_first_touch",
+SELECT
+DATE_TRUNC('day', time_first_touch) AS "Date",
+SUM(first_visit)::REAL/COUNT(*) as "fraction_of_visits_that_are_new"
+FROM (
+	SELECT
+	MIN(collector_tstamp) AS "time_first_touch",
 	domain_userid, 
 	domain_sessionidx,
-	case when domain_sessionidx = 1 then 1 else 0 end as "first_visit"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx) v
-group by "date"
-ORDER BY "date";
+	CASE WHEN domain_sessionidx = 1 THEN 1 ELSE 0 END AS "first_visit"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY domain_userid, domain_sessionidx) v
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -260,37 +263,37 @@ To calculate this, 1st we need to calculate the duration of every visit:
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid,
 domain_sessionidx,
-min(collector_tstamp) as "start_time",
-max(collector_tstamp) as "finish_time",
-max(collector_tstamp) - min(collector_tstamp) as "duration"
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx;
+MIN(collector_tstamp) as "start_time",
+MAX(collector_tstamp) as "finish_time",
+MAX(collector_tstamp) - min(collector_tstamp) as "duration"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1,2;
 {% endhighlight %}
 
 Then we simply average visit durations over the time period we're interested e.g. by day:
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
-to_char(start_time, 'YYYY-MM-DD') AS "Date",
-avg(duration)/1000000 as "average_visit_duration_seconds"
-from (
-	select
+SELECT
+DATE_TRUNC('day', start_time) AS "Date",
+AVG(duration)/1000000 as "average_visit_duration_seconds"
+FROM (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
-	min(collector_tstamp) as "start_time",
-	max(collector_tstamp) as "finish_time",
-	max(collector_tstamp) - min(collector_tstamp) as "duration"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx
+	MIN(collector_tstamp) as "start_time",
+	MAX(collector_tstamp) as "finish_time",
+	MAX(collector_tstamp) - min(collector_tstamp) as "duration"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY 1,2
 ) v
-group by "Date"
-order by "Date";
+group by 1
+order by 1;
 {% endhighlight %}
 
 [Back to top](#top)
@@ -303,11 +306,11 @@ For each event the browser language is stored in the `br_language` field. As a r
 /* Redshift / PostgreSQL */
 SELECT
 br_lang,
-count(distinct(domain_userid)) as "visitors"
-from events
-where collector_tstamp > current_date - integer '31'
-group by br_lang
-order by "visitors" desc;
+COUNT(DISTINCT(domain_userid)) as "visitors"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY br_lang
+ORDER BY 2 DESC;
 {% endhighlight %}
 
 In ChartIO:
@@ -326,11 +329,11 @@ To calculate the number of visitors in the last month by country, simply execute
 /* Redshift / PostgreSQL */
 SELECT
 geo_country,
-count(distinct(domain_userid)) as "visitors"
-from events
-where collector_tstamp > current_date - integer '31'
-group by geo_country
-order by "visitors" desc;
+COUNT(DISTINCT(domain_userid)) as "visitors"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1
+ORDER BY 2 DESC;
 {% endhighlight %}
 
 In ChartIO:
@@ -347,36 +350,34 @@ Within a given time period, we can compare the number of new visitors (for whom 
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid,
 domain_sessionidx,
-min(collector_tstamp) as time_first_touch,
-case when domain_sessionidx = 1 then 'new' else 'returning' end as "new_vs_returning"
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx
+MIN(collector_tstamp) as time_first_touch,
+CASE WHEN domain_sessionidx = 1 THEN 'new' ELSE 'returning' END AS "new_vs_returning"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY domain_userid, domain_sessionidx;
 {% endhighlight %}
 
 Then we can aggregate them by time period, to get the total new vs returning e.g. by day:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
-to_char(time_first_touch, 'YYYY-MM-DD') AS "Date",
-"new_vs_returning" As "New vs returning",
-count(*) AS "Number of visits"
-from (
-	select
-	domain_userid,
+SELECT
+DATE_TRUNC('day', time_first_touch) AS "Date",
+SUM(first_visit)::REAL/COUNT(*) as "fraction_of_visits_that_are_new"
+FROM (
+	SELECT
+	MIN(collector_tstamp) AS "time_first_touch",
+	domain_userid, 
 	domain_sessionidx,
-	min(collector_tstamp) AS time_first_touch,
-	case when domain_sessionidx = 1 then 'new' else 'returning' end as "new_vs_returning"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx
-) v
-group by "Date", "New vs returning"
-order by "Date", "New vs returning"
+	CASE WHEN domain_sessionidx = 1 THEN 1 ELSE 0 END AS "first_visit"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY domain_userid, domain_sessionidx) v
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -385,18 +386,18 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="frequency"><h2>12. Behavior: frequency</h2></a>
+<a name="frequency"><h2>12. Behavior: frequency</h2></a>
 
 We can plot the distribution of visits in a time period by the number of visits each visitor has performed:
 
 {% highlight sql %}
-select
+SELECT
 domain_sessionidx as "Number of visits",
-count(distinct(domain_userid)) as "Frequency"
-from events
-where collector_tstamp > current_date - integer '31'
-group by "Number of visits"
-order by "Number of visits"
+COUNT(DISTINCT(domain_userid)) as "Frequency"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1
+ORDER BY 2;
 {% endhighlight %}
 
 In ChartIO:
@@ -411,99 +412,99 @@ We can plot the distribution of visits by the number of days since the previous 
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid,
 domain_sessionidx,
 domain_sessionidx - 1 as "previous_domain_sessionidx",
-min(collector_tstamp) as "time_first_touch"
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx
+MIN(collector_tstamp) as "time_first_touch"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1, 2;
 {% endhighlight %}
 
 We can join the above table with a similar table, but join each visit to data for the previous visit, so we can calculate the number of days between visits:
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 n.domain_userid,
 n.domain_sessionidx,
-extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
-case 
-	when n.domain_sessionidx = 1 then '0'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 1 then '1'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 2 then '2'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 3 then '3'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 4 then '4'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 5 then '5'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 10 then '6-10'
-	when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 25 then '11-25'
-	else '25+' end as "Days between visits"
-from (
-	select
+EXTRACT(EPOCH FROM (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
+CASE
+	WHEN n.domain_sessionidx = 1 THEN '0'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 1 THEN '1'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 2 THEN '2'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 3 THEN '3'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 4 THEN '4'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 5 THEN '5'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 10 THEN '6-10'
+	WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 25 THEN '11-25'
+	ELSE '25+' END as "Days between visits"
+FROM (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
 	domain_sessionidx - 1 as "previous_domain_sessionidx",
-	min(collector_tstamp) as "time_first_touch"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx
+	MIN(collector_tstamp) as "time_first_touch"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY 1,2
 ) n
-left join (
-	select
+LEFT JOIN (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
-	min(collector_tstamp) as "time_first_touch"
-	from events
-	group by domain_userid, domain_sessionidx
+	MIN(collector_tstamp) as "time_first_touch"
+	FROM "atomic".events
+	GROUP BY 1,2
 ) p on n.previous_domain_sessionidx = p.domain_sessionidx
-and n.domain_userid = p.domain_userid
+and n.domain_userid = p.domain_userid;
 {% endhighlight %}
 
 Finally, we group the results by the number of days between visits, to plot a frequency table:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 "Days between visits",
-count(*) as "Number of visits"
-from (
-	select
+COUNT(*) as "Number of visits"
+FROM (
+	SELECT
 	n.domain_userid,
 	n.domain_sessionidx,
-	extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
-	case 
-		when n.domain_sessionidx = 1 then '0'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 1 then '1'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 2 then '2'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 3 then '3'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 4 then '4'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 5 then '5'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 10 then '6-10'
-		when extract(epoch from (n.time_first_touch - p.time_first_touch))/3600/24 < 25 then '11-25'
-		else '25+' end as "Days between visits"
-	from (
-		select
+	EXTRACT(EPOCH FROM (n.time_first_touch - p.time_first_touch))/3600/24 as "days_between_visits",
+	CASE
+		WHEN n.domain_sessionidx = 1 THEN '0'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 1 THEN '1'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 2 THEN '2'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 3 THEN '3'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 4 THEN '4'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 5 THEN '5'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 10 THEN '6-10'
+		WHEN extract(epoch FROM (n.time_first_touch - p.time_first_touch))/3600/24 < 25 THEN '11-25'
+		ELSE '25+' END as "Days between visits"
+	FROM (
+		SELECT
 		domain_userid,
 		domain_sessionidx,
 		domain_sessionidx - 1 as "previous_domain_sessionidx",
-		min(collector_tstamp) as "time_first_touch"
-		from events
-		where collector_tstamp > current_date - integer '31'
-		group by domain_userid, domain_sessionidx
+		MIN(collector_tstamp) as "time_first_touch"
+		FROM "atomic".events
+		WHERE collector_tstamp > current_date - integer '31'
+		GROUP BY 1,2
 	) n
-	left join (
-		select
+	LEFT JOIN (
+		SELECT
 		domain_userid,
 		domain_sessionidx,
-		min(collector_tstamp) as "time_first_touch"
-		from events
-		group by domain_userid, domain_sessionidx
-	) p on n.previous_domain_sessionidx = p.domain_sessionidx
-	and n.domain_userid = p.domain_userid
+		MIN(collector_tstamp) as "time_first_touch"
+		FROM "atomic".events
+		GROUP BY 1,2
+	) p ON n.previous_domain_sessionidx = p.domain_sessionidx
+	AND n.domain_userid = p.domain_userid
 ) t
-group by "Days between visits"
-order by "Days between visits"
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -512,7 +513,7 @@ In ChartIO:
 
 [Back to top](#top)
 
- <a name="engagement"><h2>14. Behavior: engagement</h2></a>
+<a name="engagement"><h2>14. Behavior: engagement</h2></a>
 
 Google Analytics provides two sets of metrics to indicate *engagement*:
 
@@ -523,47 +524,47 @@ Both of these are flakey and unsophisticated measures of engagement. Nevertheles
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 domain_userid,
 domain_sessionidx,
-case 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 1800 then 'g. 1801+ seconds' 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 600 then 'f. 601-1800 seconds' 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 180 then 'e. 181-600 seconds' 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 60 then 'd. 61 - 180 seconds' 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 30 then 'c. 31-60 seconds' 
-	when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 10 then 'b. 11-30 seconds' 
-	else 'a. 0-10 seconds' end as "Visit duration"
-from events
-where collector_tstamp > current_date - integer '31'
-group by domain_userid, domain_sessionidx;
+CASE 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 1800 THEN 'g. 1801+ seconds' 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 600 THEN 'f. 601-1800 seconds' 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 180 THEN 'e. 181-600 seconds' 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 60 THEN 'd. 61 - 180 seconds' 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 30 THEN 'c. 31-60 seconds' 
+	WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 10 THEN 'b. 11-30 seconds' 
+	ELSE 'a. 0-10 seconds' END AS "Visit duration"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1,2;
 {% endhighlight %}
 
 Then we aggregate the results for each bucket, so we have frequency by bucket:
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 "Visit duration",
-count(*) as "Number of visits"
-from (
-	select
+COUNT(*) as "Number of visits"
+FROM (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
-	case 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 1800 then 'g. 1801+ seconds' 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 600 then 'f. 601-1800 seconds' 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 180 then 'e. 181-600 seconds' 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 60 then 'd. 61 - 180 seconds' 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 30 then 'c. 31-60 seconds' 
-		when extract(epoch from (max(dvce_tstamp)-min(dvce_tstamp))) > 10 then 'b. 11-30 seconds' 
-		else 'a. 0-10 seconds' end as "Visit duration"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	group by domain_userid, domain_sessionidx
+	CASE 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 1800 THEN 'g. 1801+ seconds' 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 600 THEN 'f. 601-1800 seconds' 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 180 THEN 'e. 181-600 seconds' 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 60 THEN 'd. 61 - 180 seconds' 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 30 THEN 'c. 31-60 seconds' 
+		WHEN extract(EPOCH FROM (MAX(dvce_tstamp)-MIN(dvce_tstamp))) > 10 THEN 'b. 11-30 seconds' 
+		ELSE 'a. 0-10 seconds' END AS "Visit duration"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	GROUP BY 1,2
 ) t
-group by "Visit duration"
-order by "Visit duration"
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 We can then plot the results in ChartIO:
@@ -588,21 +589,21 @@ We then aggregate those results together by the number of page views per visit
 
 {% highlight sql %}
 /* Redshift / PostgreSLQ */
-select
+SELECT
 "Page views per visit",
-count(*) as "Number of visits"
-from (
-	select
+COUNT(*) as "Number of visits"
+FROM (
+	SELECT
 	domain_userid,
 	domain_sessionidx,
-	count(*) as "Page views per visit"
-	from events
-	where collector_tstamp > current_date - integer '31'
-	and event = 'page_view'
-	group by domain_userid, domain_sessionidx
+	COUNT(*) as "Page views per visit"
+	FROM "atomic".events
+	WHERE collector_tstamp > current_date - integer '31'
+	AND event = 'page_view'
+	GROUP BY 1,2
 ) t
-group by "Page views per visit"
-order by "Page views per visit"
+GROUP BY 1
+ORDER BY 1;
 {% endhighlight %}
 
 In ChartIO:
@@ -620,12 +621,13 @@ Looking at the distribution of visits by browser is straightforward:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select
+SELECT
 br_family as "Browser",
-count(distinct(domain_userid || domain_sessionidx)) as "Visits"
-from events
-group by "Browser"
-order by "Visits" desc;
+COUNT(DISTINCT(domain_userid || domain_sessionidx)) as "Visits"
+FROM "atomic"events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1
+ORDER BY 2 DESC;
 {% endhighlight %}
 
 In ChartIO:
@@ -643,12 +645,14 @@ Looking at the distribution of visits by operating system is straightforward:
 
 {% highlight sql %}
 /* Redshift / PostgreSQL */
-select 
+CREATE VIEW basic_recipes.technology_os AS
+SELECT 
 os_name as "Operating System",
-count(distinct(domain_userid || domain_sessionidx)) as "Visits"
-from events
-group by "Operating System"
-order by "Visits" desc;
+COUNT(DISTINCT(domain_userid || domain_sessionidx)) as "Visits"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1 
+ORDER BY 2 DESC; 
 {% endhighlight %}
 
 Again, we can plot the results in ChartIO:
@@ -663,11 +667,13 @@ To work out how the number of visits in a given time period splits between visit
 
 {% highlight mysql %}
 /* Redshift / PostgreSQL */
-select 
-case when dvce_ismobile=1 then 'mobile' else 'desktop' end as "Device type",
-count(distinct(domain_userid || domain_sessionidx)) as "Visits"
-from events
-group by "Device type";
+CREATE VIEW basic_recipes.technology_mobile AS
+SELECT 
+CASE WHEN dvce_ismobile=1 THEN 'mobile' ELSE 'desktop' END AS "Device type",
+COUNT(DISTINCT(domain_userid || domain_sessionidx)) as "Visits"
+FROM "atomic".events
+WHERE collector_tstamp > current_date - integer '31'
+GROUP BY 1;
 {% endhighlight %}
 
 Plotting the results in ChartIO:
