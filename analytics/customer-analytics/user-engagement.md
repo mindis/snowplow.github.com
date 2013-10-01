@@ -37,95 +37,80 @@ Note: for a more in-depth discussion of measuring user engagement, particularly 
 3. [Number of events per visit](#events-per-visit)
 4. [Weighting events by value](#weighted-events-per-visit)
 
- <a name="days-per-time-period"><h3>1. Measuring the number of days per week / month that users visit the site</h3></a>
+<a name="days-per-time-period"><h3>1. Measuring the number of days per month that users visit the site</h3></a>
 
 This is a key metric employed by the social network Facebook, amongst others.
 
-To calculate it, we first calculate the figure per domain_userid per time period (e.g. month):
+To calculate it, calculate for each user how many days they've visited our website for each month:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
-CREATE TABLE days_visited_per_user_per_month (
-domain_userid STRING,	
-yr INT,
-mnth INT,
-visits INT
-) ;
-
-INSERT OVERWRITE TABLE days_visited_per_user_per_month 
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
+DATE_TRUNC('month', collector_tstamp) AS "Month",
 domain_userid,
-YEAR(collectordt),
-MONTH(dt),
-COUNT(DISTINCT (domain_sessionidx) )
-FROM events
-GROUP BY domain_userid, YEAR(dt), month(dt) ;
+COUNT(DISTINCT(DATE_TRUNC('day', collector_tstamp))) AS "Days_visited_website"
+FROM "atomic".events
+GROUP BY 1,2
 {% endhighlight %}
 
-We can then look at the distribution of users by the number of days per month they have logged in, for any month in particular:
+Now we can aggregate over that data to calculate the distribution, by month, or users, by the number of days they have logged in:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
-visits,
-count(domain_userid)
-FROM days_visited_per_month
-WHERE yr=12 AND mnth=5
-GROUP BY visits ;
-{% endhighlight %}
-
-We might also want to see how the distribution evolves by month:
-
-{% highlight mysql %}
-/* HiveQL / Infobright */
-SELECT
-yr,
-mnth,
-visits,
-count(domain_userid)
-FROM days_visited_per_month
-GROUP BY yr, month, visits ;
+"Month",
+"Days_visited_website",
+COUNT(domain_userid) AS "Frequency"
+FROM (
+	SELECT
+	DATE_TRUNC('month', collector_tstamp) AS "Month",
+	domain_userid,
+	COUNT(DISTINCT(DATE_TRUNC('day', collector_tstamp))) AS "Days_visited_website"
+	FROM "atomic".events
+	GROUP BY 1,2 ) t
+GROUP BY 1,2
+ORDER BY 1,2;
 {% endhighlight %}
 
 Note: as well as looking at how the distribution of users by engagement level changes over time, we might also want to look at how it changes for a fixed group of users. This is normally performed as part of a [cohort analysis][cohort-analysis].
 
 <a name="visits-per-time-period"><h3>2. Number of visits by each user per day / week / month</h3></a>
 
-A similar metric is calculated by countint the number of visits that each user makes in a given time period. The difference here, is that if a user visits a site more than once a day, each individual visit contributes to the "engagement" value assigned to that user. When we look at the number of days per month a user visits a website, by contrast, we do not distinguish users who've visited once from users who've visited twice. 
+A similar metric is calculated by countint the number of visits (sessions) that each user makes in a given time period. The difference here, is that if a user visits a site more than once a day, each individual visit contributes to the "engagement" value assigned to that user. When we look at the number of days per month a user visits a website, by contrast, we do not distinguish users who've visited once from users who've visited twice. 
 
 Which approach is better depends on the type of product / service you offer online and the way users engage with it. If users typically open your service in a browser window, and then leave it on (but in the background), distinguishing users who visit once and twice a day may not be meaningful. If each visit is distinct, however, this metric might be preferable.
 
 To calculate it, we first calculate the number of visits performed per user per time period. (In the below example we use a month as a time period):
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
-CREATE TABLE visits_by_user_by_month (
-domain_userid STRING,
-yr INT,
-mnth INT,
-visits INT
-) ;
-
-INSERT OVERWRITE TABLE visits_by_user_by_month
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
+DATE_TRUNC('month', collector_tstamp) AS "Month",
 domain_userid,
-YEAR(dt),
-MONTH(dt),
-COUNT( DISTINCT( domain_sessionidx ))
-GROUP BY domain_userid, YEAR(dt), MONTH(dt) ;
+COUNT(DISTINCT(domain_sessionidx)) AS "Visits_per_month"
+FROM "atomic".events
+GROUP BY 1,2;
+) ;
 {% endhighlight %}
 
-Now we can look at the distribution of users, by numbers of visits per time period, in each time period:
+Now we can aggregate over the above data to view the distribution of users, by numbers of visits per time period, in each time period:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
-yr,
-mnth,
-visits,
-COUNT(domain_userid)
-FROM visits_by_user_by_month
-GROUP BY yr, mnth, visits ;
+"Month",
+"Visits_per_month",
+COUNT(*) AS "Frequency"
+FROM (
+	SELECT
+	DATE_TRUNC('month', collector_tstamp) AS "Month",
+	domain_userid,
+	COUNT(DISTINCT(domain_sessionidx)) AS "Visits_per_month"
+	FROM "atomic".events
+	GROUP BY 1,2 
+) t
+GROUP BY 1,2
+ORDER BY 1,2
 {% endhighlight %}
 
 <a name="events-per-visit"><h3>3. Number of events per visit</h3></a>
@@ -134,60 +119,49 @@ We can take the number of "events" that occur on each visit as a proxy for how "
 
 Counting the number of events per user per visit is straightforward:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
-CREATE TABLE engagement_by_visit (
-domain_userid STRING,
-domain_sessionidx INT,
-engagement INT
-) ;
-
-INSERT OVERWRITE TABLE engagement_by_visit
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
 domain_userid,
-domain_sessionidx,
-COUNT(txn_id)
-FROM events
-GROUP BY domain_userid, domain_sessionidx ;
+COUNT(*) AS "engagement_level"
+FROM "atomic".events
+GROUP BY 1 ;
 {% endhighlight %}
 
-We can then look at the distribution of visits by engagement level:
+We can then look at the distribution of users by engagement level:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
-engagement,
+engagement_level,
 COUNT(*)
-FROM events
-GROUP BY engagement ;
+FROM (
+	SELECT
+	domain_userid,
+	COUNT(*) AS "engagement_level"
+	FROM "atomic".events
+	GROUP BY 1 
+) t
+GROUP BY 1 ;
 {% endhighlight %}
 
 If we want to see whether this metric is improving over time, we can repeat the above, but this time note the date of each visit, and aggregate by time period:
 
 {% highlight mysql %}
-/* HiveQL / Infobright */
-CREATE TABLE engagement_by_visit (
-domain_userid STRING,
-domain_sessionidx INT,
-dt STRING,
-engagement INT
-) ;
-
-INSERT OVERWRITE TABLE engagement_by_visit
+/* PostgreSQL / Redshift */
 SELECT
-domain_userid,
-domain_sessionidx,
-MIN(dt),
-COUNT(txn_id)
-FROM events
-GROUP BY domain_userid, domain_sessionidx ;	
-
-SELECT
-dt,
-engagement,
-COUNT(*)
-FROM events
-GROUP BY dt, engagement ;
+Month,
+engagement_level,
+COUNT(*) AS "Frequency"
+FROM (
+	SELECT
+	DATE_TRUNC('month', collector_tstamp) AS "Month",
+	domain_userid,
+	COUNT(*) AS "engagement_level"
+	FROM "atomic".events
+	GROUP BY 1,2
+) t
+GROUP BY 1,2 ;
 {% endhighlight %}
 
 <a name="weighted-events-per-visit"><h3>4. Weighting events by value</h3></a>
