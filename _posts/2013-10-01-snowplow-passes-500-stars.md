@@ -42,4 +42,4 @@ All of this is hugely encouraging for the future. Especially given that we have 
 [red-dwarf]: http://jrvis.com/red-dwarf/?user=snowplow&repo=snowplow
 [heatmap]: /static/img/blog/2013/10/snowplow-stars-at-501.png
 
-[trending]: /static/img/blog/2013/10/snowplow-trending.png
+[trending]: /static/img/blog/2013/10/snowplow-trending-16-sep-2013.png
