@@ -17,7 +17,7 @@ In this section, we walk through the process of integrating Snowplow data with o
 3. [Uploading customer data into Snowplow](#upload)
 4. [Joining customer data with Snowplow to create an integrated customer datamart](#join)
 
- <a name="why"><h2>1. Why integrate web analytics data with other customer data sources?</h2></a>
+<a name="why"><h2>1. Why integrate web analytics data with other customer data sources?</h2></a>
 
 To date many companies have become very good at using CRM, loyalty and sales data to understand, segment and serve their customer base. Typically, however, they have **not** used web analytics data to understand their customers, even though how users engage with brands and companies through their website and applications provides some of the most revealing data about who a person is, there motivation for engaging with a brand / product / service and how happy they are with that brand / product and service. To illustrate how revealing web analytics data can be, consider:
 
@@ -37,7 +37,7 @@ Potential sources of customer data to integrate with:
 * Marketing databases (e.g. email, direct mail, ad server)
 * Social media (e.g. Facebook, Twitter)
 
- <a name="ingredients"><h2>2. Necessary ingredients for successful integration</h2></a>
+<a name="ingredients"><h2>2. Necessary ingredients for successful integration</h2></a>
 
 Integrating any two data sources requires that:
 
@@ -49,7 +49,7 @@ Given the two above requirements, it becomes clear why web analytics data has no
 * Web analytics data volumes are typically enormous, making *copying* the data hard. (Snowplow *fixes* this problem by enabling you to import your data into Snowplow, rather than export your web analytics data out of it.)
 * Web analytics programs are typically bad at reliably identifying users. (Snowplow *fixes* this problem by exposing a `user_id`, `domain_userid` and `network_userid` and making it striaghtforward to map those user identifiers with identifiers from other systems.)
 
- <a name="upload"><h2>3. Uploading data into Snowplow</h2></a>
+<a name="upload"><h2>3. Uploading data into Snowplow</h2></a>
 
 In order two join two data sets, you need to be able to run a query across both of them. Typically, this means getting copies of them in the same system. There are three options:
 
@@ -57,9 +57,22 @@ In order two join two data sets, you need to be able to run a query across both 
 2. Import the data you want to integrate with Snowplow out the system it usually lives (e.g. your CRM system) and import it into Snowplow
 3. Export data out of Snowplow and out of the system you want to integrate it with, and import both data sets into a third system to run the join
 
-Whilst all three options are possible, more often then not we recommend companies use option 2 i.e. import the customer data they want to join with Snowplow into Snowplow. (Or more specifically, if they are querying Snowplow data in Hive, import the data into Hive. If they are querying Snowplow data in Redshift, import the data into Redshift.) The reason is relatively straightforward: Snowplow data sets tend to be very large: that is why we use either Hive or Redshift to store and query the data, as both these platforms are built for scale. Other sources of customer data e.g. CRM data are typically much smaller scale, so moving them into Hive / Infobright is usually more straightforward then moving millions of lines of Snowplow data into a non-Hive / non-Infobright data store.
+Whilst all three options are possible, more often then not we recommend companies use option 2 i.e. import the customer data they want to join with Snowplow into Snowplow. (Or more specifically, if they are querying Snowplow data in Hive, import the data into Hive. If they are querying Snowplow data in Redshift, import the data into Redshift.) The reason is relatively straightforward: Snowplow data sets tend to be very large: that is why we use either Hive or Redshift to store and query the data, as both these platforms are built for scale. Other sources of customer data e.g. CRM data are typically much smaller scale, so moving them into Hive / Redshift is usually more straightforward then moving millions of lines of Snowplow data into a non-Hive / non-Redshift data store.
 
-### Importing data into Hive 
+1. [Importing your data into Redshift] (#redshift-import)
+2. [Importing your data into S3 / Hive](#hive-import)
+
+
+<a name="redshift-import"><h3>3.1 Importing your data into Redshift</h3></a>
+
+If you are using Redshift to store and query your Snowplow data, uploading other sources of customer data into your Redshift cluster is reasonably straightforward. 
+
+Because uploading data into Redshift is fastest from S3, we generally recommend saving the data in tab delimited format (being careful to remove any tabs from the data), and then uploading those text files to S3. Bulk loading the data from S3 into Redshift is then straightforward. (For details on how to bulk load data from S3 into Redshift - see [here][bulk-load-data-from-s3-to-redshift].) Note you will need to create new tables in Redshift with a schema that match the format of the exported data in S3, prior to performing the bulk upload.
+
+To maintain a regular update of data from your other customer data sources into Redshift for analysing alongside Snowplow, it makes sense either to script an ETL process, or to use an ETL tool. Currently there are not any Redshift compatible tools ETL tools that we have tested. However, we expect many ETL tools to roll out Redshift support over the next couple of months. In addition, the Snowplow team can setup those regular ETL steps as part of our [professional services][pro-services] offering.
+
+
+<a name="hive-import"><h3>3.2 Importing data into Hive</h3></a>
 
 If you are running Snowplow using Hive on Amazon's S3 / EMR infrastructure, uploading data into Hive is a three step process:
 
@@ -67,7 +80,7 @@ If you are running Snowplow using Hive on Amazon's S3 / EMR infrastructure, uplo
 2. Upload the data into S3
 3. Create an external table in Hive that references the data, with the correct field definitions
 
-#### 1. Exporting your data in a format suitable for Hive
+#### 3.2.1 Exporting your data in a format suitable for Hive
 
 How you export customer data out of your systems will vary depending on the system. In general, however, nearly all cutomer-data applications will enable you to export customer records as CSV files.
 
@@ -77,11 +90,11 @@ Some useful things to note about the format of the exported CSV file. (If the CS
 2. At least one of the columns should be a user identifier that will be used to do the join
 3. If possible, the CSV should not contain the column titles themselves, as this will make importing them into Hive more straightforward
 
-#### 2. Uploading data into S3
+#### 3.2.2 Uploading data into S3
 
 Uploading data into S3 is reasonably straight forward: this can be done via the [Amazon Web Services UI][aws-console] or an S3 interface tool like [Bucket Explorer][bucket-explorer].
 
-#### 3. Defining your data in Hive
+#### 3.2.3 Defining your data in Hive
 
 Once your data is on S3, you need to tell Hive about it, so you can query it. To do that, you'll need to define a Hive table for it:
 
@@ -104,24 +117,13 @@ To check that your data has been successfully uploaded, you can run some sample 
 
 {% highlight mysql %}
 /* HiveQL / MySQL */
-SELECT * from {{table_name}} LIMIT 10;
+SELECT * FROM {{table_name}} LIMIT 10;
 {% endhighlight %}
 
-### Importing your data into Redshift
-
-If you are using Redshift to store and query your Snowplow data, uploading other sources of customer data into your Redshift cluster is reasonably straightforward. 
-
-Because uploading data into Redshift is fastest from S3, we generally recommend saving the data in tab delimited format (being careful to remove any tabs from the data), and then uploading those text files to S3. Bulk loading the data from S3 into Redshift is then straightforward. (For details on how to bulk load data from S3 into Redshift - see [here][bulk-load-data-from-s3-to-redshift].) Note you will need to create new tables in Redshift with a schema that match the format of the exported data in S3, prior to performing the bulk upload.
-
-To maintain a regular update of data from your other customer data sources into Redshift for analysing alongside Snowplow, it makes sense either to script an ETL process, or to use an ETL tool. Currently there are not any Redshift compatible tools ETL tools that we have tested. However, we expect many ETL tools to roll out Redshift support over the next couple of months. In addition, the Snowplow team can setup those regular ETL steps as part of our [professional services][pro-services] offering.
-
-### Importing your data into Infobright
-
-If you are using Infobright to store and query your Snowplow data, uploading data into Infobright is straightforward: you can use any database administration tool that interfaces with MySQL (on which Infobright is based) to create a new table in Infobright and import the CSV in. If the data you are importing lives in another relational database, it may be possible to use a tool like [Navicat][navicat] to move the data directly between one database and the other, or use an ETL tool like [Jitterbit][jitterbit] to manage a regular transfer of data from one database to the other. 
 
 <a name="join"><h2>4. Joining 3rd party customer data with Snowplow data</h2></a>
 
-Now that all your customer data sets are available in Hive, Redshift Infobright, you are in a position to run an analysis across all customer data sets.</a>
+Now that all your customer data sets are available in Redshift or Hive, you are in a position to run an analysis across all customer data sets.</a>
 
 To do so, however, you need to map users between the different systems: mapping users identified in Snowplow by the `domain_userid`, `network_userid` and `user_id`, with customers as identified by a `customer_id` (or something similar) in your other customer data sets. This requires firing a Snowplow event with the `customer_id` at some stage in the customer journey when the ID is available, so that it can be assigned to the Snowplow `user_id`. The most common way of achieving this is to fire the event at login events, as described in the [identifying users with Snowplow][identifying-users] section of this Cookbook. Assuming this has been done, you can generate the mapping by executing the following SQL query:
 
@@ -131,7 +133,7 @@ SELECT
 user_id,
 domain_userid,
 network_userid
-FROM `events_008`
+FROM "atomic".events
 GROUP BY user_id, domain_userid, network_userid;
 {% endhighlight %}
 
@@ -151,11 +153,11 @@ JOIN (
 	user_id,
 	domain_userid,
 	network_userid
-	FROM `events_008`
+	FROM "atomic".events
 	GROUP BY user_id, domain_userid, network_userid
 ) m
 ON c.user_id = m.user_id
-JOIN `events_008`
+JOIN "atomic".events
 ON e.domain_userid = m.domain_userid;
 {% endhighlight %}
 
