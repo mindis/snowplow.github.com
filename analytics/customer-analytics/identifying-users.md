@@ -24,9 +24,14 @@ Every line of Snowplow table includes placeholders for three different user IDs:
 2. The `network_userid`. This is a user ID that is set via a third party cookie. It can be used to track user behavior across a network of sites on different domains.
 3. A `user_id` that can be set to custom values. This can be used to assign e.g. an ID set by a CRM system to Snowplow data.
 
+In addition, there are two additional fields that can be used to identify users:
+
+1. `user_ipaddress`
+2. `user_fingerprint`
+
 There are strengths and weaknesses associated with each different type of user identifier. In many cases, we recommend using a combination of two or three of them to power the most robust set of user analytics. (More on this below.) In this introductory section, however, we'll stick to outlining the benefits and limitations of each:
 
-### 1. The `domain_userid`
+#### 1. The `domain_userid`
 
 The `domain_userid` is set via a first party cookie in the Snowplow Javascript (`sp.js`). 
 
@@ -34,7 +39,7 @@ Because it is set via a first party cookie, the `domain_userid` is rarely blocke
 
 However, because it is tied to a first party cookie, it cannot be used to track users across domains: if you have Snowplow set up across a network of sites, the same user on different sites will have different `domain_userid`s. (At least one for each site.)
 
-### 2. The `network_userid`
+#### 2. The `network_userid`
 
 The `network_userid` is tied to a third party cookie. Because of this, it can be used to track an individual across multiple different domains.
 
@@ -42,9 +47,21 @@ Third party cookies are increasingly being blocked on browsers. For example, mob
 
 Currently, the `network_userid` is **only** set if you use the [Clojure collector][clojure-collector], not if you use the Cloudfront collector. (Unlike the Clojure collector, the Cloudfront collector does not set 3rd party cookies.)
 
-### 3. The `user_id` 
+#### 3. The `user_id` 
 
 Many companies and business already set their identifiers for their users and / or customers. (For example, when the user creates an account, or completes a first purchase.) In these cases, that user ID can be passed into Snowplow as the `user_id` using the [setUserID][setuserid] method. This makes it easy to join Snowplow event data with other customer data sets e.g. CRM data.
+
+#### 4. The `user_ipaddress`
+
+IP addresses can be useful tools to use for identifying users. In particular, these can often be mapped to geographic locations, or specific companies / businesses.
+
+Often, however, several users will connect from the same IP address. As a result, companies only typically use IP address as one of many clues to identifying a user, rather than the sole identifier.
+
+#### 5. The `user_fingerprint`
+
+This is an experimental feature, that uses specific browser features (e.g. plugins that have been installed) to "fingerprint" the browser.
+
+We are not sure how well this works in practice (i.e. how unique different browsers are). It may be useful to stitch together sessions on occasions where a user's cookies have been deleted, for example.
 
 <h2><a name="benefits_of_user_id">2. Benefits of exposing the user IDs for analysis</a></h2>
 
@@ -53,12 +70,12 @@ Many companies and business already set their identifiers for their users and / 
 Analysts can quickly zoom in on a user's complete engagement record, including every action they have taken on every single visit to your website(s). Fetching this history is straightforward:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
+/* PostgreSQL / Redshift */
 SELECT 
 *
-FROM events_008_cf
-WHERE domain_userid = '[[ENTER USER ID HERE]]'
-ORDER BY collector_dt, collector_tm
+FROM "atomic".events
+WHERE domain_userid = '{ENTER USER ID HERE}'
+ORDER BY dvce_tstamp
 {% endhighlight %}
 
 E.g. executing the query in Navicat:
@@ -72,15 +89,15 @@ Often a user will visit a website several times before completing a particular g
 Each time a user visits a site, Snowplow sets a session counter (`domain_sessionidx`): this is set to 1 on the user's first visit, 2 on the user's second visit etc. So to view how many visits a customer makes before purchasing, we can execute a query like this:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
+/* PostgreSQL / Redshift */
 SELECT
 domain_sessionidx,
 COUNT(DISTINCT(domain_userid))
-FROM `events_008`
+FROM "atomic".events
 WHERE ev_action = 'order-complete'
 AND domain_sessionidx IS NOT NULL
-GROUP BY domain_sessionidx
-ORDER BY domain_sessionidx
+GROUP BY 1
+ORDER BY 1
 {% endhighlight %}
 
 Plotting the results in ChartIO:
@@ -89,15 +106,15 @@ Plotting the results in ChartIO:
 
 ### 2c. Ability to categorise users by cohorts
 
-Because we can easily slice data by user_id (rather than session), it is easy to define [cohorts][cohort-analysis] to use in [cohort-analysis] [cohort-analysis]. For example, to divide users into cohorts based on the month that they first used a service, we can execute the following query:
+Because we can easily slice data by user  (rather than session), it is easy to define [cohorts][cohort-analysis] to use in [cohort-analysis] [cohort-analysis]. For example, to divide users into cohorts based on the month that they first used a service, we can execute the following query:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
-SELECT
-DATE_FORMAT(collector_dt, '%Y-%m') AS `cohort`,
-domain_userid
-FROM `events_008`
-GROUP BY domain_userid
+/* PostgreSQL / Redshift */
+SELECT 
+domain_userid,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS "cohort"
+FROM "atomic"."events"
+GROUP BY 1
 {% endhighlight %}
 
 We can then aggregate results for each individual `user_id` by cohort (`group by cohort`), to compare different metrics (e.g. engagement levels) between different cohorts as a whole. (For more in-depth examples of how this is done in practice, see the [cohort analysis] [cohort-analysis] section.)
@@ -150,14 +167,15 @@ _snaq.push(['setUserId', 'joe.blogs@email.com']);
 It is then possible to map `user_id` to e.g. `domain_userid` by executing the following query:
 
 {% highlight mysql %}
-/* HiveQL / MySQL */
+/* PostgreSQL / Redshift */
+CREATE VIEW business_to_cookie_id_map AS
 SELECT
 domain_userid,
 user_id
-FROM `events_008`
+FROM "atomic".events
 WHERE domain_userid IS NOT NULL
 AND user_id IS NOT NULL
-GROUP BY domain_userid, user_id
+GROUP BY 1,2
 {% endhighlight %}
 
 This type of mapping table is reliable and flexible, because it can accommodate many-to-many relationships between `user_id` and `domain_userid`. Consider the following two cases:
@@ -174,7 +192,7 @@ This type of mapping table is reliable and flexible, because it can accommodate 
 [join-customer-data]: /analytics/customer-analytics/joining-customer-data.html
 [attribution]: /analytics/customer-analytics/attribution.html
 [setuserid]: https://github.com/snowplow/snowplow/wiki/javascript-tracker#wiki-user-id
-[user-actions-over-time-navicat]: /static/img/analytics/customer-analytics/user-actions-over-time.png
+[user-actions-over-time-navicat]: /static/img/analytics/customer-analytics/user-actions-over-time-navicat.JPG
 [breakdown-of-purchases-by-number-of-visits-to-purchase]: /static/img/analytics/customer-analytics/breakdown-of-purchases-by-number-of-visits-to-purchase.png
 [clojure-collector]: https://github.com/snowplow/snowplow/wiki/Setting-up-the-Clojure-collector
 [cloudfront-collector]: https://github.com/snowplow/snowplow/wiki/Setting-up-the-Cloudfront-collector
