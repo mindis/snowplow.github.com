@@ -28,16 +28,12 @@ All cohort analyses can be performed with the following steps:
 2. [Metric definition](#metric-definition): write a query that calculates the required metric for each user
 3. [Combine the results](#combinetheresults) from the above two queries to calculate an aggregated metric for each cohort
 
- <a name="cohort-definition"><h2>1. Cohort definition</h2></a>
+<a name="cohort-definition"><h2>1. Cohort definition</h2></a>
 
-Regardless of the type of cohort analysis we want to perform, we start by creating a table that maps domain_userids to cohorts:
+Regardless of the type of cohort analysis we want to perform, we start by creating a view / table that maps users (e.g. via `domain_userid`) to cohorts:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
-CREATE TABLE user_cohort_map (
-	cohort STRING,
-	domain_userid STRING
-) ;
+{% highlight sql %}
+CREATE VIEW user_cohort_map AS ...
 {% endhighlight %}
 
 
@@ -45,19 +41,20 @@ CREATE TABLE user_cohort_map (
 
 In this case we want to compare users who first visited us in January with those that first visited us in February, March, April etc.
 
-To do this, we need to lookup the date that a user first visited the site (i.e. when `domain_sessionidx`=1, check `collector_dt`) and then group users by month:
+To do this, we need to lookup the date that a user first visited the site (i.e. when `domain_sessionidx`=1, check `collector_tstamp`) and then group users by month:
 	
-{% highlight mysql %}
-INSERT OVERWRITE TABLE user_cohort_map
+{% highlight sql %}
+/* PostgreSQL / Redshift */
+CREATE VIEW user_cohort_map AS
 SELECT
-DATE_FORMAT(MIN(collector_dt, '%Y-%m') AS cohort,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS cohort,
 domain_userid
-FROM events
+FROM "atomic".events
 WHERE domain_sessionidx=1
-GROUP BY domain_userid ;
+GROUP BY domain_userid;
 {% endhighlight %}
 
-The query applies a filter `domain_sessionidx=1` so that we only look at first visits. We then group all the results by domain_userid, so we have one line of data for user. We take the minimum `collector_dt` logged (in case a visit spanned two days).
+The query applies a filter `domain_sessionidx=1` so that we only look at first visits. We then group all the results by domain_userid, so we have one line of data for user. We take the minimum `collector_tstamp` logged (in case a visit spanned two days).
 
 ### 1b. Definine a cohort by when a user first performed a specific action
 
@@ -66,12 +63,12 @@ For many SaaS providers, it is not when a user first visits the site that is rea
 In this case we use a variation of the above query:
 
 {% highlight mysql %}
-/* HiveQL / Infobright */
-INSERT OVERWRITE TABLE user_cohort_map
+/* PostgreSQL / Redshift */
+CREATE VIEW user_cohort_map AS
 SELECT
-MIN(DATE_FORMAT(collector_dt, '%Y-%m')) AS cohort,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS cohort,
 domain_userid
-FROM events
+FROM "atomic".events
 WHERE 
 ev_category LIKE '<INSERT RELEVANT CATEGORY e.g. subscription>'
 AND ev_action LIKE '<INSERT RELEVANT ACTION e.g. signup>' ;
@@ -80,14 +77,15 @@ AND ev_action LIKE '<INSERT RELEVANT ACTION e.g. signup>' ;
 Alternatively we may want to define our cohorts based on the first date a user visited a specific page:
 
 {% highlight mysql %}
-/* HiveQL / Infobright */
-INSERT OVERWRITE TABLE user_cohort_map
+/* PostgreSQL / Redshift */
+CREATE VIEW user_cohort_map AS
 SELECT
-MIN(DATE_FORMAT(collector_dt, '%Y-%m')) AS cohort,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS cohort,
 domain_userid
-FROM events
+FROM "atomic".events
 WHERE 
-pageurl LIKE= '<INSERT RELEVANT PAGEURL>' ; 
+event='pageview'
+AND page_urlpath = '<INSERT RELEVANT PAGEURL PATH>' ; 
 {% endhighlight %}
 
 ### 1c. Definine a cohort by the channel a user was acquired on
@@ -96,47 +94,53 @@ This is important if we want to e.g. compare the lifetime value of customers acq
 
 In this case, we need to look again at the first time a user visited the site, see how they were referred to the site, and then classify them by cohort accordingly. If we were interested in compare users who'd found the site organically, vs those from CPC campaigns, vs those referred from 3rd party sites, for example, we'd look at the `mkt_medium` field:
 
-{% highlight mysql %}
-/* HiveQL / Infobright */
-INSERT OVERWRITE TABLE user_cohort_map
+{% highlight sql %}
+/* PostgreSQL / Redshift */
+CREATE VIEW user_cohort_map AS
 SELECT
-mkt_medium AS cohort,
+mkt_medium AS channel_acquired,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS month_acquired,
 domain_userid
 FROM events
 WHERE domain_sessionidx=1
-GROUP BY mkt_medium, domain_userid ; 
+GROUP BY 1,2,4; 
 {% endhighlight %}
 
 Alternatively, we might want to distinguish between CPC traffic from Google with other PPC sources. In this case we would use a combination of `mkt_source` and `mkt_medium` to define our cohorts:
 
 {% highlight mysql %}
-/* HiveQL / Infobright */
-INSERT OVERWRITE TABLE user_cohort_map
+/* PostgreSQL / Redshift */
+CREATE VIEW user_cohort_map AS
 SELECT
-CONCAT(mkt_source, " / ", mkt_medium) AS cohort,
+mkt_medium AS channel_medium_acquired,
+mkt_source As channel_source_acquired,
+DATE_TRUNC('month', MIN(collector_tstamp)) AS month_acquired,
 domain_userid
 FROM events
 WHERE domain_sessionidx=1
-GROUP BY mkt_source, mkt_medium, domain_userid ;
+GROUP BY 1,2,4;
 {% endhighlight %}
 
 By including the other marketing fields (`mkt_term`, `mkt_content`, `mkt_name`) we can define cohorts more precisely e.g. to compare users acquired with different keyword combinations, or who had seen different ad versions.
+
+We may want to define cohorts based on a the `refr_...` rather than `mkt_...` fields (e.g. because we are interested in comparing the behaviour of users from organic rather than paid campaigns), or define our cohorts based a combination of `refr_...` and `mkt_...` fields.
 
 ### 1d. Other ways to define cohorts
 
 Snowplow makes it possible to define cohorts based on a wide variety of criteria, including definitions obtained from data that exists outside of Snowplow. (This data will need to be uploaded to Snowplow before it can be used.) For more information, [get in touch] [get-in-touch]
 
-
- <a name="metric-definition"><h2>2. Metric definitions</h2></a>
+<a name="metric-definition"><h2>2. Metric definitions</h2></a>
 
 As a second step, we need to define a query that measure the _thing_ we want to compare between our cohorts. We therefore need to populate a table like the one below:
 
-{% highlight mysql %}
-CREATE TABLE metric_by_user (
-domain_userid STRING,
-time_period STRING,
-metric_value INT /* May also be FLOAT / DOUBLE */
-) ;
+{% highlight sql %}
+CREATE VIEW metric_by_user  AS
+SELECT
+domain_userid,
+DATE_TRUNC('month', collector_tstamp) AS month,
+... AS metric
+FROM "atomic".events
+GROUP BY 1,2
 {% endhighlight %}
 
 There is a wide range `metric_value`s we might want to compare between cohorts: most either get at how engaged a particular cohort is, or how valuable a particular cohort is. 
