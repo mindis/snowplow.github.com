@@ -21,19 +21,19 @@ A straightforward (if crude) way of measuring *how good a product page is* then 
 To calculate the fraction of users who've visited a product page that have gone on to add one or more of those products to their basket, we start by calculating the number of uniques per product page:
 
 {% highlight mysql %}
-/* Hive / Infobright SQL */
+/* PostgreSQL / Redshift */
 SELECT 
 page_urlpath,
 COUNT(DISTINCT(domain_userid)) AS unique_visitors,
 COUNT(*) AS page_views
-FROM `events_008`
-WHERE (                                    # Only display results for *product* pages
+FROM "atomic".events
+WHERE (                                    -- Only display results for *product* pages
 	(page_urlpath LIKE '/tarot-cards/%') 
 	OR (page_urlpath LIKE '/oracles/%') 
 	OR (page_urlpath LIKE '/pendula/%')
 	OR (page_urlpath LIKE '/jewellery/%')
-) AND `event` = 'page_view'
-AND page_urlhost = 'www.psychicbazaar.com' # Only display results for the *production website*
+) AND event = 'page_view'
+AND page_urlhost = 'www.psychicbazaar.com' -- Only display results for the *production website*
 GROUP BY page_urlpath
 ORDER BY unique_visitors DESC;
 {% endhighlight %}
@@ -54,34 +54,34 @@ Now that we have number of unique visitors per page, we need to find out how man
 
 On our example website ([www.psychicbazaar.com] [pbz]), add to baskets are recorded using the [structured event tracking] [struct-event] method. The five fields are set as follows:
 
-* `ev_category` = 'ecomm'
-* `ev_action` = 'action'
-* `ev_label` = product SKU
-* `ev_property` = number added to basket
-* `ev_value` = sales value of items added to basket
+* `se_category` = 'ecomm'
+* `se_action` = 'action'
+* `se_label` = product SKU
+* `se_property` = number added to basket
+* `se_value` = sales value of items added to basket
 
 We can therefore query the number of add-to-baskets by product page using the following query:
 
 {% highlight mysql %}
-/* Hive / Infobright SQL */
+/* PostgreSQL / Redshift */
 SELECT
 page_urlpath,
-ev_label AS product_sku,
+se_label AS product_sku,
 COUNT(DISTINCT(domain_userid)) AS uniques_that_add_to_basket,
 COUNT(*) AS number_of_add_to_baskets,
-SUM(ev_property) AS number_of_products_added_to_baket
-FROM events_008
-WHERE (                                    # Only display results for *product* pages
+SUM(se_property) AS number_of_products_added_to_baket
+FROM "atomic".events
+WHERE (                                    -- Only display results for *product* pages
 	(page_urlpath LIKE '/tarot-cards/%' ) 
 	OR ( page_urlpath LIKE '/oracles/%' ) 
 	OR (page_urlpath LIKE '/pendula/%')
 	OR (page_urlpath LIKE '/jewellery/%'))
-AND `event` = 'struct'
-AND `ev_category` = 'ecomm'
-AND `ev_action` = 'add-to-basket'
+AND event = 'struct'
+AND se_category = 'ecomm'
+AND se_action = 'add-to-basket'
 AND page_urlhost = 'www.psychicbazaar.com'
-GROUP BY page_urlpath, product_sku
-ORDER BY uniques_that_add_to_basket DESC;
+GROUP BY 1,2
+ORDER BY 3 DESC;
 {% endhighlight %}
 
 The results of the above query look something like this:
@@ -95,7 +95,7 @@ The results of the above query look something like this:
 We can now combine the two above tables into a single query, and calculate the fraction of visitors to each page that go on to add the product to their basket:
 
 {% highlight mysql %}
-/* Hive / Infobright SQL */
+/* PostgreSQL / Redshift */
 SELECT
 pv.page_urlpath,
 pv.unique_visitors,
@@ -106,34 +106,36 @@ FROM (
 	page_urlpath,
 	COUNT(DISTINCT(domain_userid)) AS unique_visitors,
 	COUNT(*) AS page_views
-	FROM `events_008`
-	WHERE (                                    # Only display results for *product* pages
-		(page_urlpath LIKE '/tarot-cards/%' ) 
-		OR ( page_urlpath LIKE '/oracles/%' ) 
+	FROM "atomic".events
+	WHERE (                                    -- Only display results for *product* pages
+		(page_urlpath LIKE '/tarot-cards/%') 
+		OR (page_urlpath LIKE '/oracles/%') 
 		OR (page_urlpath LIKE '/pendula/%')
 		OR (page_urlpath LIKE '/jewellery/%')
-	) AND `event` = 'page_view'
-	AND page_urlhost = 'www.psychicbazaar.com' # Only display results for the *production website*
-	GROUP BY page_urlpath	
+	) AND event = 'page_view'
+	AND page_urlhost = 'www.psychicbazaar.com' -- Only display results for the *production website*
+	GROUP BY page_urlpath
+	ORDER BY unique_visitors DESC
 ) pv
 LEFT JOIN (
 	SELECT
 	page_urlpath,
-	ev_label AS product_sku,
+	se_label AS product_sku,
 	COUNT(DISTINCT(domain_userid)) AS uniques_that_add_to_basket,
 	COUNT(*) AS number_of_add_to_baskets,
-	SUM(ev_property) AS number_of_products_added_to_baket
-	FROM events_008
-	WHERE (                                    # Only display results for *product* pages
+	SUM(se_property) AS number_of_products_added_to_baket
+	FROM "atomic".events
+	WHERE (                                    -- Only display results for *product* pages
 		(page_urlpath LIKE '/tarot-cards/%' ) 
 		OR ( page_urlpath LIKE '/oracles/%' ) 
 		OR (page_urlpath LIKE '/pendula/%')
 		OR (page_urlpath LIKE '/jewellery/%'))
-	AND `event` = 'struct'
-	AND `ev_category` = 'ecomm'
-	AND `ev_action` = 'add-to-basket'
+	AND event = 'struct'
+	AND se_category = 'ecomm'
+	AND se_action = 'add-to-basket'
 	AND page_urlhost = 'www.psychicbazaar.com'
-	GROUP BY page_urlpath, product_sku
+	GROUP BY 1,2
+	ORDER BY 3 DESC
 ) ab
 ON pv.page_urlpath = ab.page_urlpath
 {% endhighlight %}
@@ -201,21 +203,21 @@ Similarly, products in the lower left corner are performing poorly - but it is n
 To produce the plot we need to the same data as above, but need to include in addition data on the number of uniques who go on to purchase each product. This additional data can be delivered via the following query:
 
 {% highlight mysql %}
-/* Hive / Infobright SQL */
+/* PostgreSQL / Redshift */
 SELECT
 ti_sku,
 COUNT(DISTINCT(domain_userid)) AS uniques_that_purchase,
 COUNT(DISTINCT(ti_orderid)) AS number_of_orders,
 SUM(ti_quantity) AS actual_number_sold
-FROM events_008
-WHERE `event` = 'transaction_item'
-GROUP BY ti_sku
+FROM "atomic".events
+WHERE event = 'transaction_item'
+GROUP BY ti_sku;
 {% endhighlight %}
 
 We can combine this with the previous queries:
 
 {% highlight mysql %}
-/* Hive / Infobright SQL */
+/* PostgreSQL / Redshift */
 SELECT
 pv.page_urlpath,
 pv.unique_visitors,
@@ -226,34 +228,36 @@ FROM (
 	page_urlpath,
 	COUNT(DISTINCT(domain_userid)) AS unique_visitors,
 	COUNT(*) AS page_views
-	FROM `events_008`
-	WHERE (                                    # Only display results for *product* pages
-		(page_urlpath LIKE '/tarot-cards/%' ) 
-		OR ( page_urlpath LIKE '/oracles/%' ) 
+	FROM "atomic".events
+	WHERE (                                    -- Only display results for *product* pages
+		(page_urlpath LIKE '/tarot-cards/%') 
+		OR (page_urlpath LIKE '/oracles/%') 
 		OR (page_urlpath LIKE '/pendula/%')
 		OR (page_urlpath LIKE '/jewellery/%')
-	) AND `event` = 'page_view'
-	AND page_urlhost = 'www.psychicbazaar.com' # Only display results for the *production website*
-	GROUP BY page_urlpath	
+	) AND event = 'page_view'
+	AND page_urlhost = 'www.psychicbazaar.com' -- Only display results for the *production website*
+	GROUP BY page_urlpath
+	ORDER BY unique_visitors DESC
 ) pv
 LEFT JOIN (
 	SELECT
 	page_urlpath,
-	ev_label AS product_sku,
+	se_label AS product_sku,
 	COUNT(DISTINCT(domain_userid)) AS uniques_that_add_to_basket,
 	COUNT(*) AS number_of_add_to_baskets,
-	SUM(ev_property) AS number_of_products_added_to_baket
-	FROM events_008
-	WHERE (                                    # Only display results for *product* pages
+	SUM(se_property) AS number_of_products_added_to_baket
+	FROM "atomic".events
+	WHERE (                                    -- Only display results for *product* pages
 		(page_urlpath LIKE '/tarot-cards/%' ) 
 		OR ( page_urlpath LIKE '/oracles/%' ) 
 		OR (page_urlpath LIKE '/pendula/%')
 		OR (page_urlpath LIKE '/jewellery/%'))
-	AND `event` = 'struct'
-	AND `ev_category` = 'ecomm'
-	AND `ev_action` = 'add-to-basket'
+	AND event = 'struct'
+	AND se_category = 'ecomm'
+	AND se_action = 'add-to-basket'
 	AND page_urlhost = 'www.psychicbazaar.com'
-	GROUP BY page_urlpath, product_sku
+	GROUP BY 1,2
+	ORDER BY 3 DESC
 ) ab
 ON pv.page_urlpath = ab.page_urlpath
 LEFT JOIN (
@@ -262,11 +266,11 @@ LEFT JOIN (
 	COUNT(DISTINCT(domain_userid)) AS uniques_that_purchase,
 	COUNT(DISTINCT(ti_orderid)) AS number_of_orders,
 	SUM(ti_quantity) AS actual_number_sold
-	FROM events_008
-	WHERE `event` = 'transaction_item'
+	FROM "atomic".events
+	WHERE event = 'transaction_item'
 	GROUP BY ti_sku
 ) t
-ON ab.product_sku = t.ti_sku
+ON ab.product_sku = t.ti_sku;
 {% endhighlight %}
 
 This produces a result set that looks like this:
