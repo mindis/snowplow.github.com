@@ -33,8 +33,9 @@ The [Snowplow Tracker Protocol] [tracker-protocol] provides a standard way for *
 ### 4. Storage
 
 * Snowplow can be setup to load your event-level and customer-level data into one or more data stores, to enable analytics.
-* Currently we support loading Snowplow data into [Amazon S3] [s3] (for processing by [Hive] [hive] / [Pig] [pig] / [Mahout] [mahout] on EMR) and [Amazon Redshift] [redshift] for analysis in more traditional tools (e.g. [R] [r], [Tableau] [tableau] and [Excel] [excel]). 
-* We plan to add support for storing Snowplow data in [PostgreSQL] [postgres] in the near future, for Snowplow users who do not require Redshift's Terabyte-Petabyte scale solution.
+* Snowplow data is delivered into [Amazon S3] [s3] (for processing by [Hive] [hive] / [Pig] [pig] / [Mahout] [mahout] on EMR). 
+* In addition, Snowplow supports loading the data into [Amazon Redshift] [redshift] and [PostgreSQL] [postgres] for analysis in more traditional tools (e.g. [R] [r], [Tableau] [tableau] and [Excel] [excel]). Amazon Redshift enables Snowplow users to query Petabytes of Snowplow data quickly and conveniently via its Postgres API.
+* Going forwards, we plan to support more storage targets to enable a broader set of analyses, including [Neo4J] [neo4j].
 
 Snowplow data is stored in each storage option above as close to the [Snowplow Canonical Event Model] [event-model] as possible. The data model is described [here] [event-model].
 
@@ -98,3 +99,4 @@ Snowplow is built on top AWS, and makes extensive use of Cloudfront, Elastic Bea
 [beanstalk]: http://aws.amazon.com/elasticbeanstalk/
 [emr]: http://aws.amazon.com/elasticmapreduce/
 [postgres]: http://www.postgresql.org/
+[neo4j]: http://www.neo4j.org/
