@@ -47,19 +47,19 @@ Back to [top](#top).
 
 We can pull up a stream of the page view and page ping events for a particular user over time executing a query like this:
 
-{% highlight mysql %}
-/* Infobright / MySQL */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT
 	domain_userid,
 	domain_sessionidx,
-	TIMESTAMP(collector_dt, collector_tm) AS tstamp,
+	collector_tstamp,
 	page_urlpath,
 	page_title,
 	event
-FROM events
+FROM "atomic".events
 WHERE domain_userid = '594b77eb9d30435b'
 AND (event = 'page_ping' OR event = 'page_view')
-ORDER BY domain_userid, tstamp
+ORDER BY 1,2;
 {% endhighlight %}
 
 We can visualize the above user journey in Tableau:
@@ -90,10 +90,10 @@ We can use Snowplow data not just to visualize a user's interaction with the dif
 
 In the above example, we saw that this particular user spent some time on the 'From ETL to Enrichment' blog post. We can execute the following query to understand how he / she scrolled over that web page during that time period:
 
-{% highlight mysql %}
-/* Infobright / MySQL */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT 
-	TIMESTAMP(collector_dt, collector_tm) AS tstamp,
+	collector_tstamp,
 	page_urlpath,
 	event,
 	pp_xoffset_min,
@@ -104,7 +104,7 @@ SELECT
 	br_viewheight,
 	doc_width,
 	doc_height
-FROM `events`
+FROM "atomic".events
 WHERE domain_userid = '594b77eb9d30435b'
 AND page_urlpath LIKE '%etl-to-enrichment%';
 {% endhighlight %}
@@ -140,33 +140,33 @@ As should be clear, the number of page pings for each web page on a site is prop
 
 We can calculate the number of visitors to a page by counting the number of distinct user IDs:
 
-{% highlight mysql %}
-/* Infobright / MySQL */
+{% highlight sql %}
+/* PostgreSQL / Redshift */
 SELECT 
 	page_urlpath,
 	COUNT(DISTINCT (domain_userid)) AS uniques
-FROM `events`
+FROM "atomic".events
 WHERE page_urlhost = 'snowplowanalytics.com'
-GROUP BY page_urlpath
-ORDER BY uniques DESC;
+GROUP BY 1
+ORDER BY 2 DESC;
 {% endhighlight %}
 
 We can sum the number of page pings per page:
 
-{% highlight mysql %}
+{% highlight sql %}
 SELECT
 	page_urlpath,
 	COUNT(DISTINCT(event_id)) AS number_of_pings
-FROM `events`
+FROM "atomic".events
 WHERE page_urlhost = 'snowplowanalytics.com'
 AND event = 'page_ping'
-GROUP BY page_urlpath
-ORDER BY number_of_pings DESC;
+GROUP BY 1
+ORDER BY 2 DESC;
 {% endhighlight %}
 
 We can join the two above queries into a single data set, and divide the number of page pings by the number of uniques to calculate the average pings per visitor for each page with the following query:
 
-{% highlight mysql %}
+{% highlight sql %}
 SELECT
 	u.page_urlpath,
 	u.uniques,
@@ -176,18 +176,18 @@ FROM (
 	SELECT 
 		page_urlpath,
 		COUNT(DISTINCT (domain_userid)) AS uniques
-	FROM `events`
+	FROM "atomic".events
 	WHERE page_urlhost = 'snowplowanalytics.com'
-	GROUP BY page_urlpath
+	GROUP BY 1
 ) u
 LEFT JOIN (
 	SELECT
 		page_urlpath,
 		COUNT(DISTINCT(event_id)) AS number_of_pings
-	FROM `events`
+	FROM "atomic".events
 	WHERE page_urlhost = 'snowplowanalytics.com'
 	AND event = 'page_ping'
-	GROUP BY page_urlpath
+	GROUP BY 1
 ) p
 on u.page_urlpath = p.page_urlpath
 ORDER BY u.uniques DESC;
@@ -217,7 +217,7 @@ We may want to compare the page height with the average amount of time spent on 
 
 To do this with our data set, we simply add the `doc_height` field to our previous query:
 
-{% highlight mysql %}
+{% highlight sql %}
 SELECT
 	u.page_urlpath,
 	u.uniques,
@@ -229,18 +229,18 @@ FROM (
 		page_urlpath,
 		COUNT(DISTINCT (domain_userid)) AS uniques,
 		MAX(doc_height) AS doc_height
-	FROM `events`
+	FROM "atomic".events
 	WHERE page_urlhost = 'snowplowanalytics.com'
-	GROUP BY page_urlpath
+	GROUP BY 1
 ) u
 LEFT JOIN (
 	SELECT
 		page_urlpath,
 		COUNT(DISTINCT(event_id)) AS number_of_pings
-	FROM `events`
+	FROM "atomic".events
 	WHERE page_urlhost = 'snowplowanalytics.com'
 	AND event = 'page_ping'
-	GROUP BY page_urlpath
+	GROUP BY 1
 ) p
 on u.page_urlpath = p.page_urlpath
 ORDER BY u.uniques DESC;
@@ -262,24 +262,24 @@ One question we may have regarding long web pages is: what percentage of uses ma
 
 Snowplow makes this straightforward to calculate. We can see how far down a user has scrolled in each page ping by adding together the maximum Y offset with the browser view height i.e.:
 
-{% highlight mysql %}
+{% highlight sql %}
 pp_yoffset_max + br_viewheight
 {% endhighlight %}
 
 and then take that as a percentage of the total web page height:
 
-{% highlight mysql %}
+{% highlight sql %}
 (pp_yoffset_max + br_viewheight) / doc_height AS fraction_read
 {% endhighlight %}
 
 We can then calculate the maximum value for each user for each web page:
 
-{% highlight mysql %}
+{% highlight sql %}
 SELECT
 	domain_userid,
 	page_urlpath,
-	MAX( (pp_yoffset_max + br_viewheight) / doc_height ) AS fraction_read
-FROM `events`
+	MAX( (pp_yoffset_max + br_viewheight) / doc_height::REAL ) AS fraction_read
+FROM "atomic".events
 WHERE page_urlhost = 'snowplowanalytics.com'
 AND event='page_ping'
 GROUP BY domain_userid, page_urlpath;
