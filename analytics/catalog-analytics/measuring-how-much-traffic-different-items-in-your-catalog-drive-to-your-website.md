@@ -67,14 +67,14 @@ For any page view that happens in session (so it **not** a landing page), the re
 /* PostgreSQL / Redshift */
 SELECT
 	page_urlpath AS "Item page",
-	COUNT(DISTINCT(user_id + domain_userid)) AS "Uniques driven to site",
-	COUNT(DISTINCT(user_id + domain_userid + '-' + domain_sessionidx)) AS "Visits driven to site",
+	COUNT(DISTINCT(domain_userid)) AS "Uniques driven to site",
+	COUNT(DISTINCT(domain_userid || '-' || domain_sessionidx)) AS "Visits driven to site",
 	COUNT(*) AS "Landing page views"
 FROM
-	"events"
+	"atomic"."events"
 WHERE "event" = 'page_view'
 AND   "refr_medium" != 'internal'
-GROUP BY page_urlpath;
+GROUP BY 1;
 {% endhighlight %}
 
 Note that we group our results by page, so we get a single line for each page. The sum of all the records for each page is the number of page views, where that page is a landing page. We also calculate the number of visits and uniques, by counting the number of distinct users and sessions.
@@ -85,19 +85,19 @@ To start with, lets perform the analysis on [Psychic Bazaar] [pbz-website]. We w
 /* PostgreSQL / Redshift */
 SELECT
 	page_urlpath AS "Item page",
-	COUNT(DISTINCT(user_id + domain_userid)) AS "Uniques driven to site",
-	COUNT(DISTINCT(user_id + domain_userid + '-' + domain_sessionidx)) AS "Visits driven to site",
+	COUNT(DISTINCT(domain_userid)) AS "Uniques driven to site",
+	COUNT(DISTINCT(domain_userid + '-' + domain_sessionidx)) AS "Visits driven to site",
 	COUNT(*) AS "Landing page views"
 FROM
-	"events"
+	"atomic"."events"
 WHERE "event" = 'page_view'
 AND   "refr_medium" != 'internal'
 AND (  (page_urlpath LIKE '/tarot-cards/%') 
 	OR (page_urlpath LIKE '/oracles/%') 
 	OR (page_urlpath LIKE '/pendula/%')
 	OR (page_urlpath LIKE '/jewellery/%') )
-GROUP BY page_urlpath
-ORDER BY "Landing page views" DESC;
+GROUP BY 1
+ORDER BY 4 DESC;
 {% endhighlight %}
 
 <a href="/static/img/analytics/catalog-analytics/driving-traffic/1.png"><img src="/static/img/analytics/catalog-analytics/driving-traffic/1.png" /></a>
@@ -160,7 +160,7 @@ We can examine *how* our top performing products (for inbound marketing) drive t
 /* PostgreSQL / Redshift */
 SELECT
 	collector_tstamp,
-	user_id + domain_userid AS "domain_userid",
+	domain_userid,
 	domain_sessionidx,
 	page_urlpath,
 	refr_medium,
@@ -173,7 +173,7 @@ SELECT
 	mkt_term,
 	mkt_campaign
 FROM
-	"events"
+	"atomic"."events"
 WHERE "event" = 'page_view'
 AND   "refr_medium" != 'internal'
 AND (  (page_urlpath LIKE '/tarot-cards/%') 
