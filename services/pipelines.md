@@ -9,9 +9,13 @@ weight: 5
 
 Want to leverage Amazon Web Services and big data technologies to help you get get value out of your company-specific data?
 
-We have significant experience using Amazon Web Services including EMR, Redshift and Dynamo DB to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We often use that experience to help clients implement custom data pipelines and analytic infrastructure to match their particular event models and data sets.
+Amazon Redshift is a fantastic data warehousing platform, that makes it possible and affordable to warehouse granular, atomic data to analyze in a wide range of BI and analytics tools. Amazon EMR is a fantastic platform for building sophisticated, scalable ETL pipelines.
 
-We are familiar not just with AWS, but a range of open source data processing technologies including  [Hadoop] [hadoop], [Hive] [hive] [Cascading] [cascading] and [Scalding] [scalding], and BI and analysis tools including [Tableau] [tableau], [ChartIO] [chartio] and [R] [r], all of which we can stitch together to deliver agile datawarehousing and reporting solutions for fast-movign, data-driven companies.
+We have significant experience using both Redshift and EMR to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We've been able to repurpose much of the Snowplow technology stack (which includes [Cascading] [cascading] and [Scalding] [scalding]) to implement client-specific solutions that load data in a custom (often JSON format) into a custom schema in Redshift for analysis.
+
+## Load your raw JSON data into Redshift
+
+Whilst we have worked with a range of clients with different event models and raw data stores, we've done *a lot* of work with clients who are warehousing JSON data in S3 to transform and load that data into Amazon Redshift, for analysis in a range of analytics tools.
 
 ## Experts in developing and delivering data processing infrastructure on AWS
 
