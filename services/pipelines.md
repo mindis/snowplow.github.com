@@ -1,21 +1,23 @@
 ---
 layout: section
 category: services
-title: Data pipelines and algorithms
+title: Custom datawarehouses and pipelines using EMR and Redshift
 weight: 5
 ---
 
-# Data pipelines and analytics infrastructure
+# Custom datawarehouses and pipelines using Amazon EMR and Redshift
 
 Want to leverage Amazon Web Services and big data technologies to help you get get value out of your company-specific data?
 
-Amazon Redshift is a fantastic data warehousing platform, that makes it possible and affordable to warehouse granular, atomic data to analyze in a wide range of BI and analytics tools. Amazon EMR is a fantastic platform for building sophisticated, scalable ETL pipelines.
+Amazon Redshift is a fantastic data warehousing platform, that makes it possible and affordable to warehouse granular, event data to analyze in a wide range of BI and analytics tools. Amazon EMR is a perfect platform for building sophisticated, scalable ETL pipelines, especially when used with technologies like [Cascading] [cascading] and [Scalding] [scalding].
 
-We have significant experience using both Redshift and EMR to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We've been able to repurpose much of the Snowplow technology stack (which includes [Cascading] [cascading] and [Scalding] [scalding]) to implement client-specific solutions that load data in a custom (often JSON format) into a custom schema in Redshift for analysis.
+We have significant experience using both Redshift and EMR to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We've been able to repurpose much of the Snowplow technology stack to implement client-specific solutions that load data in a custom (often JSON format) into a custom schema in Redshift for analysis.
 
 ## Load your raw JSON data into Redshift
 
-Whilst we have worked with a range of clients with different event models and raw data stores, we've done *a lot* of work with clients who are warehousing JSON data in S3 to transform and load that data into Amazon Redshift, for analysis in a range of analytics tools.
+JSON is a very popular format for storing event data. Analysing JSON data is not trivial: as a result, many companies are looking for ways to load their JSON data into Amazon Redshift, so that it can be analyzed faster, more easily, using a wider set of BI and analysis tools.
+
+We have worked with a number of clients to modify the Snowplow stack to load custom JSONs into Redshift.
 
 ## Experts in developing and delivering data processing infrastructure on AWS
 
