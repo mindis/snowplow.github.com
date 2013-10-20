@@ -1,13 +1,13 @@
 ---
 layout: blog-post
 shortenedlink: Scripting Hadoop part one
-title: Scripting Hadoop part one - Adventures with Scala, Rhino and JavaScript
+title: Scripting Hadoop, Part One - Adventures with Scala, Rhino and JavaScript
 tags: snowplow hadoop scala rhino scriptengine javascript js
 author: Alex
 category: Research
 ---
 
-As we have got to know the many different users of Snowplow, we have become aware of the highly customized, proprietary or domain-specific event processing requirements that many companies have. To date, we have leant on three main solutions to help Snowplow users meet these requirements:
+As we have got to know the Snowplow community better, we have become more aware of the highly bespoke, proprietary or domain-specific event processing requirements that many companies have. To date, we have relied on three main techniques to help Snowplow users meet these requirements:
 
 1. Adding additional configuration options into the core Enrichment process (e.g. IP address anonymization, coming in 0.8.11)
 2. Working with users on bespoke re-writes of the Snowplow Enrichment process (mostly forks of the Scalding ETL job)
@@ -18,16 +18,16 @@ Each of these approaches has its strengths and weaknesses, and we will certainly
 We started our research with a few key assumptions:
 
 1. We would pass one or more user-authored scripts into our Scalding ETL at runtime
-2. The(se) user-authored script(s) would be executed against each row as the MapReduce process ran
-3. These scripts would need to be written in a popular and easy-to-learn scripting language
+2. The user-authored script(s) would be executed against each row of event data
+3. These scripts should be written in a popular and easy-to-learn scripting language
 
-These assumptions brought us quickly to two technologies: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written entirely in Java and available out of the box through ScriptEngine.
+These assumptions brought us quickly to two technologies: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written in Java and available to any JVM app through ScriptEngine.
 
 The first step was to test out Rhino and Scala's inter-operation to see what was possible. In the rest of this blog post, we will reproduce that investigation as an interactive REPL (read–eval–print loop) session. To follow along, you will need to have SBT and Scala installed...
 
 <!--more-->
 
-First we clone our [Scalding Example Project] [scalding-example-project]. This gives us a Scala environment which we know successfully can run Scalding on Hadoop (including Elastic MapReduce), so we can have more confidence that whatever works in this environment will ultimately work fine on EMR too.
+First we clone our [Scalding Example Project] [scalding-example-project], available on GitHub. This gives us a Scala environment which we know successfully can run Scalding on Hadoop (including Elastic MapReduce), giving us some 	confidence that whatever scripting works in this environment will ultimately work fine on EMR too.
 
 So let's get started:
 
@@ -67,12 +67,14 @@ Great, that worked, although the return type java.lang.Object is obviously a lit
 
 {% highlight scala %}
 scala> val isFiltered = engine.eval("undefined.splice()")
-javax.script.ScriptException: sun.org.mozilla.javascript.internal.EcmaError: TypeError: Cannot call method "splice" of undefined (<Unknown source>#1) in <Unknown source> at line number 1
+javax.script.ScriptException: sun.org.mozilla.javascript.internal.EcmaError:
+TypeError: Cannot call method "splice" of undefined (<Unknown source>#1) in
+<Unknown source> at line number 1
 {% endhighlight %}
 
 Okay - this ScriptException is very similar to what you would see evaluating the same code in the Firefox or Chrome JavaScript consoles, so that's reassuring.
 
-Let's try another failure scenario - where our JavaScript accidentally returns Numbers when we are expecting a Boolean:
+Let's try another failure scenario - where our JavaScript accidentally returns a Number when we are expecting a Boolean:
 
 {% highlight scala %}
 scala> val isFiltered = engine.eval("($filter === \"yeah\") ? 1 : 0;")
@@ -103,14 +105,18 @@ Let's try something a little more ambitious now. Can we mutate a POJO ("plain ol
 {% highlight scala %}
 scala> class MyPojo { @scala.reflect.BeanProperty var myVar: String = "heart scala" }
 defined class MyPojo
+{% endhighlight %}
 
+{% highlight scala %}
 scala> val myPojo = new MyPojo
 myPojo: MyPojo = MyPojo@2bbf1be2
 
 scala> engine.put("$myPojo", myPojo)
 
 scala> engine.eval("$myPojo.myVar = \"heart js\";")
-javax.script.ScriptException: sun.org.mozilla.javascript.internal.EvaluatorException: Java method "myVar" cannot be assigned to. (<Unknown source>#1) in <Unknown source> at line number 1
+javax.script.ScriptException: sun.org.mozilla.javascript.internal.EvaluatorException:
+Java method "myVar" cannot be assigned to. (<Unknown source>#1) in <Unknown source>
+at line number 1
 {% endhighlight %}
 
 Oh dear! It looks like Java and Scala's getters and setters sugar doesn't translate well into JavaScript. So let's try the actual setter method, and then print using the getter:
@@ -122,9 +128,11 @@ res10: java.lang.Object = null
 scala> engine.eval("print($myPojo.myVar() + \"\\n\")")
 heart js
 res20: java.lang.Object = null
+{% endhighlight %}
 
 Okay great - the mutation seems to be working. And note that trailing semi-colons are optional, just as they are in "real" JavaScript. Now let's try and get our POJO back out into our Scala context:
 
+{% highlight scala %}
 scala> val myPojoRedux = engine.get("$myPojo") match {
 	case p: MyPojo => p
 	case _ => throw new ClassCastException
@@ -155,7 +163,7 @@ res35: java.lang.Object = null
 
 Great! We can see inside Scala case classes without any particular fuss.
 
-We're almost done for our first blog post - of course, we haven't touched Hadoop yet, but we do have a much better understanding of how we can script Scala programs using JavaScript.
+We're almost done for our first blog post - of course, we haven't touched Hadoop yet, but we have a much better understanding of how we can script Scala programs (and so hopefully Scalding jobs) using JavaScript.
 
 Before we go, let's try to generalize our `evalAsBoolean()` method above into something a little bit more reusable. How about a method with a signature like this:
 
@@ -164,7 +172,7 @@ Before we go, let's try to generalize our `evalAsBoolean()` method above into so
  * Evaluate some JavaScript into a Some(Boolean),
  * returning None if this evaluation failed.
  *
- * @param js The valid JavaScript to evaluate
+ * @param js The JavaScript to evaluate
  * @param vars A Map of variables to pass into
  * the JavaScript
  * @return An Option-boxed Boolean
@@ -182,26 +190,26 @@ import PartialFunction._
  * Evaluate some JavaScript into a Some(Boolean),
  * returning None if this evaluation failed.
  *
- * @param js The valid JavaScript to evaluate
+ * @param js The JavaScript to evaluate
  * @param vars A Map of variables to pass into
  * the JavaScript
  * @return An Option-boxed Boolean
  */
 def evalAsBoolean(js: String, vars: Map[String, Object]): Option[Boolean] = {
 	
-	val factory = new ScriptEngineManager
-	val engine = factory.getEngineByName("JavaScript")
+    val factory = new ScriptEngineManager
+    val engine = factory.getEngineByName("JavaScript")
 
-	val prependDollar = (v: String) => if (v.startsWith("$")) v else "$%s".format(v)
-	for ((k, v) <- vars) engine.put(prependDollar(k), v)
+    val prependDollar = (v: String) => if (v.startsWith("$")) v else "$%s".format(v)
+    for ((k, v) <- vars) engine.put(prependDollar(k), v)
 
-	try {
-		condOpt(engine.eval(js): Any) {
-			case b: Boolean => b
-		}
-	} catch {
-		case se: javax.script.ScriptException => None
-	}
+    try {
+        condOpt(engine.eval(js): Any) {
+            case b: Boolean => b
+        }
+    } catch {
+        case se: javax.script.ScriptException => None
+    }
 }
 {% endhighlight %}
 
@@ -214,7 +222,10 @@ evalAsBoolean: (js: String, vars: Map[String,java.lang.Object])Option[Boolean]
 Now let's try this out - first with a script which should evaluate to true:
 
 {% highlight scala %}
-scala> val vars1 = Map[String, Object]("one" -> new java.lang.Integer(1), "$two" -> new java.lang.Integer(2))
+scala> val vars1 = Map[String, Object](
+"one" -> new java.lang.Integer(1),
+"$two" -> new java.lang.Integer(2)
+)
 vars1: scala.collection.immutable.Map[String,java.lang.Object] = Map(one -> 1, $two -> 2)
 
 scala> val js1 = "($one + $two) === 3;"
@@ -230,10 +241,7 @@ Now a false value, involving checking a property inside of a case class:
 scala> case class ALang(aLang: String)
 defined class ALang
 
-scala> val aLang = ALang("dart")
-aLang: ALang = ALang(dart)
-
-scala> val vars2 = Map[String, Object]("lang" -> aLang)
+scala> val vars2 = Map[String, Object]("lang" -> ALang("dart"))
 vars2: scala.collection.immutable.Map[String,java.lang.Object] = Map(lang -> ALang(dart))
 
 scala> val js2 = "$lang.aLang() === \"js\";"
@@ -243,7 +251,7 @@ scala> evalAsBoolean(js2, vars2)
 res2: Option[Boolean] = Some(false)
 {% endhighlight %}
 
-Perfect. Now let's try evaluating an invalid piece of JavaScript:
+That's working a treat. Now let's try evaluating an invalid piece of JavaScript:
 
 {% highlight scala %}
 scala> val js3 = "$doesNotExist.arg()"
@@ -265,7 +273,7 @@ res4: Option[Boolean] = None
 
 Great! Those are all behaving as expected. We're going to pause here, but we've already made some good progress understanding how JavaScript can be invoked at runtime from a Scala environment.
 
-In the next post, we will take these learnings and start to apply them within a Scalding environment, with the aim of getting some initial user-defined JavaScript executing on our Hadoop cluster.
+In the next post, we will take these learnings and start to apply them within a Scalding environment, with the aim of getting some basic user-defined JavaScript executing on Elastic MapReduce. Stay tuned for the next installment!
 
 [rhino]: https://developer.mozilla.org/en/docs/Rhino
 [script-engine]: http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine
