@@ -27,7 +27,7 @@ The first step was to test out Rhino and Scala's inter-operation to see what was
 
 <!--more-->
 
-First we clone our [Scalding Example Project] [scalding-example-project]. This gives us a Scala environment which we know successfully can run Scalding on Hadoop (including Elastic MapReduce), so we can have more confidence that whatever works in this environment will work okay on EMR too.
+First we clone our [Scalding Example Project] [scalding-example-project]. This gives us a Scala environment which we know successfully can run Scalding on Hadoop (including Elastic MapReduce), so we can have more confidence that whatever works in this environment will ultimately work fine on EMR too.
 
 So let's get started:
 
@@ -104,7 +104,7 @@ Let's try something a little more ambitious now. Can we mutate a POJO ("plain ol
 scala> class MyPojo { @scala.reflect.BeanProperty var myVar: String = "heart scala" }
 defined class MyPojo
 
-scala> val myPojo = new MyPojo()
+scala> val myPojo = new MyPojo
 myPojo: MyPojo = MyPojo@2bbf1be2
 
 scala> engine.put("$myPojo", myPojo)
@@ -113,11 +113,12 @@ scala> engine.eval("$myPojo.myVar = \"heart js\";")
 javax.script.ScriptException: sun.org.mozilla.javascript.internal.EvaluatorException: Java method "myVar" cannot be assigned to. (<Unknown source>#1) in <Unknown source> at line number 1
 {% endhighlight %}
 
-Oh dear! I guess Java and Scala's sugar around getters and setters doesn't translate well into JavaScript. So let's try the actual setter method, and then print using the getter:
+Oh dear! It looks like Java and Scala's getters and setters sugar doesn't translate well into JavaScript. So let's try the actual setter method, and then print using the getter:
 
 {% highlight scala %}
 scala> engine.eval("$myPojo.setMyVar(\"heart js\")")
 res10: java.lang.Object = null
+
 scala> engine.eval("print($myPojo.myVar() + \"\\n\")")
 heart js
 res20: java.lang.Object = null
