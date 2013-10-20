@@ -99,7 +99,7 @@ scala> evalAsBoolean("($filter === \"yeah\") ? 1 : 0;")
 res30: Option[Boolean] = None
 {% endhighlight %}
 
-Perfect! We have wrapped our JavaScript in some sensible Scala types. For more information on the `condOpt` "magic", check out [this Stack Overflow answer] [cond-opt] to "How to cast java.lang.Object to a specific type in Scala?" by Daniel C Sobral.
+Perfect! We have wrapped our JavaScript in some sensible Scala types. For more information on the `condOpt` "magic", check out [this Stack Overflow answer] [cond-opt] to _"How to cast java.lang.Object to a specific type in Scala?"_.
 
 Let's try something a little more ambitious now. Can we mutate a POJO ("plain old Java object") from inside JavaScript? Only one way to find out:
 
