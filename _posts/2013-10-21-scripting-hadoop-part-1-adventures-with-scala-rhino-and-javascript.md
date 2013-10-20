@@ -35,6 +35,7 @@ So let's get started:
 	$ cd scalding-example-project
 	$ sbt
 	scalding-example-project > console
+	scala> 
 
 Great, now we're in the Scala console within SBT, and we have access to all of the libraries loaded as part of the scalding-example-project should we need them.
 
