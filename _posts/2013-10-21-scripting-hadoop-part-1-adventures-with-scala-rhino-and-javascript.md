@@ -7,7 +7,13 @@ author: Alex
 category: Research
 ---
 
-As we have got to know the Snowplow community better, we have become more aware of the highly bespoke, proprietary or domain-specific event processing requirements that many companies have. To date, we have relied on three main techniques to help Snowplow users meet these requirements:
+As we have got to know the Snowplow community better, it has become clear that many members have very specific event processing requirements including:
+
+1. Custom trackers and collector logging formats
+2. Custom event models
+3. Custom business logic that impacts on the way their event data is processed
+
+To date, we have relied on three main techniques to help Snowplow users meet these requirements:
 
 1. Adding additional configuration options into the core Enrichment process (e.g. IP address anonymization, coming in 0.8.11)
 2. Working with users on bespoke re-writes of the Snowplow Enrichment process (mostly forks of the Scalding ETL job)
@@ -15,15 +21,15 @@ As we have got to know the Snowplow community better, we have become more aware 
 
 Each of these approaches has its strengths and weaknesses, and we will certainly continue to develop and improve all three. But we also want to explore if there is a "middle ground" between configuration options and fully bespoke code: can we somehow make the Snowplow Enrichment process user-scriptable?
 
-We started our research with a few key assumptions:
+If possible, the following approach would make an attractive middle ground:
 
-1. We would pass one or more user-authored scripts into our Scalding ETL at runtime
-2. The user-authored script(s) would be executed against each row of event data
-3. These scripts should be written in a popular and easy-to-learn scripting language
+1. Pass one or more user-authored scripts into our Scalding ETL at runtime
+2. The user-authored script(s) are executed against each row of event data
+3. These scripts can be written in a popular and easy-to-learn scripting language
 
-These assumptions brought us quickly to two technologies: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written in Java and available to any JVM app through ScriptEngine.
+Two technologies stand out as potential candidates: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written in Java and available to any JVM app through ScriptEngine.
 
-The first step was to test out Rhino and Scala's inter-operation to see what was possible. In the rest of this blog post, we will reproduce that investigation as an interactive REPL (read–eval–print loop) session. To follow along, you will need to have SBT and Scala installed...
+The first step to test if this approach is viable, was to test out Rhino and Scala's inter-operation to see what was possible. In the rest of this blog post, we will reproduce that investigation as an interactive REPL (read–eval–print loop) session. To follow along, you will need to have SBT and Scala installed...
 
 <!--more-->
 
@@ -276,6 +282,8 @@ Great! Those are all behaving as expected. We're going to pause here, but we've 
 
 In the next post, we will take these learnings and start to apply them within a Scalding environment, with the aim of getting some basic user-defined JavaScript executing on Elastic MapReduce. Stay tuned for the next installment!
 
+If you're interested in adapting Snowplow's technology to meet your custom event processing needs, and would like to discuss your requirements with the Snowplow team, then [get in touch] [contact].
+
 [rhino]: https://developer.mozilla.org/en/docs/Rhino
 [script-engine]: http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine
 [scalding-example-project]: https://github.com/snowplow/scalding-example-project
@@ -284,3 +292,4 @@ In the next post, we will take these learnings and start to apply them within a 
 [se-javadoc]: http://download.java.net/jdk6/archive/b104/docs/api/javax/script/ScriptEngine.html
 
 [cond-opt]: http://stackoverflow.com/a/9828815/255627
+[contact]: /about/index.html
