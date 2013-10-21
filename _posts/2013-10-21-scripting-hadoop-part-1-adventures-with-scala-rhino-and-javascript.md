@@ -27,7 +27,7 @@ If possible, the following approach would make an attractive middle ground:
 2. The user-authored script(s) are executed against each row of event data
 3. These scripts can be written in a popular and easy-to-learn scripting language
 
-Two technologies stand out as potential candidates: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written in Java and available to any JVM app through ScriptEngine.
+Two technologies stood out as promising: Java's [ScriptEngine] [script-engine] and Mozilla's [Rhino] [rhino]. ScriptEngine is a technology bundled with J2SE 6+ which allows dynamic languages to be evaluated at runtime from Java; Rhino is an implementation of JavaScript written in Java and available to any JVM app through ScriptEngine.
 
 The first step to test if this approach is viable, was to test out Rhino and Scala's inter-operation to see what was possible. In the rest of this blog post, we will reproduce that investigation as an interactive REPL (read–eval–print loop) session. To follow along, you will need to have SBT and Scala installed...
 
