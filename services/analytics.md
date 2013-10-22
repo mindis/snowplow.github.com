@@ -2,6 +2,7 @@
 layout: section
 category: services
 title: Web and event analytics
+description: We help clients use their Snowplow and other data to quickly answer business questions and drive decision-making
 weight: 3
 ---
 

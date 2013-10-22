@@ -2,6 +2,7 @@
 layout: section
 category: services
 title: Snowplow Implementation
+description: We help clients get up and running with Snowplow as quickly as possible
 weight: 2
 ---
 

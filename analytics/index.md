@@ -3,6 +3,7 @@ layout: section
 category: analytics
 analytics_category: overview
 title: Introduction
+description: The Snowplow Analysts Cookbook contains a wealth of recipes for using Snowplow data to answer your business questions.
 weight: 1
 ---
 

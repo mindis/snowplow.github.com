@@ -2,6 +2,7 @@
 layout: section
 category: services
 title: KPI and dashboards
+description: We design reporting dashboards, cubes and reports on top of Snowplow and related data sets
 weight: 4
 ---
 

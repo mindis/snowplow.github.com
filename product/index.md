@@ -2,6 +2,7 @@
 layout: section
 category: product
 title: Overview
+description: Snowplow is the most powerful, flexible, scalable web analytics platform in the world. It gives you direct access to your customer-level and event-level data, so you can perform any analysis on that data.
 weight: 1
 ---
 

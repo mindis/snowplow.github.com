@@ -10,6 +10,8 @@
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	{% if page.description %}<meta name="description" content="{{ page.description }}{{ site.description }}" />
+	{% else %}<meta name="description" content="{{ page.description }}{{ page.description }}" />{% endif %}
 	<link href="/static/css/styles.css" type="text/css" rel="stylesheet" />
 	<link href="/static/css/pygments.css" type="text/css" rel="stylesheet" />
 	

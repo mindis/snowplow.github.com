@@ -2,6 +2,7 @@
 layout: section
 category: services
 title: Custom datawarehouses and pipelines using EMR and Redshift
+description: We help companies use Amazon EMR and Redshift to deliver custom datawarehouses and ETL pipelines that are robust and scalable
 weight: 5
 ---
 

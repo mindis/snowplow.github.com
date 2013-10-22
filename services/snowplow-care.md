@@ -2,6 +2,7 @@
 layout: section
 category: services
 title: Snowplow Care
+description: Snowplow Care - let us look after the regular running and maintenance of your Snowplow data pipeline, with our premium care package.
 weight: 6
 ---
 

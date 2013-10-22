@@ -4,7 +4,8 @@ server:      false
 server_port: 4000
 baseurl:     /
 url:         http://snowplowanalytics.com
-title:       Snowplow Analytics - the world's most powerful, flexible, open source analytics platform
+title:       Snowplow - open source web event analytics powered by Hadoop Redshift and Postgres
+description: Snowplow Analytics is an open source web event platform. We make it easy for you to capture and warehouse your own digital event data in your own data warehouse, so you can perform any analysis on that data, including joining that data with other data sets.
 
 source:      .
 destination: ./_site

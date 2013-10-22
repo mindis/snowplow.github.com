@@ -2,6 +2,7 @@
 layout: default
 category: technology
 title: Overview
+description: Snowplow is architected using the best-of-breed in open source and cloud technology, to deliver a highly scalable, robust, cost effective event analytics platform.
 weight: 1
 ---
 

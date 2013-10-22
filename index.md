@@ -1,7 +1,7 @@
 ---
 layout: homepage
 category: homepage
-title: Snowplow Analytics - your web analytics data in your hands
+title: Open source web analytics powered by Hadoop, Hive, Redshift & Postgres
 permalink: index.html
 ---
 

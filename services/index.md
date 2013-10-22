@@ -2,12 +2,13 @@
 layout: section
 category: services
 title: Overview
+description: The Snowplow Professional Services team offers a range of services to help you get up and running with Snowplow as quickly as possible and drive value from your Snowplow data
 weight: 1
 ---
 
 # Snowplow Professional Services
 
-We offer four services:
+We offer five services:
 
 1. [Snowplow implementation] [implementation]. We support clients implementing Snowplow, including running proof-of-concepts, rolling Snowplow out across domains and applications, integrating Snowplow data with third party data sets and designing and implementing dashboards and reporting cubes on top of Snowplow and connected data.
 2. [Web and event analytics] [analytics]. We help companies make the most of Snowplow data to answer the business questions that matter to them: including designing research questions, formulating hypotheses and testing and iterating hypotheses with Snowplow event data.
