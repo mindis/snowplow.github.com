@@ -1,7 +1,7 @@
 ---
 layout: section
 category: services
-title: Overview
+title: Services offered by the Snowplow Professional Services Team
 description: The Snowplow Professional Services team offers a range of services to help you get up and running with Snowplow as quickly as possible and drive value from your Snowplow data
 weight: 1
 ---

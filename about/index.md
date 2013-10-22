@@ -1,7 +1,7 @@
 ---
 layout: section
 category: about
-title: Contact us
+title: Get in touch with the Snowplow team
 weight: 1
 ---
 
