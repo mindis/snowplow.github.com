@@ -13,11 +13,13 @@ Last week, Alex and I had the pleasure to attend the [Budapest BI Forum] [budape
 
 To summarize a few of the things we learnt:
 
+<!--more-->
+
 ## 1. The Python toolset for data analytics is devloping incredibly rapidly
 
-We were fortunate to hear talks from three data scientists who are very active in the Python community: [Almar Klein] [almar-klein] (who is part of the team developing [VisPy] [vispy], an advanced visualization library), Olivier Grisel (who is part of the team developing [scikit-learn] [scikit-learn], a machine learning library) and [Yves J. Hilpisch] [yves] (who works at [Continuum Analytics] [continuum-analytics], who've produced a raft of Python libraries incl. a just-in-time compiler) talk through the Python ecosystem and some of the developments in it. There presentations can be found below:
+We were fortunate to hear talks from three data scientists who are very active in the Python community: [Almar Klein] [almar-klein] (who is part of the team developing [VisPy] [vispy], an advanced visualization library), Olivier Grisel (who is part of the team developing [scikit-learn] [scikit-learn], a machine learning library) and [Yves J. Hilpisch] [yves] (who works at [Continuum Analytics] [continuum-analytics], who've produced a raft of Python libraries incl. a just-in-time compiler) talk through the Python ecosystem and some of the developments in it. 
 
-<script async class="speakerdeck-embed" data-id="20586b0028ef01316fe732c65d7cd49e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+Olivier's prsentation is can be accessed [here](https://speakerdeck.com/ogrisel/growing-randomized-trees-in-the-cloud-1).
 
 Almar's presentation can be downloaded [here] (https://github.com/vispy/static/raw/master/vispy-biforum-2013.pdf).
 
@@ -58,9 +60,11 @@ Big thanks to the many people who made the conference possible and enjoyable, es
 [knime]: http://www.knime.org/
 [sanoma]: http://www.sanoma.com/
 [skieft]: https://twitter.com/skieft
+[jvoogel]: https://twitter.com/Voogeltje
 [bzarkacs]: http://budapestbiforum.com/program/innovative-bi-day/balazs-szakacs-the-bi-journey-of-ustream/
 [ustream]: http://www.ustream.tv/
 [zoltan]: hu.linkedin.com/in/zoltanctoth/
+[prezi]: http://prezi.com/
 [rgabo]: https://twitter.com/rgabo
 [ssp]: http://secretsaucepartners.com/
 [bence]: https://twitter.com/BenceArato
