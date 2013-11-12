@@ -15,36 +15,37 @@ To summarize a few of the things we learnt:
 
 <!--more-->
 
-## 1. The Python toolset for data analytics is devloping incredibly rapidly
+## 1. The Python toolset for data analytics is developing incredibly rapidly
 
-We were fortunate to hear talks from three data scientists who are very active in the Python community: [Almar Klein] [almar-klein] (who is part of the team developing [VisPy] [vispy], an advanced visualization library), Olivier Grisel (who is part of the team developing [scikit-learn] [scikit-learn], a machine learning library) and [Yves J. Hilpisch] [yves] (who works at [Continuum Analytics] [continuum-analytics], who've produced a raft of Python libraries incl. a just-in-time compiler) talk through the Python ecosystem and some of the developments in it. 
+We were fortunate to hear talks from three data scientists who are very active in the Python community: [Almar Klein] [almar-klein] (who is part of the team developing [VisPy] [vispy], an advanced visualization library), Olivier Grisel (who is part of the team developing [scikit-learn] [scikit-learn], a machine learning library) and [Yves J. Hilpisch] [yves] (from [Continuum Analytics] [continuum-analytics], who've produced a raft of Python libraries incl. a just-in-time compiler). All three introduced us to compelling and fast-developing aspects of the Python data analytics ecosystem.
 
-Olivier's prsentation is can be accessed [here](https://speakerdeck.com/ogrisel/growing-randomized-trees-in-the-cloud-1).
+Olivier's presentation can be accessed [here](https://speakerdeck.com/ogrisel/growing-randomized-trees-in-the-cloud-1).
 
-Almar's presentation can be downloaded [here] (https://github.com/vispy/static/raw/master/vispy-biforum-2013.pdf).
+Almar's presentation can be downloaded [here](https://github.com/vispy/static/raw/master/vispy-biforum-2013.pdf).
 
-I hope to update this post with links to Yves's presentation shortly. (Once I've located it.) I also hope to add some Python tutorials to the [Snowplow Analytics Cookbook] [cookbook] in the future.
+Yves's presentation can be browsed as a hosted iPython notebook [here](https://www.wakari.io/sharing/bundle/yves/CAE_Python_Next_Gen_Analytics).
+
+I also hope to add some Python tutorials to the [Snowplow Analytics Cookbook] [cookbook] in the future.
 
 ## 2. BI offerings are pushing beyond traditional OLAP into predictive analytics / modelling
 
-I've always used BI tools for slicing / dicing data, and R for modelling and predictive analytics. So it was interesting to learn that many analytics tools are now incorporating modelling and predictive analytics capabilities via a GUI, including [RapidMiner] [rapid-miner], [Spotfire] [spotfire] and [Knime] [knime] amongst others.
+I've always used BI tools for slicing / dicing data, and R for modelling and predictive analytics. So it was interesting to learn that many of these tools are now incorporating modelling and predictive analytics capabilities via a GUI, including [RapidMiner] [rapid-miner], [Spotfire] [spotfire] and [Knime] [knime] amongst others.
 
 ## 3. Media Companies boast some of the most sophisticated big data analytics platforms
 
-We know that in the UK, media companies including the Guardian and Channel4 have implemented internally some incredibly sophisticated data pipelines and analytics engines. It was great to learn (though not surprising) that European media companies have also implemented very sophisticated analytics infrastructure. In particular, we thoroughly enjoyed hearing about the Hadoop / R / Python stack at [Sanoma Media] [sanoma] from [Sander Kieft] [skieft] and [Jelmer Voogel] [jvoogel]. 
+We know that in the UK, media companies including the Guardian and Channel 4 have implemented internally some super-sophisticated data pipelines and analytics engines. It was great to learn (though not surprising) that European media companies have also implemented equally sophisticated analytics infrastructure. In particular, we thoroughly enjoyed hearing about the Hadoop, R and Jython stack built at [Sanoma Media] [sanoma] from [Sander Kieft] [skieft] and [Jelmer Voogel] [jvoogel].
 
 Again, I hope to post a link to their slides shortly.
 
 ## 4. The Budapest tech scene is buzzing
 
-Budapest is home to some very exciting, and rapidly growing tech companies. It was great to meet [Balázs Szakács] [bzarkacs] from [Ustream] [ustream], who presented on the development to date of the analytics stack at UStream, as well as [Zoltán Csaba Tóth] [zoltan] from [Prezi] [prezi] and [Gabor Ratky] [rgabo] from [Secret Sauce Partners] [ssp].
+Budapest is home to some very exciting, and rapidly growing tech companies. It was great to meet [Balázs Szakács] [bzarkacs] from [Ustream] [ustream], who presented on the development to date of the analytics stack at UStream, as well as [Zoltán Csaba Tóth] [zoltan] from [Prezi] [prezi] and of course Snowplow community member [Gabor Ratky] [rgabo] from [Secret Sauce Partners] [ssp].
 
-Again, I hope to post a link to Balazs's slides in due course.
+Again, I hope to post a link to Balázs's slides in due course.
 
 ## Thank you
 
-Big thanks to the many people who made the conference possible and enjoyable, especially [Bence Arato] [bence], who organised it and invited us to speak. We look forward to returning!
-
+Big thanks to the many people who made the conference possible and enjoyable, especially [Bence Arató] [bence], who organised it and invited us to speak. We look forward to returning next year!
 
 
 [budapest-bi]: http://budapestbiforum.com/
@@ -69,6 +70,3 @@ Big thanks to the many people who made the conference possible and enjoyable, es
 [ssp]: http://secretsaucepartners.com/
 [bence]: https://twitter.com/BenceArato
 [pic]: /static/img/blog/2013/11/budapest.jpg
-
-
-
