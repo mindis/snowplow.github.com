@@ -3,7 +3,7 @@ layout: section
 category: analytics
 analytics_category: tools-and-techniques
 title: Converting Snowplow data into a format suitable for OLAP
-weight: 2
+weight: 4
 ---
 
 <h1><a name="top">Converting Snowplow data into a format suitable for OLAP reporting tools e.g. Tableau, Qlikview, Pentaho, Microstrategy</a></h1>
