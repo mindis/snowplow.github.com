@@ -12,7 +12,9 @@ weight: 5
 
 The following queries return basic web analytics data that someone could expect from any standard web analytics package. These are *not* the queries that Snowplow was designed to perform: we built Snowplow to enable analysts to run queries on web analytics data that are **not** possible with other web analytics programs. These queries return the results that **all** web analytics queries return. However, running them can be useful for an analyst to validate Snowplow has been setup correctly (by comparing the output against e.g. Google Analytics), and help her get familiar with writing queries in Snowplow.
 
-The following queries will work with both Hive and Infobright.
+For users who are getting started with Snowplow, but are not that familiar with SQL, we recommend consulting our [quick-start guide to using SQL] (/analytics/tools-and-techniques/beginners-guide-to-using-sql-to-query-snowplow-data.html).
+
+The following queries will work with both Redshift and PostgreSQL. It should not take much to edit them so that they work with Hive.
 
 1. [Number of unique visitors](#counting-unique-visitors)
 2. [Number visits](#counting-visits)
