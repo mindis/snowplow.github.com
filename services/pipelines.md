@@ -16,7 +16,7 @@ We have significant experience using both Redshift and EMR to build scalable, ro
 
 ## Fork Snowplow to handle your custom event dictionary
 
-Want to log your own set of company-specific or application specific events, and analyse those events using Amazon Redshift? We've worked with clients to customise the Snowplow stack to accommodate their custom event dictionaries and analytics requirements.
+Want to log your own set of company-specific or application-specific events, and analyse those events using Amazon Redshift? We've worked with clients to customi\e the Snowplow stack to do just that.
 
 ## Load your raw JSON data into Redshift
 
