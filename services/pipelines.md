@@ -14,11 +14,21 @@ Amazon Redshift is a fantastic data warehousing platform, that makes it possible
 
 We have significant experience using both Redshift and EMR to build scalable, robust, fault tolerent data pipeline and data analytics infrastructure. We've been able to repurpose much of the Snowplow technology stack to implement client-specific solutions that load data in a custom (often JSON format) into a custom schema in Redshift for analysis.
 
+## Fork Snowplow to handle your custom event dictionary
+
+Want to log your own set of company-specific or application specific events, and analyse those events using Amazon Redshift? We've worked with clients to customise the Snowplow stack to accommodate their custom event dictionaries and analytics requirements.
+
 ## Load your raw JSON data into Redshift
 
 JSON is a very popular format for storing event data. Analysing JSON data is not trivial: as a result, many companies are looking for ways to load their JSON data into Amazon Redshift, so that it can be analyzed faster, more easily, using a wider set of BI and analysis tools.
 
-We have worked with a number of clients to modify the Snowplow stack to load custom JSONs into Redshift.
+We have worked with a number of clients to modify the Snowplow technology stack to load custom JSONs into Redshift. For more information see [this blog post] [json-redshfit-blogpost].
+
+## Load your bespoke log file formats into Redshift
+
+Already logging your event data into a custom log file format, and interested in loading that data into Redshift? 
+
+We have worked with a number of clients to modify the Snowplow technology stack to load custom log file formats into Redshift.
 
 ## Experts in developing and delivering data processing infrastructure on AWS
 
@@ -40,3 +50,4 @@ We have worked with a number of clients to modify the Snowplow stack to load cus
 [tableau]: http://www.tableausoftware.com/
 [chartio]: https://chartio.com/
 [r]: http://cran.r-project.org/
+[json-redshfit-blogpost]: /blog/2013/11/20/loading-json-data-into-redshift/#weaknesses
