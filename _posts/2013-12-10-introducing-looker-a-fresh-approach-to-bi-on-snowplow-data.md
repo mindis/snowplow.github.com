@@ -10,7 +10,7 @@ category: Analytics
 
 In the last few weeks, we have been experimenting with using [Looker] [looker] as a front-end to analsye Snowplow data. We've really liked what we've seen: Looker works beautifully with Snowplow. Over the next few weeks, we'll share example analyses and visualizations of Snowplow data in Looker, and dive into Looker in more detail. In this post, we'll take a step back and walk through some context to explain why we are so excited about Looker.
 
-1. [The limitations that arise when you use traditional Business Intelligence (BI) tools (like Tableau) to analyse Snowplow data] (/blog/2013/12/10/introducing-looker-a-fresh-approach-to-bi-on-snowplow-data/#limitations)
+1. [Understanding the limitations that arise when you use traditional Business Intelligence (BI) tools (like Tableau) to analyse Snowplow data] (/blog/2013/12/10/introducing-looker-a-fresh-approach-to-bi-on-snowplow-data/#limitations)
 2. [How Looker takes a fresh approach to BI, and why that overcomes the limitations Snowplow users have working with other solutions] (/blog/2013/12/10/introducing-looker-a-fresh-approach-to-bi-on-snowplow-data/#enter-looker)
 
 <!--more-->
