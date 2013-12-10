@@ -1,7 +1,7 @@
 ---
 layout: blog-post
 shortenedlink: Introducing Looker - a fresh approach to Business Intelligence that works beautifully with Snowplow
-title: Introducing Looker - a fresh approach to Business Intelligence that works brilliantly with Snowplow
+title: Introducing Looker - a fresh approach to Business Intelligence that works beautifully with Snowplow
 tags: events business intelligence
 author: Yali
 category: Analytics
