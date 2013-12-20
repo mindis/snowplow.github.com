@@ -15,9 +15,13 @@ This week saw all three of our winterns working hard on their respective Snowplo
 
 Brandon Amos is one of our two remote winterns.
 
-He is based on the East Coast of the US and is a third-year CS undergraduate at Virginia Tech. Outside of computer science, Brandon is an indie guitarist, classical pianist, and symphonic trumpeter. During the winternship, Brandon wants to learn about Scala and associated libraries, such as Akka and Spray, to use in his own work.
+Brandon is based on the East Coast of the US and is a third-year CS undergraduate at Virginia Tech. Outside of computer science, Brandon is an indie guitarist, classical pianist, and symphonic trumpeter. During the winternship, Brandon aims to learn more about Scala and associated libraries, such as Akka and Spray, so he can use them in his own work.
 
-PROJECT DESC TO COME.
+Brandon is working on a new stream-based event collector for Snowplow, written in Scala. The original plan was for this new collector to collect events from Snowplow trackers over HTTP and then emit them onto a [Kafka] [kafka] queue. However, prior to Brandon starting, we were given early access to [Amazon Kinesis] [kinesis], the new fully-managed stream processing service from AWS; we decided it makes more sense to focus on Kinesis as the first target for our new Scala collector.
+
+Brandon's new Scala collector is being built on top of Spray (aka akka-http), a Scala/Akka toolkit for building REST/HTTP-based integration layers. As well as building the 
+
+You can follow Brandon's progress in the xxx.
 
 ## Jiawen Zhou: a new forex library for Scala
 
@@ -31,7 +35,7 @@ PROJECT DESC TO COME.
 
 Anuj More is the second of our remote winterns.
 
-He is a recent IT graduate of Mumbai University, and is still based in the city. Anuj is ambidextrous, a huge "A Bit of Fry and Laurie" fan, and a Beatles lover. Through this winternship, Anuj is keen to find out how FOSS startups work, including the challenges on the business side of things. He also notes that _"this will be my first professionally written Python project; so excited about that too."_
+Anuj is a recent IT graduate of Mumbai University, and is still based in the city. Anuj is ambidextrous, a huge "A Bit of Fry and Laurie" fan, and a Beatles lover. Through this winternship, Anuj is keen to find out how FOSS startups work, including the challenges on the business side of things. He also notes that _"this will be my first professionally written Python project; so excited about that too."_
 
 PROJECT DESC TO COME.
 
