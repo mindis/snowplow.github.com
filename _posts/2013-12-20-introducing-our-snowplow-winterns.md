@@ -31,7 +31,7 @@ Jiawen is a second-year MEng undergrad at Imperial in London; she likes basketba
 
 Jiawen is working on a new high-performance Scala library for exchange rate lookups and currency conversions. The library will let users work with foreign exchange in an expressive high-level DSL - we are working with Finance professionals to get the details of this library right. Under the covers the library makes use of the excellent [Open Exchange Rates] [ore] API, and leverages both [Joda-Money] [joda-money] and [Joda-Time] [joda-time].
 
-The ultimate plan is to integrate this library into the Snowplow Enrichment process, to allow financial transactions (e.g. ecommerce tracking) to be converted into a base currency for reporting.
+The ultimate plan is to integrate this library into the Snowplow Enrichment process, to allow financial transactions (e.g. ecommerce tracking) to be converted into a base currency for consistent reporting.
 
 You can follow Jiawen's progress in the new repository, [`scala-forex`] [scala-forex] (foreign exchange).
 
