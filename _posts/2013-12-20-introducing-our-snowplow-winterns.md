@@ -7,9 +7,13 @@ author: Alex
 category: Recruitment
 ---
 
-Just over two months ago we announced our winter internship program for open source hackers, [right here on this blog] [original-post]. We had no idea what response kind of response we would receive - this was our first attempt at designing an internship program, and we had never heard of a startup (even an open source company like ours) recruiting _remote_ interns. As it turned out, we were delighted by the response we received, and we decided to make offers to **three** very talented "winterns" from around the world, rather than the one or two originally planned.
+Just over two months ago we announced our winter internship program for open source hackers, [here on this blog] [original-post]. We had no idea what response kind of response we would receive - it was our first attempt at designing an internship program, and we had never heard of a startup (even an open source company like ours) recruiting _remote_ interns. As it turned out, we were delighted by the response we received, and we decided to make offers to **three** very talented "winterns" from around the world, rather than the one-to-two originally planned.
 
 This week saw all three of our winterns working hard on their respective Snowplow projects, and so we wanted to take this opportunity to introduce each of them to the community, as well as giving a little more background on the projects they are working on:
+
+![winterns-montage] [winterns-montage]
+
+<!--more-->
 
 ## Brandon Amos: a new stream-based Scala collector for Snowplow
 
@@ -48,6 +52,7 @@ The Python Tracker is built for Python 3, and makes use of the excellent [Reques
 Anuj's `snowplow-python-tracker`, our fifth Snowplow tracker, will be open-sourced in early January.
 
 [original-post]: /blog/2013/10/07/announcing-out-winter-open-source-internship-program/
+[winterns-montage]: /static/img/blog/2013/12/winterns.png
 
 [kafka]: https://kafka.apache.org/
 [kinesis]: http://aws.amazon.com/kinesis/
