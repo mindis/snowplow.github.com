@@ -35,11 +35,12 @@ Creating the above slices of data is as simple as selecting the dimension / metr
 
 <a name="define-your-own-metrics-and-dimensions"><h2>2. Quickly and easily define dimensions and metrics that are specific to your business using Looker's light-weight metadata model</h2></a>
 
-Looker's metadata model makes it very easy to define and analyze:
+Looker's metadata model makes it very easy to define and analyze busines specific:
 
-1. Business-specific events
-2. Business-specific dimensions (e.g. audience segments, session classification)
-3. Business-specific funnels
+1. Events
+2. Dimensions (e.g. audience segments, session classification)
+3. Funnels
+4. Metrics
 
 To give a very specific example: we are Snowplow are very interested in whether or not visitors to our website visit the 'services' pages, for example, as that indicates that they are potentially interested in our pro services offering.
 
@@ -66,17 +67,17 @@ Both the above dimension and metric will now be available to include in any repo
 
 <a href="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG"><img src="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG" title="Plotting the number of events on services pages by day" /></a>
 
-We can define additional derived metrics (e.g. average events on a service page per visitor / session) or dimensions (e.g. classify visitors by whether or not they have visited the services pages at all) by simply extending the metadata model. 
+We can define additional derived metrics (e.g. average events on a service page per visitor / session) or dimensions (e.g. classify visitors by whether or not they have visited the services pages at all) by simply extending the metadata model. The Looker metadata model is flexible enough to extend with your business, as you become more sophisticated in your use of data.
 
-<a name="drill-up-and-down"><h2>3. Drill up and drill right down to visitor-level and event-level data</h2></a>
+<a name="drill-up-and-down"><h2>3. Drill-up and drill-down to visitor-level and event-level data</h2></a>
 
-To illustrate this: let's start by comparing visit and engagement levels by refer medium for the last month (i.e. a session-level analysis):
+To illustrate this, let's start by comparing visit and engagement levels by refer medium for the last month (i.e. a session-level analysis):
 
 <a href="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-refer-medium.JPG"><img src="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-refer-medium.JPG" title="Visit numbers and engagement levels by referer medium" /></a>
 
 We can see visitors referered from other websites appear to engage more deeply, on average. We can explore that further, to see if it is true across e.g. all landing pages, by clicking on the **Landing Page Count** (which is "7" and circled above):
 
-This opens another view, that lets us compare events per visit and bounce rates by landing page, just for those visitors who were refered to the website from other websites. It looks like users refered from external websites to our recipe on market basket analysis engaged particularly deeply with the website:
+This opens another view, that lets us compare events per visit and bounce rates by the seven different landing pages that users refered to our websites from other websites were driven to. It looks like users refered from external websites to our recipe on market basket analysis engaged particularly deeply with our website:
 
 <a href="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG"><img src="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG" title="Visit numbers and engagement levels by landing page" /></a>
 
@@ -126,7 +127,6 @@ We can use Looker to publish the data to a URL. We've published the above view t
 You can see how the data looks in Google Spreadsheets below:
 
 <a href="/static/img/blog/2014/01/looker/google-spreadsheet.JPG"><img src="/static/img/blog/2014/01/looker/google-spreadsheet.JPG" title="Snowplow data served live into Google Spreadsheet by Looker" /></a>
-![google-spreadsheet] [img-13]
 
 Because the data is being served live, it is always up-to-date. Pretty cool, huh?
 
