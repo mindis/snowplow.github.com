@@ -68,7 +68,7 @@ The purpose of the model is to get you started using Looker on top of Snowplow. 
 2. Dimensions that are specific to  your website / business (e.g. audience segments or stages in funnels)
 3. Metrics that are specific to your website / business
 
-<h2><a name="">3. How to install the model</a></h2>
+<h2><a name="install">3. How to install the model</a></h2>
 
 If you have a Looker trial setup for you by either the Looker or Snowplow teams, they should be able to install the model for you.
 
