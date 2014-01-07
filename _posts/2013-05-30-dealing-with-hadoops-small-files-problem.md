@@ -1,6 +1,6 @@
 ---
 layout: blog-post
-shortenedlink: Rob Slifka's Elasticity
+shortenedlink: Dealing with Hadoop's small files problem
 title: Dealing with Hadoop's small files problem
 tags: hadoop small-file hdfs
 author: Alex
@@ -155,7 +155,7 @@ So that's everything - hopefully this post has helped to illustrate just how bad
 [agg-thread]: https://groups.google.com/forum/#!topic/snowplow-user/xdhegsztJlA
 [agg-issue]: https://github.com/snowplow/snowplow/issues/82
 
-[etl-repo]: https://github.com/snowplow/snowplow/tree/master/3-enrich/hadoop-etl
+[etl-repo]: https://github.com/snowplow/snowplow/tree/master/3-enrich/scala-hadoop-enrich
 
 [filecrush]: https://github.com/edwardcapriolo/filecrush
 [edwardcapriolo]: https://github.com/edwardcapriolo
