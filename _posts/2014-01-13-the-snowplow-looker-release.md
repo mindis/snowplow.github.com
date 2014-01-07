@@ -7,9 +7,19 @@ author: Yali
 category: Releases
 ---
 
-We are very pleased to announce the release of Snowplow 0.8.13. This release makes it easy for Snowplow users to start analyzing their Snowplow data with [Looker] [looker], a next-generation BI tool that we are particularly excited about.
+We are very pleased to announce the release of Snowplow 0.8.13. This release makes it easy for Snowplow users to get started analyzing their Snowplow data with [Looker] [looker], by providing an initial data model for Looker so that a whole host of standard dimensions, metrics, entities and events are recognized in the Looker query interface.
 
-## What's so special about analyzing Snowplow data with Looker?
+<a href="/static/img/blog/2014/01/looker/7-days-dashboard-quickstart.JPG"><img src="/static/img/blog/2014/01/looker/7-days-dashboard-quickstart.JPG" title="7 day web analytics dashboard built with Snowplow data and Looker UI" /></a>
+
+In this post we will cover:
+
+1. [What's so special about analyzing Snowplow data with Looker?] (/blog/2014/01/13/the-snowplow-looker-release/#special)
+2. [What does the Looker meta-data model deliver?] (/blog/2014/01/13/the-snowplow-looker-release/#what)
+3. [How to install the meta-data model] (/blog/2014/01/13/the-snowplow-looker-release/#install)
+
+<!--more-->
+
+<h2><a name="special">What's so special about analyzing Snowplow data with Looker?</a></h2>
 
 Snowplow makes it possible to analyze your granular, event-level data with any BI tool. So what's so special about Looker?
 
@@ -18,9 +28,8 @@ In a nutshell, Looker makes it fast and simple for people with no SQL knowledge 
 1. [Introducing Looker - a fresh approach to Business intelligence that works beautifully with Snowplow] [blog-post-1]
 2. [Five things that make anazlying Snowplow data in Looker an absolute pleasure] [blog-post-2]
 
-<!--more-->
 
-## What does the Looker metadata model deliver?
+<h2><a name="what">2. What does the Looker metadata model deliver?</a></h2>
 
 By loading the metadata model into Looker, you immediately have:
 
@@ -28,28 +37,28 @@ By loading the metadata model into Looker, you immediately have:
 
 The model includes a large number of metrics and dimensions - the screenshot below illustrates just *some* of the metrics available:
 
-![list-of-metrics] [img-1] 
+<a href="/static/img/blog/2014/01/looker/list-of-metrics.JPG"><img src="/static/img/blog/2014/01/looker/list-of-metrics.JPG" title="Just some of the metrics available in the Looker model for Snowplow data" /></a>
 
 
 #### 2. The ability to zoom up to visitor-level, country-level, channel level analysis or down to transaction-level, event-level data seamlessly
 
 The model makes it easy to zoom up to view country-level, channel level data e.g.:
 
-![zoom-up] [img-2] 
+<a href="/static/img/blog/2014/01/looker/zoom-up.JPG"><img src="/static/img/blog/2014/01/looker/zoom-up.JPG" title="zooming out with Looker on Snowplow data" /></a> 
 
 And to drill down to individual event-level data, e.g. so that we can view the event stream for a particular visitor over time:
 
-![drill-down] [img-3]
+<a href="/static/img/blog/2014/01/looker/drill-down.JPG"><img src="/static/img/blog/2014/01/looker/drill-down.JPG" title="Drilling down to event-level data with Snowplow and Looker" /></a>
 
 #### 3. Quick-start dashboards
 
 The model includes a general-purpose dashboard for reporting on the last 7 days:
 
-[7-days-dashboard-quickstart] [img-4]
+<a href="/static/img/blog/2014/01/looker/7-days-dashboard-quickstart.JPG"><img src="/static/img/blog/2014/01/looker/7-days-dashboard-quickstart.JPG" title="7 day dashboard for web analytics data built in Looker on top of Snowplow data" /></a>
 
 And a general purpose dashboard for reporting on the last 6 months:
 
-[6-months-dashboard-quickstart] [img-5]
+<a href="/static/img/blog/2014/01/looker/6-months-dashboard-quickstart.JPG"><img src="/static/img/blog/2014/01/looker/6-months-dashboard-quickstart.JPG" title="6 month dashboard built in Looker on top of Snowplow data" /></a>
 
 #### 4. A solid basis to extend the model to encompass your own business-specific and product-specific events, dimensions and metrics
 
@@ -59,7 +68,7 @@ The purpose of the model is to get you started using Looker on top of Snowplow. 
 2. Dimensions that are specific to  your website / business (e.g. audience segments or stages in funnels)
 3. Metrics that are specific to your website / business
 
-## Using the model
+<h2><a name="">3. How to install the model</a></h2>
 
 If you have a Looker trial setup for you by either the Looker or Snowplow teams, they should be able to install the model for you.
 

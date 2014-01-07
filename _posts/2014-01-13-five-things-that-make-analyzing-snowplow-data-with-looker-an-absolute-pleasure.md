@@ -19,17 +19,17 @@ category: Releases
 
 With Looker, you can slice your Snowplow data by *any* dimension / metric combination. To give some illustrative examples - we can plot the number of visits, bounce rate, pages per visit and events per visit by landing page:
 
-![metrics-by-landing-page] [img-1]
+<a href="/static/img/blog/2014/01/looker/metrics-by-landing-page.JPG"><img src="/static/img/blog/2014/01/looker/metrics-by-landing-page.JPG" title="Querying metrics by landing page" /></a>
 
 <!--more-->
 
 We may want to plot the number of *new* visitors by landing page over time:
 
-![new-visitors-by-landing-page-over-time] [img-2]
+<a href="/static/img/blog/2014/01/looker/new-visitors-by-landing-page-over-time.JPG"><img src="/static/img/blog/2014/01/looker/new-visitors-by-landing-page-over-time.JPG" title="Plotting the number of visits by landing page over time" /></a>
 
-Or perhaps we want to compare the number of transactions by customers based on the channel they were *first* acquired on:
+Or perhaps we want to compare the number of transactions by customers based on the channel they were *first* acquired on (first touch referer source):
 
-![metrics-by-original-mkt-source] [img-3]
+<a href="/static/img/blog/2014/01/looker/metrics-by-original-mkt-source.JPG"><img src="/static/img/blog/2014/01/looker/metrics-by-original-mkt-source.JPG" title="Number of visitor-level metrics plotted by original (first touch) marketing channel" /></a>
 
 Creating the above slices of data is as simple as selecting the dimension / metric combination from the long list provided in the Looker UI.
 
@@ -45,26 +45,26 @@ To give a very specific example: we are Snowplow are very interested in whether 
 
 We can add a dimension to our [`events.lookerml`] [events.lookerml] model that categorises whether a specific event has occurred on a services page or not:
 
-```yaml
-  # Snowplow-website specific field
+{% highlight yaml %}
+  # Snowplow-website specific dimension
   - dimension: occurred_on_services_page
     type: yesno
     sql: ${page_urlpath} LIKE '%services%'
-```
+{% endhighlight %}
 
 We can then create a metric that counts the number of events that occur on services pages, further down the [`events.lookerml`] [events.lookerml] definition:
 
-```yaml
+{% highlight yaml %}
   # Snowplow-website specific metric
   - measure: events_on_services_page_count
     type: count
     filters:
       occurred_on_services_page: yes
-```
+{% endhighlight %}
 
 Both the above dimension and metric will now be available to include in any report produced in the explorer. For example, we can now compare the number of events that occurred on services page by marketing campaign, landing page or over time. 
 
-![events-on-services-page-by-day] [img-4]
+<a href="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG"><img src="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG" title="Plotting the number of events on services pages by day" /></a>
 
 We can define additional derived metrics (e.g. average events on a service page per visitor / session) or dimensions (e.g. classify visitors by whether or not they have visited the services pages at all) by simply extending the metadata model. 
 
@@ -72,23 +72,23 @@ We can define additional derived metrics (e.g. average events on a service page 
 
 To illustrate this: let's start by comparing visit and engagement levels by refer medium for the last month (i.e. a session-level analysis):
 
-![visit-and-engagement-levels-by-refer-medium] [img-5]
+<a href="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-refer-medium.JPG"><img src="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-refer-medium.JPG" title="Visit numbers and engagement levels by referer medium" /></a>
 
 We can see visitors referered from other websites appear to engage more deeply, on average. We can explore that further, to see if it is true across e.g. all landing pages, by clicking on the **Landing Page Count** (which is "7" and circled above):
 
 This opens another view, that lets us compare events per visit and bounce rates by landing page, just for those visitors who were refered to the website from other websites. It looks like users refered from external websites to our recipe on market basket analysis engaged particularly deeply with the website:
 
-![visit-and-engagement-levels-by-landing-page] [img-6]
+<a href="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG"><img src="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG" title="Visit numbers and engagement levels by landing page" /></a>
 
 We can explore this further by clicking on the visit count to see the actual visits. For example, if we click on the "17" visits to the market basket analysis (circled above)...
 
-![visits-to-market-basket-analaysis-recipe] [img-7]
+<a href="/static/img/blog/2014/01/looker/visits-to-market-basket-analaysis-recipe.JPG"><img src="/static/img/blog/2014/01/looker/visits-to-market-basket-analaysis-recipe.JPG" title="Exploring visits that land on teh market basket analysis recipe post" /></a>
 
 ...we are shown an actual list of the 17 visits, including the cookie ID and the time each visitor spent on the website. (Note that all but the 3rd visitor were visiting our website for the first time).
 
 It looks like the 9th visitor on teh list was on our website for a particular long period of time - let's click on "Event Stream" (circled above) to find out what he / she actually did on the website:
 
-![session-complete-event-stream] [img-8]
+<a href="/static/img/blog/2014/01/looker/session-complete-event-stream.JPG"><img src="/static/img/blog/2014/01/looker/session-complete-event-stream.JPG" title="Drilling in to the individual event stream for a particular session" /></a>
 
 We are now shown the *complete event stream* for that user on that session. Incredibly, the visitor *only* visited that recipe page (did not navigate to any other pages on our website).
 
@@ -96,11 +96,11 @@ We are now shown the *complete event stream* for that user on that session. Incr
 
 It is straightforward in Looker to develop customized dashboards. The following is an example of one included in our [Looker release] [looker-release]:
 
-![7-day-dashboard] [img-9]
+<a href="/static/img/blog/2014/01/looker/7-day-dashboard.JPG"><img src="/static/img/blog/2014/01/looker/7-day-dashboard.JPG" title="7 day dashboard built in Looker on top of Snowplow data" /></a>
 
 Most BI tools offer great dashboarding facilities. What we like particularly about Looker's is that clicking on any of the graphs sends you straight into the query explorer, so you can then start slicing / dicing and drilling in as described in the sections above. For example, if you clicked on the data point circled above (representing the number of visits from search engines to the website on January 6th) brings up a list of all those different sessions. We can then click on the **Event Stream** for any of those sessions to see what actually occurred.
 
-![session-drilldown] [img-10]
+<a href="/static/img/blog/2014/01/looker/session-drilldown.JPG"><img src="/static/img/blog/2014/01/looker/session-drilldown.JPG" title="Drilling down into an individual session" /></a>
 
 <a name="data-server"><h2>5. Access your data from <i>any</i> application: Looker as a general purpose data server</h2></a>
 
@@ -114,7 +114,7 @@ You can set Looker up to make specific slices of data available at designated UR
 
 Say for example the following cut of data was important to us (the number of visits and events per visitor by web page, for the last week):
 
-![visits-and-events-per-visitor-by-page-for-last-week] [img-11]
+<a href="/static/img/blog/2014/01/looker/visits-and-events-per-visitor-by-page-for-last-week.JPG"><img src="/static/img/blog/2014/01/looker/visits-and-events-per-visitor-by-page-for-last-week.JPG" title="Visits and events per visitor by page for last week" /></a>
 
 We can use Looker to publish the data to a URL. We've published the above view to the following URLs - check them out in your browser to see how easy it is to fetch the data:
 
@@ -125,6 +125,7 @@ We can use Looker to publish the data to a URL. We've published the above view t
 
 You can see how the data looks in Google Spreadsheets below:
 
+<a href="/static/img/blog/2014/01/looker/google-spreadsheet.JPG"><img src="/static/img/blog/2014/01/looker/google-spreadsheet.JPG" title="Snowplow data served live into Google Spreadsheet by Looker" /></a>
 ![google-spreadsheet] [img-13]
 
 Because the data is being served live, it is always up-to-date. Pretty cool, huh?
@@ -135,7 +136,7 @@ Then get in touch with the [team at Looker] [looker-team] or the [team at Snowpl
 
 
 [looker]: http://www.looker.com
-[looker-release]: /2014/01/03/the-snowplow-looker-release/
+[looker-release]: /blog/2014/01/13/the-snowplow-looker-release/
 [events.lookerml]: https://github.com/snowplow/snowplow/blob/master/5-analytics/looker-analytics/looker-metadata-model/events.lookml
 [looker-team]: http://looker.com/free-trial
 [snowplow-team]: http://snowplowanalytics.com/about/index.html
