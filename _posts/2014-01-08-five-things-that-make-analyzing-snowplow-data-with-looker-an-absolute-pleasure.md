@@ -9,11 +9,11 @@ category: Releases
 
 *Towards the end of 2013 we published our first blog post on [Looker] [looker] where we explored at a technical level why Looker is so well suited to analyzing Snowplow data. Today we [released Snowplow 0.8.13] [looker-release], the [Looker release] [looker-release]. This includes a metadata model to make it easy for Snowplow users to get up and running with Looker on top of Snowplow very quickly. In this post, we get a bit less theoretical, and highlight five very tangible reasons why analyzing Snowplow data with Looker is such an absolute pleasure.*
 
-1. [Slice and dice any combination of dimension and metrics] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#any-dimension-or-metric-combination)
-2. [Quickly and easily define dimensions and metrics that are specific to your business using Looker's light-weight metadata model] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#define-your-own-metrics-and-dimensions)
-3. [Drill up and drill right down to visitor-level and event-level data] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#drill-up-and-down)
-4. [Dashboards are a strating point for more involved analysis] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#dashboards)
-5. [Access your data from *any* application: Looker as a general purpose data server] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#data-server)
+1. [Slice and dice any combination of dimension and metrics](/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#any-dimension-or-metric-combination)
+2. [Quickly and easily define dimensions and metrics that are specific to your business using Looker's lightweight metadata model](/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#define-your-own-metrics-and-dimensions)
+3. [Drill up and drill right down to visitor-level and event-level data](/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#drill-up-and-down)
+4. [Dashboards are a strating point for more involved analysis](/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#dashboards)
+5. [Access your data from *any* application: Looker as a general purpose data server](/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#data-server)
 
 <a name="any-dimension-or-metric-combination"><h2>1. Slice and dice any combination of dimension and metrics</h2></a>
 
@@ -42,7 +42,7 @@ Looker's metadata model makes it very easy to define and analyze busines specifi
 3. Funnels
 4. Metrics
 
-To give a very specific example: we are Snowplow are very interested in whether or not visitors to our website visit the 'services' pages, for example, as that indicates that they are potentially interested in our pro services offering.
+To give a very specific example: at Snowplow we are very interested in whether or not visitors to our website visit the 'services' pages, for example, as that indicates that they are potentially interested in our Pro Services offering.
 
 We can add a dimension to our [`events.lookerml`] [events.lookerml] model that categorises whether a specific event has occurred on a services page or not:
 
@@ -63,7 +63,7 @@ We can then create a metric that counts the number of events that occur on servi
       occurred_on_services_page: yes
 {% endhighlight %}
 
-Both the above dimension and metric will now be available to include in any report produced in the explorer. For example, we can now compare the number of events that occurred on services page by marketing campaign, landing page or over time. 
+Both the above dimension and metric will now be available to include in any report produced in the Query Explorer. For example, we can now compare the number of events that occurred on services page by marketing campaign, landing page or over time. 
 
 <a href="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG"><img src="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG" title="Plotting the number of events on services pages by day" /></a>
 
@@ -77,7 +77,7 @@ To illustrate this, let's start by comparing visit and engagement levels by refe
 
 We can see visitors referered from other websites appear to engage more deeply, on average. We can explore that further, to see if it is true across e.g. all landing pages, by clicking on the **Landing Page Count** (which is "7" and circled above):
 
-This opens another view, that lets us compare events per visit and bounce rates by the seven different landing pages that users refered to our websites from other websites were driven to. It looks like users refered from external websites to our recipe on market basket analysis engaged particularly deeply with our website:
+This opens another view, which lets us compare events per visit and bounce rates by the seven different landing pages that users refered to our websites from other websites were driven to. It looks like users refered from external websites to our recipe on market basket analysis engaged particularly deeply with our website:
 
 <a href="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG"><img src="/static/img/blog/2014/01/looker/visit-and-engagement-levels-by-landing-page.JPG" title="Visit numbers and engagement levels by landing page" /></a>
 
@@ -87,7 +87,7 @@ We can explore this further by clicking on the visit count to see the actual vis
 
 ...we are shown an actual list of the 17 visits, including the cookie ID and the time each visitor spent on the website. (Note that all but the 3rd visitor were visiting our website for the first time).
 
-It looks like the 9th visitor on teh list was on our website for a particular long period of time - let's click on "Event Stream" (circled above) to find out what he / she actually did on the website:
+It looks like the 9th visitor on the list was on our website for a particularly long period of time - let's click on "Event Stream" (circled above) to find out what he / she actually did on the website:
 
 <a href="/static/img/blog/2014/01/looker/session-complete-event-stream.JPG"><img src="/static/img/blog/2014/01/looker/session-complete-event-stream.JPG" title="Drilling in to the individual event stream for a particular session" /></a>
 
@@ -99,7 +99,7 @@ It is straightforward in Looker to develop customized dashboards. The following 
 
 <a href="/static/img/blog/2014/01/looker/7-day-dashboard.JPG"><img src="/static/img/blog/2014/01/looker/7-day-dashboard.JPG" title="7 day dashboard built in Looker on top of Snowplow data" /></a>
 
-Most BI tools offer great dashboarding facilities. What we like particularly about Looker's is that clicking on any of the graphs sends you straight into the query explorer, so you can then start slicing / dicing and drilling in as described in the sections above. For example, if you clicked on the data point circled above (representing the number of visits from search engines to the website on January 6th) brings up a list of all those different sessions. We can then click on the **Event Stream** for any of those sessions to see what actually occurred.
+Most BI tools offer great dashboarding facilities. What we like particularly about Looker's is that clicking on any of the graphs sends you straight into the Query Explorer, so you can then start slicing / dicing and drilling in as described in the sections above. For example, if you clicked on the data point circled above (representing the number of visits from search engines to the website on January 6th) brings up a list of all those different sessions. We can then click on the **Event Stream** for any of those sessions to see what actually occurred.
 
 <a href="/static/img/blog/2014/01/looker/session-drilldown.JPG"><img src="/static/img/blog/2014/01/looker/session-drilldown.JPG" title="Drilling down into an individual session" /></a>
 
@@ -136,7 +136,7 @@ Then get in touch with the [team at Looker] [looker-team] or the [team at Snowpl
 
 
 [looker]: http://www.looker.com
-[looker-release]: /blog/2014/01/08/the-snowplow-looker-release/
+[looker-release]: /blog/2014/01/08/snowplow-0.8.13-released-with-looker-support
 [events.lookerml]: https://github.com/snowplow/snowplow/blob/master/5-analytics/looker-analytics/looker-metadata-model/events.lookml
 [looker-team]: http://looker.com/free-trial
 [snowplow-team]: http://snowplowanalytics.com/about/index.html
