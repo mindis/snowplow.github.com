@@ -78,7 +78,7 @@ Over time we plan to add Looker-specific recipes to our [Analytics Cookbook] [co
 
 [looker]: http://looker.com/
 [blog-post-1]: /blog/2013/12/10/introducing-looker-a-fresh-approach-to-bi-on-snowplow-data/
-[blog-post-2]: /blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/
+[blog-post-2]: /blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/
 
 [img-1]: /static/img/blog/2014/01/looker/list-of-metrics.JPG
 [img-2]: /static/img/blog/2014/01/looker/zoom-up.JPG

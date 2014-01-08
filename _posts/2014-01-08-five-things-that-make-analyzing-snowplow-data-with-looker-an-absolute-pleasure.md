@@ -136,7 +136,7 @@ Then get in touch with the [team at Looker] [looker-team] or the [team at Snowpl
 
 
 [looker]: http://www.looker.com
-[looker-release]: /blog/2014/01/13/the-snowplow-looker-release/
+[looker-release]: /blog/2014/01/08/the-snowplow-looker-release/
 [events.lookerml]: https://github.com/snowplow/snowplow/blob/master/5-analytics/looker-analytics/looker-metadata-model/events.lookml
 [looker-team]: http://looker.com/free-trial
 [snowplow-team]: http://snowplowanalytics.com/about/index.html
