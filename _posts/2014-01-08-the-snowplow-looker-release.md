@@ -14,8 +14,10 @@ We are very pleased to announce the release of Snowplow 0.8.13. This release mak
 In this post we will cover:
 
 1. [What's so special about analyzing Snowplow data with Looker?] (/blog/2014/01/13/the-snowplow-looker-release/#special)
-2. [What does the Looker meta-data model deliver?] (/blog/2014/01/13/the-snowplow-looker-release/#what)
-3. [How to install the meta-data model] (/blog/2014/01/13/the-snowplow-looker-release/#install)
+2. [What does the Looker metadata
+ model deliver?] (/blog/2014/01/13/the-snowplow-looker-release/#what)
+3. [How to install the metadata
+ model] (/blog/2014/01/13/the-snowplow-looker-release/#install)
 
 <!--more-->
 
