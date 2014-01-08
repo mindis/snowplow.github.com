@@ -9,11 +9,11 @@ category: Releases
 
 *Towards the end of 2013 we published our first blog post on [Looker] [looker] where we explored at a technical level why Looker is so well suited to analyzing Snowplow data. Today we [released Snowplow 0.8.13] [looker-release], the [Looker release] [looker-release]. This includes a metadata model to make it easy for Snowplow users to get up and running with Looker on top of Snowplow very quickly. In this post, we get a bit less theoretical, and highlight five very tangible reasons why analyzing Snowplow data with Looker is such an absolute pleasure.*
 
-1. [Slice and dice any combination of dimension and metrics] (/blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#any-dimension-or-metric-combination)
-2. [Quickly and easily define dimensions and metrics that are specific to your business using Looker's light-weight metadata model] (/blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#define-your-own-metrics-and-dimensions)
-3. [Drill up and drill right down to visitor-level and event-level data] (/blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#drill-up-and-down)
-4. [Dashboards are a strating point for more involved analysis] (/blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#dashboards)
-5. [Access your data from *any* application: Looker as a general purpose data server] (/blog/2014/01/13/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#data-server)
+1. [Slice and dice any combination of dimension and metrics] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#any-dimension-or-metric-combination)
+2. [Quickly and easily define dimensions and metrics that are specific to your business using Looker's light-weight metadata model] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#define-your-own-metrics-and-dimensions)
+3. [Drill up and drill right down to visitor-level and event-level data] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#drill-up-and-down)
+4. [Dashboards are a strating point for more involved analysis] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#dashboards)
+5. [Access your data from *any* application: Looker as a general purpose data server] (/blog/2014/01/08/five-things-that-make-analyzing-snowplow-data-with-looker-an-absolute-pleasure/#data-server)
 
 <a name="any-dimension-or-metric-combination"><h2>1. Slice and dice any combination of dimension and metrics</h2></a>
 
