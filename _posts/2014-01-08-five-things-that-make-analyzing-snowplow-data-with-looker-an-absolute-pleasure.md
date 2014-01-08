@@ -137,7 +137,7 @@ Then get in touch with the [team at Looker] [looker-team] or the [team at Snowpl
 
 [looker]: http://www.looker.com
 [looker-release]: /blog/2014/01/08/snowplow-0.8.13-released-with-looker-support
-[events.lookerml]: https://github.com/snowplow/snowplow/blob/master/5-analytics/looker-analytics/looker-metadata-model/events.lookml
+[events.lookerml]: https://github.com/snowplow/snowplow/blob/master/5-analytics/looker-analytics/lookml/events.lookml
 [looker-team]: http://looker.com/free-trial
 [snowplow-team]: http://snowplowanalytics.com/about/index.html
 [d3-js]: http://d3js.org/
