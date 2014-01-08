@@ -63,7 +63,7 @@ We can then create a metric that counts the number of events that occur on servi
       occurred_on_services_page: yes
 {% endhighlight %}
 
-Both the above dimension and metric will now be available to include in any report produced in the Query Explorer. For example, we can now compare the number of events that occurred on services page by marketing campaign, landing page or over time. 
+Both the above dimension and metric will now be available to include in any report produced in the Explorer. For example, we can now compare the number of events that occurred on services page by marketing campaign, landing page or over time. 
 
 <a href="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG"><img src="/static/img/blog/2014/01/looker/events-on-services-page-by-day.JPG" title="Plotting the number of events on services pages by day" /></a>
 
@@ -99,7 +99,7 @@ It is straightforward in Looker to develop customized dashboards. The following 
 
 <a href="/static/img/blog/2014/01/looker/7-day-dashboard.JPG"><img src="/static/img/blog/2014/01/looker/7-day-dashboard.JPG" title="7 day dashboard built in Looker on top of Snowplow data" /></a>
 
-Most BI tools offer great dashboarding facilities. What we like particularly about Looker's is that clicking on any of the graphs sends you straight into the Query Explorer, so you can then start slicing / dicing and drilling in as described in the sections above. For example, if you clicked on the data point circled above (representing the number of visits from search engines to the website on January 6th) brings up a list of all those different sessions. We can then click on the **Event Stream** for any of those sessions to see what actually occurred.
+Most BI tools offer great dashboarding facilities. What we like particularly about Looker's is that clicking on any of the graphs sends you straight into the Explorer, so you can then start slicing / dicing and drilling in as described in the sections above. For example, if you clicked on the data point circled above (representing the number of visits from search engines to the website on January 6th) brings up a list of all those different sessions. We can then click on the **Event Stream** for any of those sessions to see what actually occurred.
 
 <a href="/static/img/blog/2014/01/looker/session-drilldown.JPG"><img src="/static/img/blog/2014/01/looker/session-drilldown.JPG" title="Drilling down into an individual session" /></a>
 
