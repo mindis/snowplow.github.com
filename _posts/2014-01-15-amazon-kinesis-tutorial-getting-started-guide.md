@@ -1,7 +1,7 @@
 ---
 layout: blog-post
 shortenedlink: Getting started with Amazon Kinesis
-title: Getting started with stream-processing on Amazon Kinesis - a tutorial
+title: Amazon Kinesis tutorial - a getting started guide
 tags: snowplow analysis
 author: Yali
 category: Inside the Plow
