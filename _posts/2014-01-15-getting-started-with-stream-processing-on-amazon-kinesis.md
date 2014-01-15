@@ -11,8 +11,8 @@ category: Inside the Plow
 
 In this tutorial, we will walk through the process of getting up and running with Amazon Kinesis using two very simple Kinesis apps:
 
-1. The [kinesis-example-scala-producer] [example-producer]. This will create a Kinesis stream and write records to it.
-2. The [kinesis-example-scala-consumer] [example-producer]. This will consume the Kinesis stream created by the producer
+1. The [kinesis-example-scala-producer] [example-producer]: this will create a Kinesis stream and write records to it
+2. The [kinesis-example-scala-consumer] [example-producer]: this will consume the Kinesis stream created by the producer
 
 The source code for both is available on the [Snowplow repo] [snowplow-repo].
 
@@ -22,7 +22,7 @@ The source code for both is available on the [Snowplow repo] [snowplow-repo].
 
 In general Kinesis apps should run on EC2. However, for this simple example, the apps can be run locally. They require Java 1.7 and SBT 0.13.0 to run. If you use Vagrant, you can run them in the [dev-environment] [dev-environment] VM, by setting it up as follows:
 
-First, clone the [dev-environment] [dev-environment] repo (make sure to include the `--recurseive` flag): 
+First, clone the [dev-environment] [dev-environment] repo (make sure to include the `--recursive` flag): 
 
 {% highlight bash %}
 $ git clone --recursive https://github.com/snowplow/dev-environment.git
@@ -71,7 +71,7 @@ Now we need to create a config file (e.g. by copying the template config file to
 $ cp src/main/resources/default.conf my.conf
 {% endhighlight %}
 
-Use your favorite text editor to edit the AWS credentials in the file with your own access key and secret access key. (If you are creating a new user in IAM for the purpose of this tutorial, make she that user has permissions to create and write to Kinesis streams, and create, write to and delete DynamoDB tables.)
+Use your favorite text editor to edit the AWS credentials in the file with your own access key and secret access key. If you are creating a new user in IAM for the purpose of this tutorial, make sure that user has permissions to create and write to Kinesis streams, and create, write to and delete DynamoDB tables.
 
 You're now ready to run the app! Enter the following at the command line - this runs it from SBT, passing in the new config file as an argument:
 
@@ -79,7 +79,7 @@ You're now ready to run the app! Enter the following at the command line - this 
 $ sbt "run --config ./my.conf"
 {% endhighlight %}
 
-Once the app has started, it will create a new stream (if one does not already exist) with the name specified in the config file. (This is `kinesis_exmaple` as standard.) You should be able to view the stream in the AWS management console: 
+Once the app has started, it will create a new stream (if one does not already exist) with the name specified in the config file (this is `kinesis_exmaple` as standard). You should be able to view the stream in the AWS management console: 
 
 ![pic-of-aws-console-with-metrics-rising][pic1]
 
@@ -112,7 +112,7 @@ As before, we create a config file (e.g. by copying the template config file to 
 $ cp src/main/resources/default.conf my.conf
 {% endhighlight %}
 
-And edit the `my.conf` file in our favorite text editor to add our AWS credentials. (The rest of the parameters should be fine. If you have configured the name of the stream for the producer config, you will need to configure it in the consumer config so that it reads from the same stream that the producer writes to.)
+And edit the `my.conf` file in our favorite text editor to add our AWS credentials. The rest of the parameters should be fine, although if you have configured the name of the stream for the producer config, you will need to configure it in the consumer config so that it reads from the same stream that the producer writes to.
 
 Now run the consumer:
 
@@ -128,7 +128,7 @@ You're now successfully reading records off the Kinesis stream!
 
 ## Thanks
 
-These two Kinesis apps were written by our wintern [Brandon Amos] [bamos], who has been leading on Kinesis development at Snowplow. This is just the start - we hope to release Kinesis enabled modules for the core Snowplow stack that have also been developed by Brandon in the next couple of weeks. Stay tuned!
+These two Kinesis apps were written in collaboration with our wintern [Brandon Amos] [bamos], who has been working exclusively on Kinesis development at Snowplow over his winternship. This is just the start - we hope to release Kinesis enabled modules for the core Snowplow stack that have also been developed with Brandon in the next couple of weeks. Stay tuned!
 
 [example-producer]: https://github.com/snowplow/kinesis-example-scala-producer
 [example-consumer]: https://github.com/snowplow/kinesis-example-scala-consumer
