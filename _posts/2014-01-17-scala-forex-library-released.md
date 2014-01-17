@@ -3,7 +3,7 @@ layout: blog-post
 shortenedlink: Scala Forex library released
 title: Scala Forex library by wintern Jiawen Zhou released
 tags: scala forex currency exchange rate
-author: Yali
+author: Alex
 category: Releases
 ---
 
