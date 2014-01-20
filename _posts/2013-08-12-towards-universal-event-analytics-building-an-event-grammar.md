@@ -4,7 +4,7 @@ shortenedlink: Towards universal event analytics - building an event grammar
 title: Towards universal event analytics - building an event grammar
 tags: event analytics grammar model
 author: Alex
-category: Inside the Plow
+category: Research
 ---
 
 As we outgrow our "fat table" structure for Snowplow events in Redshift, we have been spending more time thinking about how we can model digital events in Snowplow in the most universal, flexible and future-proof way possible.
