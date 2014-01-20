@@ -22,15 +22,15 @@ In the rest of this blog post, rather than simply re-hashing Jay's thoughtpiece,
 3. [The Unified Era - a future enabled by continuous data processing on a unified log](/blog/2014/01/20/the-three-eras-of-business-data-processing/#unified-era)
 4. [Closing thoughts](/blog/2014/01/20/the-three-eras-of-business-data-processing/#closing-thoughts)
 
-After the jump, let's explore each of these eras in turn:
+We'll explore each of these eras in turn:
 
 <!--more-->
 
 <h2><a name="classic-era">The Classic Era</a></h2>
 
-When I started work at Deloitte Consulting 12 years ago, even forward-thinking businesses still primarily operated a disparate set of on-premise transactional systems. Each of these systems would feature: an internal "local loop" for data processing; its own data silo; and, when unavoidable, point-to-point connections to peer systems. To give the Management team a much-needed view _across_ these systems, very often a textbook "Ralph Kimball" data warehouse was added, typically fed from the transactional systems overnight by a set of batch ETL processes.
+When I started work at Deloitte Consulting 12 years ago, even forward-thinking businesses still primarily operated a disparate set of on-premise transactional systems. Each of these systems would feature: an internal "local loop" for data processing; its own data silo; and, when unavoidable, point-to-point connections to peer systems. To give the Management team a much-needed view _across_ these systems, a "Ralph Kimball" data warehouse might be added, typically fed from the transactional systems overnight by a set of batch ETL processes. Where present, this provided a *single version of the truth*.
 
-The whole system looked something like this - using the case of an retailer for our example:
+The whole system looked something like this - using the case of a retailer for our example:
 
 ![classic-era-img] [classic-era-img]
 
@@ -69,8 +69,9 @@ A few things should be clear, especially in contrast to the earlier eras:
 
 1. **All systems can and should write to the unified log** - third-party SaaS vendors can emit events via webhooks and streaming APIs. In the case where vendors cannot provide an eventstream (e.g. with web analytics), those services are brought back in-house
 2. **We have a single version of the truth** - together, the unified log plus Hadoop archive represent our single version of the truth. They contain exactly the same data - our eventstream - they just have different time windows of data
-3. **Point-to-point connections have largely gone away** - in their place, applications can append to the unified log and other applications can read their writes
-4. **Local loops have been unbundled** - in place of local silos, applications can collaborate on real-time decisioning via the unified log 
+3. **The single version of the truth is upstream from the datawarehouse** - in the classic era, the datawarehouse provided the single version of the truth, so all reports generated from it were consistent. In the Unified Era, the log provides the single version of the truth: as a result, operational system (e.g. recommendation and ad targeting systems) compute on the same versions of truths as analysts producing business reports
+4. **Point-to-point connections have largely gone away** - in their place, applications can append to the unified log and other applications can read their writes
+5. **Local loops have been unbundled** - in place of local silos, applications can collaborate on real-time decisioning via the unified log 
 
 <h2><a name="closing-thoughts">Closing thoughts</a></h2>
 
