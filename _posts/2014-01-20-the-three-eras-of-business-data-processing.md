@@ -81,4 +81,4 @@ This has been something of a whirlwind tour through the evolution of data proces
 
 [classic-era-img]: /static/img/blog/2014/01/classic-era.png
 [hybrid-era-img]: /static/img/blog/2014/01/hybrid-era.png
-[unified-era-img]: /static/img/blog/2014/01/classic-era.png
+[unified-era-img]: /static/img/blog/2014/01/unified-era.png
