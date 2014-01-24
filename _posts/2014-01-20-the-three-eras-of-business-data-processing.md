@@ -42,7 +42,7 @@ The Hybrid Era is characterized by companies operating a real hotchpotch of diff
 
 It is hard to generalize what these architectures look like - again we see strong local loops and data silos, but we also see attempts at "log everything" approaches with Hadoop and/or systems monitoring. There tends to be a mix of near-real-time processing for narrow analytics use cases like product recommendations, plus separate batch processing efforts into Hadoop or a classic data warehouse. We see attempts to bulk export data from external SaaS vendors for warehousing, and efforts to feed these external systems with the data they require for their own local loops.
 
-Keeping our multi-channel retailer in mind, here is what her architecture looks like now:
+Keeping our multi-channel retailer in mind, here is what their architecture looks like now:
 
 ![hybrid-era-img] [hybrid-era-img]
 
@@ -69,13 +69,15 @@ A few things should be clear, especially in contrast to the earlier eras:
 
 1. **All systems can and should write to the unified log** - third-party SaaS vendors can emit events via webhooks and streaming APIs. In the case where vendors cannot provide an eventstream (e.g. with web analytics), those services are brought back in-house
 2. **We have a single version of the truth** - together, the unified log plus Hadoop archive represent our single version of the truth. They contain exactly the same data - our eventstream - they just have different time windows of data
-3. **The single version of the truth is upstream from the datawarehouse** - in the classic era, the datawarehouse provided the single version of the truth, so all reports generated from it were consistent. In the Unified Era, the log provides the single version of the truth: as a result, operational system (e.g. recommendation and ad targeting systems) compute on the same versions of truths as analysts producing business reports
+3. **The single version of the truth is upstream from the datawarehouse** - in the classic era, the data warehouse provided the single version of the truth, so all reports generated from it were consistent. In the Unified Era, it is now the log that provides the single version of the truth: as a result, your operational systems (e.g. product recommendations and ad targeting) work off the exact same data as your analysts use for ad hoc analytics and management reporting
 4. **Point-to-point connections have largely gone away** - in their place, applications can append to the unified log and other applications can read their writes
 5. **Local loops have been unbundled** - in place of local silos, applications can collaborate on real-time decisioning via the unified log 
 
 <h2><a name="closing-thoughts">Closing thoughts</a></h2>
 
-This has been something of a whirlwind tour through the evolution of data processing for business, as we have experienced it here at Snowplow (and before Snowplow). I have tried to delineate this evolution into three distinct eras - you may not agree entirely with the terminology or the facets of each era, but I hope it has prompted some ideas about where eventstream analytics is coming from and where it is heading. For us at Snowplow, we are convinced that the unified log is a breakthrough concept in understanding how best to engineer digital businesses. And we plan to evolve Snowplow to help enable this "digital nervous system" for **your** business.
+This has been something of a whirlwind tour through the evolution of data processing for business, as we have experienced it here at Snowplow - and before Snowplow.
+
+I have tried to delineate this evolution into three distinct eras - you may not agree entirely with the terminology or the facets of each era, but I hope it has prompted some ideas about where eventstream analytics is coming from and where it is heading. For us at Snowplow, we are convinced that the unified log is a breakthrough concept in understanding how best to engineer digital businesses. And we plan to evolve Snowplow to help enable this "digital nervous system" for **your** business.
 
 [kreps-the-log]: http://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying
 [event-grammar]: http://snowplowanalytics.com/blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar/
