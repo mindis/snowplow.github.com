@@ -11,9 +11,9 @@ Both Yali and myself will be visiting New York this February, and I will be head
 
 ![brooklyn-bridge] [pic]
 
-Yali will be in New York between February 9th and 12th (including attending the [Looker user group NYC meetup] [look-and-tell-meetup] on February 11th).
+Yali will be in NYC between February 9th and 12th, including attending the [Looker user group NYC meetup] [look-and-tell-meetup] on February 11th.
 
-I will be visiting later on in the month:
+Alex will be visiting later on in the month:
 
 * New York City, February 20th - 25th
 * Boston, February 26th - 27th
