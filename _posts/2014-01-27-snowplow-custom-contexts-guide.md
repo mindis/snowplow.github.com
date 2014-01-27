@@ -45,24 +45,28 @@ A few notes on this:
 * If you want to add custom context but don't want to set all the prior arguments, just pad out your function call with empty arguments:
 
 {% highlight javascript %}
-// Skip the custom page title (get page title automatically instead)
-_snaq.push(['trackPageView', , {
-  page: {
-    category: 'sport',
-    last_updated$dt: new Date(2014,1,26)
-  }
-} ]);
+_snaq.push(['trackPageView',
+              , // <- Skip the custom page title (get page title automatically instead)
+              { page: {
+                  category: 'sport',
+                  last_updated$dt: new Date(2014,1,26)
+                }
+              }
+           ]);
 {% endhighlight %}
 
-<h2><a name="contexts">2. The `contexts` JavaScript object</a></h2>
+<h2><a name="contexts">2. The "contexts" JavaScript object</a></h2>
 
 The `contexts` argument to any `track...()` or `add...()` method is always optional. If set, it must be a JSON taking the form:
 
 {% highlight javascript %}
-{
-	"context1_name": { /* context1 JSON */ },
-	"context2_name": { /* context2 JSON */ },
-	...
+{ "context1_name": {
+    /* context1 JSON */
+  },
+  "context2_name": {
+    /* context2 JSON */
+  },
+  ...
 }
 {% endhighlight %}
 
@@ -71,14 +75,14 @@ If the `contexts` argument is set, it must be a JSON including at least one name
 1. The name is the name for an individual context entry
 2. The property is a JSON holding name: property pairs for this context entry
 
-A few dos and don'ts on context names:
+A few dos and don'ts for context names:
 
 * **Do** name each context entry however you like
-* **Do** use a context name to identify a set of data points which make sense to your business
+* **Do** use a context name to identify a set of associated data points which make sense to your business
 * **Do** use the same contexts across multiple different events and event types
 * **Don't** use multiple different context names to refer to the same set of data points
 
-A few dos and don'ts on context entry JSONs:
+A few dos and don'ts for the JSONs inside each context entry JSONs:
 
 * **Do** use any of the data types supported by [custom unstructured events] [unstructured-events] 
 * **Do** use Snowplow datatype suffixes if the data type would otherwise be unclear
@@ -90,7 +94,7 @@ A few dos and don'ts on context entry JSONs:
 
 A detailed example should make custom contexts a little more real.
 
-Let's take a retailer and Snowplow user who sells movie memorabilia online, particularly movie posters. For every movie poster, she cares about the name of the movie, the country which printed the movie poster and the year the poster was printed. She has also done some work understanding her customer base, and can assign all of her visitors a propensity-to-buy score and a customer segment as soon as they add something to their basket.
+Let's take a retailer and Snowplow user who sells movie memorabilia online, particularly movie posters. For every movie poster, our retailer cares about the name of the movie, the country which printed the movie poster and the year the poster was printed. She has also done some work understanding her customer base, and can assign all of her visitors a propensity-to-buy score and a customer segment as soon as they add something to their basket.
 
 <h3>Definition of custom contexts</h3>
 
@@ -98,9 +102,9 @@ Based on the above, our retailer will define two custom contexts. The first desc
 
 {% highlight javascript %}
 "movie_poster": {
-	"movie_name": xxx,
-	"poster_country": xxx,
-	"poster_year$dt": xxx
+  "movie_name": xxx,
+  "poster_country": xxx,
+  "poster_year$dt": xxx
 }
 {% endhighlight %}
 
@@ -108,8 +112,8 @@ And then the second context describes the customer:
 
 {% highlight javascript %}
 "customer": {
-	"p_buy": xxx,
-	"segment": xxx
+  "p_buy": xxx,
+  "segment": xxx
 }
 {% endhighlight %}
 
@@ -121,13 +125,13 @@ When a visitor arrives on a page advertising a movie poster, our retailer adds t
 
 {% highlight javascript %}
 _snaq.push(['trackPageView',
-             ,                            // <- No custom page title
-             { "movie_poster": {          // <- Context entry
-             	  "movie_name": "Solaris",
-             	  "poster_country": "JP",
-             	  "poster_year$dt": new Date(1978, 1, 1)
-               }
-             }
+              ,                            // <- No custom page title
+              { "movie_poster": {          // <- Context entry
+                  "movie_name": "Solaris",
+                  "poster_country": "JP",
+                  "poster_year$dt": new Date(1978, 1, 1)
+                }
+              }
            ]);
 {% endhighlight %}
 
@@ -135,43 +139,43 @@ When the visitor clicks the add to basket button on this poster, the website fir
 
 {% highlight javascript %}
 _snaq.push(['trackUnstructEvent',
-             'add-to-basket',             // <- Event name
-             { "button": "img-overlay",   // <- Event properties
-               "stock-level": 2 
-             },
-             { "movie_poster": {          // <- First context entry
-                 "movie_name": "Solaris",
-                 "poster_country": "JP",
-                 "poster_year$dt": new Date(1978, 1, 1)
-               },
-               "customer": {              // <- Second context entry
-                 "p_buy": 0.23,
-                 "segment": "whale"
-               }
-             }
+              'add-to-basket',             // <- Event name
+              { "button": "img-overlay",   // <- Event properties
+                "stock-level": 2 
+              },
+              { "movie_poster": {          // <- First context entry
+                  "movie_name": "Solaris",
+                  "poster_country": "JP",
+                  "poster_year$dt": new Date(1978, 1, 1)
+                },
+                "customer": {              // <- Second context entry
+                  "p_buy": 0.23,
+                  "segment": "whale"
+                }
+              }
            ]);
 {% endhighlight %}
 
-The visitor seems to be having doubts - they head to the contact page and fill out a form. This time we still track the "customer" context (with a reduced propensity-to-buy score), but it doesn't make sense to record this event against any given "movie_poster":
-
-trackStructEvent(category, action, label, property, value, contexts)
+The visitor seems to be having doubts - they head to the contact page and fill out a form. This time we still track the "customer" context (with a reduced propensity-to-buy score), but it doesn't make sense to record this event against any given "movie_poster", so we don't include that context:
 
 {% highlight javascript %}
 _snaq.push(['trackStructEvent',
-             'comms',                     // <- Category
-             'feedback-form',             // <- Action
-             ,                            // <- No label
-             ,                            // <- No property
-             ,                            // <- No value
-             { "customer": {              // <- Context entry
-                 "p_buy": 0.13,
-                 "segment": "whale"
-               }
-             }
+              'comms',                     // <- Category
+              'feedback-form',             // <- Action
+              ,                            // <- No label
+              ,                            // <- No property
+              ,                            // <- No value
+              { "customer": {              // <- Context entry
+                  "p_buy": 0.13,
+                  "segment": "whale"
+                }
+              }
            ]);
 {% endhighlight %}
 
-And that completes our example. By defining and implementing these two custom contexts, our retailer has promoted some of her most business-critical data points to the level of first class entities in Snowplow. This additional context has made standard Snowplow events such as page views much more valuable, and should make it easy in due course to analyze these business-critical data points across multiple event types.
+And that completes our example. By defining and implementing these two custom contexts, our retailer has promoted some of her most business-critical data points to the level of first class entities in Snowplow.
+
+This additional context has made standard Snowplow events such as page views much more valuable to her, and should later make it easy to analyze these business-critical data points across multiple event types.
 
 <h2><a name="help">4. Getting help</a></h2>
 
@@ -179,7 +183,7 @@ As always, if you do run into any issues or don't understand any of the above gu
 
 If you have any ideas or feedback for Snowplow's evolving approach to custom contexts, do please share them, either in the comments below or through the usual channels. And please keep an eye on our [Roadmap wiki page] [roadmap] to see how Snowplow's support for custom contexts evolves!
 
-[0130-post]: /blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/
+[0130-post]: /blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/
 [unstructured-events]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#381-trackunstructevent
 
 [roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap

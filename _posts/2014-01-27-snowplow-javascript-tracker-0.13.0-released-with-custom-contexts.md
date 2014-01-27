@@ -13,12 +13,12 @@ The primary objective of this release was to introduce some key new tracking cap
 
 In the rest of this post, then, we will cover:
 
-1. [New feature: custom contexts](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#contexts)
-2. [New feature: transaction currencies](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#currency)
-3. [New feature: specifying the tracking platform](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#platform)
-4. [Project tidy-up](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#tidyup)
-5. [Upgrading](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#upgrading)
-6. [Getting help](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#help)
+1. [New feature: custom contexts](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#contexts)
+2. [New feature: transaction currencies](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#currency)
+3. [New feature: specifying the tracking platform](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#platform)
+4. [Project tidy-up](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#tidyup)
+5. [Upgrading](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#upgrading)
+6. [Getting help](/blog/2014/01/27/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#help)
 
 <!--more-->
 
@@ -66,7 +66,7 @@ The `contexts` argument is always optional on any event call. If set, it must be
 }
 {% endhighlight %}
 
-The format of the JSON properties for each individual context follows the exact same rules as our [unstructured events' JSON properties] [unstructured-event-json].
+The format of the JSON properties for each individual context follows the exact same rules as our [unstructured events' JSON properties] [unstructured-events].
 
 If you are interested in finding out more about custom contexts, we have written a [follow-up blog post] [howto-post] - please [read this post] [howto-post] for more information.
 
@@ -156,7 +156,9 @@ As always, if you run into any issues or don't understand any of the above chang
 [event-grammar-post]: /blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar/
 [forex-post]: /blog/2014/01/17/scala-forex-library-released/
 [howto-post]: /blog/2014/01/27/snowplow-custom-contexts-guide/
+[unstructured-events]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#381-trackunstructevent
 
+[rcs]: https://github.com/rcs
 [iso-4217]: http://en.wikipedia.org/wiki/ISO_4217#Active_codes
 [protocol-platform]: https://github.com/snowplow/snowplow/wiki/snowplow-tracker-protocol#11-application-parameters
 
