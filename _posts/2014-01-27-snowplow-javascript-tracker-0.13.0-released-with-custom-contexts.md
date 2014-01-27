@@ -13,8 +13,8 @@ The primary objective of this release was to introduce some key new tracking cap
 
 In the rest of this post, then, we will cover:
 
-1. [New feature: adding custom contexts to events](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#context)
-2. [New feature: setting the transaction currency](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#currency)
+1. [New feature: custom contexts](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#contexts)
+2. [New feature: transaction currencies](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#currency)
 3. [New feature: specifying the tracking platform](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#platform)
 4. [Project tidy-up](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#tidyup)
 5. [Upgrading](/blog/2014/01/26/snowplow-javascript-tracker-0.13.0-released-with-custom-contexts/#upgrading)
@@ -22,82 +22,51 @@ In the rest of this post, then, we will cover:
 
 <!--more-->
 
-<h2><a name="context">1. New feature: adding custom contexts to events</a></h2>
+<h2><a name="contexts">1. New feature: custom contexts</a></h2>
 
 The most exciting new feature is the addition of custom contexts to all of our `track...()` events.
 
-**Please note that this release only adds custom contexts to the JavaScript Tracker - adding custom contexts to our Enrichment process and Storage targets is on the roadmap - but rest assured we are working on it!**
+<h3>1.1 What are custom contexts?</h3>
 
-<h3>Recap on context</h3>
+Context is what describes the circumstances surrounding an individual event - for example, when the event happened, where it happened, how it happened. For the original blog post where we set out our thinking about event context, see [Towards universal event analytics - building an event grammar] [event-grammar-post].
 
-We set out our original thinking about event context in our blog post last August, [Towards universal event analytics - building an event grammar] [event-grammar-post].
+The Snowplow JavaScript Tracker already captures lots of standard web context by default: event time, user timezone, browser features etc. This new feature allows you to define your own custom contexts: ones which make sense to your specific business. 
 
-Briefly: context is what describes the circumstances surrounding an individual event - for example, when the event happened, where it happened, how it happened. The JavaScript Tracker already captures lots of standard web context, but this new feature allows you to define your own custom contexts: ones which make sense to your specific business.
+Think "custom variables" but much more powerful and flexible!
 
-Think "custom variables" but much more powerful and flexible.
+<h3>1.2 When to use custom contexts?</h3>
 
-<h3>Our custom contexts implementation</h3>
+Custom contexts are great for a couple of use cases:
 
-With this release, there is now a new optional last argument to each `track...()` method, called simply `contexts`. For example, here is the new signature for tracking a page view:
+1. Whenever you want to augment a standard Snowplow event type with some additional data
+2. If your business has a set of common data points/ models which make sense to capture alongside multiple event types
+
+likely have custom data which you want to send along with The idea is that you can then attach those custom contexts to any existing Snowplow events where storing this additional information would be valuable.
+
+1. Where you want to track event types which are proprietary/specific to your business (i.e. not already part of Snowplow)
+2. Where you want to track events which have unpredictable or frequently changing properties
+
+<h3>1.3 Usage</h3>
+
+There is now a new optional last argument to each `track...()` method, called simply `contexts`. For example, here is the new signature for tracking a page view:
 
 {% highlight javascript %}
 function trackPageView(customTitle, contexts) { }
 {% endhighlight %}
 
-The `contexts` argument is always optional. If set, it must be a JSON taking the form:
+The `contexts` argument is always optional on any event call. If set, it must be a JSON taking the form:
 
 {% highlight javascript %}
 {
-	"context1_name": { ... },
-	"context2_name": { ... },
-	...
+    "context1_name": { ... },
+    "context2_name": { ... },
+    ...
 }
 {% endhighlight %}
 
-To add a little more detail here:
+Interested in finding out more about custom contexts? We have written a [follow-up blog post] [howto-post] to provide more information on using the new custom context functionality - please [read this post] [howto-post] for more information.
 
-1. If set, the `contexts` JSON must contain at least one `"context": { ... }` entry
-2. Each context's own `{ ... }` envelope can contain any of the same data types supported by [custom unstructured events] [custom-unstructured-events]
-3. Context names are globally namespaced - use the same context name across multiple different events and event types to refer to the same fields in the `{ ... }` envelope
-
-<h3>Example</h3>
-
-An example should make custom contexts a little more real.
-
-Let's take an online retailer who sells movie memorabilia, especially movie posters. For every movie poster, she cares about the name of the film, the country which produced the film poster and the year the poster was printed. She has also done some work understanding her customer base, and can assign all of her website visitors a propensity-to-buy score and a customer segment as soon as they add something to their basket.
-
-Based on the above, our retailer will define two custom contexts. The first describes a given movie poster:
-
-{% highlight javascript %}
-"movie_poster": {
-	"movie_name": xxx,
-	"poster_country": xxx,
-	"poster_year$dt": xxx
-}
-{% endhighlight %}
-
-And then the second context describes the customer:
-
-{% highlight javascript %}
-"customer": {
-	"ptb_score": xxx,
-	"segment": xxx
-}
-{% endhighlight %}
-
-Then one or both of these contexts can be added to the generated Snowplow events, like so:
-
-{% highlight javascript %}
-// User arrives on site
-
-
-<h3>Roadmap</h3>
-
-**Note:** custom contexts are **not** currently processed by the Snowplow Enrichment process, or available in Storage. We are well aware that this release is only the start of adding custom contexts to Snowplow.
-
-Please keep an eye on our [Roadmap wiki page] [roadmap] to see how Snowplow's support for custom contexts evolves.
-
-<h2><a name="currency">2. New feature: setting the transaction currency</a></h2>
+<h2><a name="currency">2. New feature: transaction currencies</a></h2>
 
 We have updated our ecommerce tracking methods to add support for setting the currency which the transaction took place in.
 
