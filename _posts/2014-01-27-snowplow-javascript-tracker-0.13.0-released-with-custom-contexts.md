@@ -164,7 +164,7 @@ As always, if you run into any issues or don't understand any of the above chang
 [semver]: http://semver.org/spec/v2.0.0.html
 [changelog]: https://github.com/snowplow/snowplow-javascript-tracker/blob/master/CHANGELOG
 [roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap
-[0130-release]: xxx
+[0130-release]: https://github.com/snowplow/snowplow-javascript-tracker/releases/tag/0.13.0
 [0140-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=3&page=1&state=open
 
 [issues]: https://github.com/snowplow/snowplow/issues
