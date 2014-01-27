@@ -159,7 +159,6 @@ As always, if you run into any issues or don't understand any of the above chang
 
 [iso-4217]: http://en.wikipedia.org/wiki/ISO_4217#Active_codes
 [protocol-platform]: https://github.com/snowplow/snowplow/wiki/snowplow-tracker-protocol#11-application-parameters
-[unstructured-events]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#381-trackunstructevent
 
 [semver]: http://semver.org/spec/v2.0.0.html
 [changelog]: https://github.com/snowplow/snowplow-javascript-tracker/blob/master/CHANGELOG
