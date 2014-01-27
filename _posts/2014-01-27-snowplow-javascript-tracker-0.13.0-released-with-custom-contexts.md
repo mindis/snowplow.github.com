@@ -26,6 +26,8 @@ In the rest of this post, then, we will cover:
 
 The most exciting new feature is the addition of custom contexts to all of our `track...()` events.
 
+**Please note that this release only adds custom contexts to the JavaScript Tracker - adding custom contexts to our Enrichment process and Storage targets is on the roadmap - but rest assured we are working on it!**
+
 <h3>1.1 What are custom contexts?</h3>
 
 Context is what describes the circumstances surrounding an individual event - for example, when the event happened, where it happened, how it happened. For the original blog post where we set out our thinking about event context, see [Towards universal event analytics - building an event grammar] [event-grammar-post].
@@ -39,7 +41,7 @@ Think "custom variables" but much more powerful and flexible!
 Custom contexts are great for a couple of use cases:
 
 1. Whenever you want to augment a standard Snowplow event type with some additional data
-2. If your business has a set of common data points/ models which make sense to capture alongside multiple event types
+2. If your business has a set of common data points/models which make sense to capture alongside multiple event types
 
 likely have custom data which you want to send along with The idea is that you can then attach those custom contexts to any existing Snowplow events where storing this additional information would be valuable.
 
@@ -51,7 +53,7 @@ likely have custom data which you want to send along with The idea is that you c
 There is now a new optional last argument to each `track...()` method, called simply `contexts`. For example, here is the new signature for tracking a page view:
 
 {% highlight javascript %}
-function trackPageView(customTitle, contexts) { }
+function trackPageView(customTitle, contexts)
 {% endhighlight %}
 
 The `contexts` argument is always optional on any event call. If set, it must be a JSON taking the form:
@@ -65,6 +67,12 @@ The `contexts` argument is always optional on any event call. If set, it must be
 {% endhighlight %}
 
 Interested in finding out more about custom contexts? We have written a [follow-up blog post] [howto-post] to provide more information on using the new custom context functionality - please [read this post] [howto-post] for more information.
+
+<h3>1.4 A note</h3>
+
+We are well aware that this release is only the start of adding custom contexts to Snowplow. We are working to define a pragmatic approach to Enrichment and Storage which can be leveraged for both unstructured events and custom contexts.
+
+Please keep an eye on our [Roadmap wiki page] [roadmap] to see how Snowplow's support for custom contexts evolves.
 
 <h2><a name="currency">2. New feature: transaction currencies</a></h2>
 
