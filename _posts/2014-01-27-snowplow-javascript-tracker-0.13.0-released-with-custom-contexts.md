@@ -7,9 +7,9 @@ author: Alex
 category: Releases
 ---
 
-We're pleased to announce the immediate availability of the Snowplow JavaScript Tracker version 0.13.0. This is the first new release of the Snowplow JavaScript Tracker since separating it from the main Snowplow repository last year.
+We're pleased to announce the immediate availability of the [Snowplow JavaScript Tracker version 0.13.0] [0130-release]. This is the first new release of the Snowplow JavaScript Tracker since separating it from the main Snowplow repository last year.
 
-The primary objective of this release was to introduce some key new tracking capabilities, in preparation for adding these to our Enrichment process later this year. Secondarily, we also wanted to perform some outstanding housekeeping and tidy-up of the newly-independent repository.
+The primary objective of this release was to introduce some key new tracking capabilities, in preparation for adding these to our Enrichment process. Secondarily, we also wanted to perform some outstanding housekeeping and tidy-up of the newly-independent repository.
 
 In the rest of this post, then, we will cover:
 
@@ -24,15 +24,15 @@ In the rest of this post, then, we will cover:
 
 <h2><a name="contexts">1. New feature: custom contexts</a></h2>
 
-The most exciting new feature is the addition of custom contexts to all of our `track...()` events.
+The most exciting new feature is the addition of custom contexts to all of our `track...()` methods for event tracking.
 
-**Please note that this release only adds custom contexts to the JavaScript Tracker - adding custom contexts to our Enrichment process and Storage targets is on the roadmap - but rest assured we are working on it!**
+**Please note that this release only adds custom contexts to the JavaScript Tracker. Adding custom contexts to our Enrichment process and Storage targets is on the roadmap - but rest assured we are working on it!**
 
 <h3>1.1 What are custom contexts?</h3>
 
-Context is what describes the circumstances surrounding an individual event - for example, when the event happened, where it happened, how it happened. For the original blog post where we set out our thinking about event context, see [Towards universal event analytics - building an event grammar] [event-grammar-post].
+Context is what describes the circumstances surrounding an individual event - for example, when the event happened, where it happened, or how it happened. For the original blog post where we introduced our ideas around event context, see [Towards universal event analytics - building an event grammar] [event-grammar-post].
 
-The Snowplow JavaScript Tracker already captures lots of standard web context by default: event time, user timezone, browser features etc. This new feature allows you to define your own custom contexts: ones which make sense to your specific business. 
+Our JavaScript Tracker already captures lots of standard web context by default: event time, user timezone, monitor color depth, browser features etc. This new feature will allow you to define and track your own custom contexts - ones which make sense to _your_ business.
 
 Think "custom variables" but much more powerful and flexible!
 
@@ -41,16 +41,13 @@ Think "custom variables" but much more powerful and flexible!
 Custom contexts are great for a couple of use cases:
 
 1. Whenever you want to augment a standard Snowplow event type with some additional data
-2. If your business has a set of common data points/models which make sense to capture alongside multiple event types
+2. If your business has a set of crosscutting data points/models which you want to record against multiple event types
 
-likely have custom data which you want to send along with The idea is that you can then attach those custom contexts to any existing Snowplow events where storing this additional information would be valuable.
-
-1. Where you want to track event types which are proprietary/specific to your business (i.e. not already part of Snowplow)
-2. Where you want to track events which have unpredictable or frequently changing properties
+You can attach custom contexts to any Snowplow event type - even custom unstructured events.
 
 <h3>1.3 Usage</h3>
 
-There is now a new optional last argument to each `track...()` method, called simply `contexts`. For example, here is the new signature for tracking a page view:
+To support custom contexts, we have added a new argument, called `contexts`, onto the end of each `track...()` and `add...()` method. For example, here is the new signature for tracking a page view:
 
 {% highlight javascript %}
 function trackPageView(customTitle, contexts)
@@ -59,20 +56,25 @@ function trackPageView(customTitle, contexts)
 The `contexts` argument is always optional on any event call. If set, it must be a JSON taking the form:
 
 {% highlight javascript %}
-{
-    "context1_name": { ... },
-    "context2_name": { ... },
+{ "context1_name": {
     ...
+  },
+  "context2_name": {
+    ...
+  },
+  ...
 }
 {% endhighlight %}
 
-Interested in finding out more about custom contexts? We have written a [follow-up blog post] [howto-post] to provide more information on using the new custom context functionality - please [read this post] [howto-post] for more information.
+The format of the JSON properties for each individual context follows the exact same rules as our [unstructured events' JSON properties] [unstructured-event-json].
 
-<h3>1.4 A note</h3>
+If you are interested in finding out more about custom contexts, we have written a [follow-up blog post] [howto-post] - please [read this post] [howto-post] for more information.
 
-We are well aware that this release is only the start of adding custom contexts to Snowplow. We are working to define a pragmatic approach to Enrichment and Storage which can be leveraged for both unstructured events and custom contexts.
+<h3>1.4 Roadmap</h3>
 
-Please keep an eye on our [Roadmap wiki page] [roadmap] to see how Snowplow's support for custom contexts evolves.
+We are well aware that this release is only the start of adding custom contexts to Snowplow. We are working on a common solution to Enriching and Storing both unstructured events and custom contexts.
+
+Please keep an eye on our [Roadmap wiki page] [roadmap] to see how Snowplow's support for custom contexts (and unstructured events) evolves.
 
 <h2><a name="currency">2. New feature: transaction currencies</a></h2>
 
@@ -108,7 +110,7 @@ Please make sure to pass in the valid [ISO 4217] [iso-4217] code for your curren
 
 Don't forget to set the currency on **both** the parent transaction and its child items.
 
-<h2><a name="paltform">3. New feature: specifying the tracking platform</a></h2>
+<h2><a name="platform">3. New feature: specifying the tracking platform</a></h2>
 
 Many thanks to community member [Ryan Sorensen] [rcs] for contributing the new `setPlatform()` method.
 
@@ -143,7 +145,7 @@ Please note that as of this release, we are moving the Snowplow JavaScript Track
 
     http(s)://d1fc8wv8zag5ca.cloudfront.net/0/sp.js
 
-where 0 is the semantic MAJOR version. If you prefer, you can use this URI path and then get new features and bug fixes "for free" as we roll-out MINOR and PATCH updates to the tracker. Any breaking changes will mean a new MAJOR version, which will be hosted on `/1/sp.js`, i.e. won't break your existing installation.
+where 0 is the semantic MAJOR version. If you prefer, you can use this URI path and then get new features and bug fixes automatically as we roll-out MINOR and PATCH updates to the tracker. Any breaking changes will mean a new MAJOR version, which will be hosted on `/1/sp.js`, i.e. it won't break your existing installation.
 
 <h2><a name="help">6. Getting help</a></h2>
 
@@ -152,18 +154,18 @@ Check out the [v0.13.0 release page] [0130-release] on GitHub for the full list 
 As always, if you run into any issues or don't understand any of the above changes, please [raise an issue] [issues] or get in touch with us via [the usual channels] [talk-to-us].
 
 [event-grammar-post]: /blog/2013/08/12/towards-universal-event-analytics-building-an-event-grammar/
-[roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap
+[forex-post]: /blog/2014/01/17/scala-forex-library-released/
+[howto-post]: /blog/2014/01/27/snowplow-custom-contexts-guide/
 
 [iso-4217]: http://en.wikipedia.org/wiki/ISO_4217#Active_codes
-[forex-post]: /blog/2014/01/17/scala-forex-library-released/
-
 [protocol-platform]: https://github.com/snowplow/snowplow/wiki/snowplow-tracker-protocol#11-application-parameters
-
-[changelog]: https://github.com/snowplow/snowplow-javascript-tracker/blob/master/CHANGELOG
+[unstructured-events]: https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#381-trackunstructevent
 
 [semver]: http://semver.org/spec/v2.0.0.html
-[0140-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=3&page=1&state=open
+[changelog]: https://github.com/snowplow/snowplow-javascript-tracker/blob/master/CHANGELOG
+[roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap
 [0130-release]: xxx
+[0140-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=3&page=1&state=open
 
 [issues]: https://github.com/snowplow/snowplow/issues
 [talk-to-us]: https://github.com/snowplow/snowplow/wiki/Talk-to-us
