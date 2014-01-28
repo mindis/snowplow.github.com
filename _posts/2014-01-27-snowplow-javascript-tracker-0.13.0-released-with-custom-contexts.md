@@ -137,9 +137,9 @@ As well as tidying up the repository, these updates should lay the groundwork fo
 
 <h2><a name="upgrading">5. Upgrading</a></h2>
 
-As always, the updated minified tracker is available here:
+**UPDATED** After an important post-release bug fix, the updated minified tracker is available here:
 
-    http(s)://d1fc8wv8zag5ca.cloudfront.net/0.13.0/sp.js
+    http(s)://d1fc8wv8zag5ca.cloudfront.net/0.13.1/sp.js
 
 Please note that as of this release, we are moving the Snowplow JavaScript Tracker to true [semantic versioning] [semver]. This means that going forwards we are also making this tracker available as:
 
