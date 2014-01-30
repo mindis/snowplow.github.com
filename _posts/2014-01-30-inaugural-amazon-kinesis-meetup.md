@@ -11,6 +11,10 @@ Yesterday evening saw the [inaugural meetup] [1st-meetup] of the [London User Gr
 
 At Snowplow we have been working with [Kinesis] [kinesis] since its first announcement, and we were keen to organize a Kinesis-centric meetup for the tech community here in London and the South-East. And it looks like our excitement about Kinesis is widely shared - there were almost 40 "Kinetics" attending the first meetup. Huge thanks to [Just Eat] [just-eat] for hosting all of us in their offices and keeping us all fed with pizza and beer!
 
+![kinesis-meetup] [pic]
+
+More on the talks after the jump:
+
 <!--more-->
 
 There were two talks at the event:
@@ -31,11 +35,13 @@ The live demo gave a sneak peak at the two new Kinesis-based Snowplow components
 1. The new Scala Stream Collector - running on my laptop, receiving Snowplow raw events over HTTP and putting them to a Kinesis raw events stream
 2. The new Scala Kinesis Enrich - running on an EC2 box, receiving Snowplow raw events from Kinesis and putting them to a Snowplow enriched events stream
 
-I'm afraid that I don't (yet) have a way of recreating or sharing the live demo - this is something we will hopefully come back to following the 0.9.0 release.
+I'm afraid that I don't (yet!) have a way of recreating or sharing the live demo - this is something we will hopefully come back to following the 0.9.0 release.
 
 It was a great evening - and hopefully the first of many as the Kinesis community takes shape here in the UK! A big thank you to Peter Mounce and the Just Eat Engineering team for being such excellent hosts, and a warm thanks for Ian Meyers for giving us the inside track on Amazon Kinesis!
 
 Do please [join the group] [kinesis-london] to be kept up-to-date with upcoming meetups, and if you would like to give a talk, email us on [kinesis-ug@snowplowanalytics.com] [email].
+
+[pic]: /static/img/blog/2014/01/kinesis-meetup.jpg
 
 [1st-meetup]: http://www.meetup.com/kinesis-london/events/155043952/
 [kinesis-london]: http://www.meetup.com/kinesis-london/
