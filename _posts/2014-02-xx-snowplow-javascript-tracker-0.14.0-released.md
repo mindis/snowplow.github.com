@@ -98,14 +98,14 @@ then you will get the new version automatically.
 
 <h2><a name="help">8. Getting help </a></h2>
 
-Check out the [v0.13.0 release page] [0140-release] on GitHub for the full list of changes made in this version.
+Check out the [v0.14.0 release page] [0140-release] on GitHub for the full list of changes made in this version.
 
 As always, if you run into any issues or don't understand any of the above changes, please [raise an issue] [issues] or get in touch with us via [the usual channels] [talk-to-us].
 
 
 
 [0140-release]: https://github.com/snowplow/snowplow-javascript-tracker/releases/tag/0.14.0
-[0140-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=4&page=1&state=open
+[100-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=4&page=1&state=open
 
 [grunt]: [http://gruntjs.com/]
 
