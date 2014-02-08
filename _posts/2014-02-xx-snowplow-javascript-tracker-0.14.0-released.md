@@ -16,16 +16,16 @@ This blog post will cover the following changes:
 1. [New feature: gzipping]
 2. [New feature: set user ID from a cookie]
 3. [New feature: set user ID from a querystring]
-4. [New feature: pass a referrer through an IFrame]
+4. [New feature: pass a referrer through an iframe]
 5. [New feature: respecting Do Not Track]
 6. [New build process]
-7. [Housekeeping]
+7. [Other structural improvements]
 8. [Upgrading]
 9. [Getting help]
 
 <h2><a name="gzipping">1. New feature: gzipping</a></h2>
 
-Our hosted JavaScript JavaScript Tracker is now gzipped for CloudFront delivery using a Grunt plugin. This decreases the file size by about 70%, improving load times and perceived website speed. All modern browsers support gzipping.
+Our hosted JavaScript JavaScript Tracker is now gzipped for CloudFront delivery using a Grunt plugin. This decreases the file size by about 70%, improving load times and perceived website speed. All modern browsers support gzipping ([reference] [gzip-browsers]).
 
 <h2><a name="cookie">2. New feature: set user ID from a cookie</a></h2>
 
@@ -65,9 +65,9 @@ And to set it to the value of the "id" field in the referrer querystring, use:
 _snaq.push([['setUserIdFromReferrer', 'id']]);
 {% endhighlight %}
 
-<h2><a name="iframe">4. New feature: pass a referrer through an IFrame</a></h2>
+<h2><a name="iframe">4. New feature: pass a referrer through an iframe</a></h2>
 
-You can now pass the referrer back to Snowplow when inside an IFrame. To do this, set 'referrer=x' in the querystring on the IFrame, where 'x' is the required referrer. This also works if you set 'referer=x' (note, two not three r's).
+You can now pass the referrer back to Snowplow from inside an iframe. To do this, set `referrer=x` in the querystring of the iframe's URL, where 'x' is the required referrer. This also works if you set `referer=x` (with one 'r').
 
 <h2><a name="iframe">5. New feature: respecting Do Not Track</a></h2>
 
@@ -79,7 +79,7 @@ We have replaced our custom `snowpak.sh` Bash script with a standardised [Grunt]
 
 It should also help us move to a more modular project structure and add a test suite in the [next release] [100-issues].
 
-<h2><a name="housekeeping">7. Housekeeping</a></h2>
+<h2><a name="housekeeping">7. Other structural improvements</a></h2>
 
 We have also:
 
@@ -88,7 +88,7 @@ We have also:
 * Moved functions to detect browser attributes into a new file [(#37)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/37]
 * Renamed setDoNotTrack to respectDoNotTrack [(#28)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/28]
 * Removed getLegacyCookieName [(#50)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/50]
-* Removed legacy debug code [(#65)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/65]
+* Removed the legacy Piwik debug code [(#65)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/65]
 
 <h2><a name="upgrading">8. Upgrading </a></h2>
 
@@ -107,6 +107,8 @@ then you will get the new version automatically.
 Check out the [v0.14.0 release page] [0140-release] on GitHub for the full list of changes made in this version.
 
 As always, if you run into any issues or don't understand any of the above changes, please [raise an issue] [issues] or get in touch with us via [the usual channels] [talk-to-us].
+
+[gzip-browsers]: http://webmasters.stackexchange.com/questions/22217/which-browsers-handle-content-encoding-gzip-and-which-of-them-has-any-special
 
 [0140-release]: https://github.com/snowplow/snowplow-javascript-tracker/releases/tag/0.14.0
 [100-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=4&page=1&state=open
