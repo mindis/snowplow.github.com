@@ -66,8 +66,8 @@ authors:
   Fred:
     display_name: Fred Blundun
     url:          /fred.html
-    avatar:       <div class="author_image"><img src="https://lh3.googleusercontent.com/-D8PouP11D7k/ThsFbjWptSI/AAAAAAAAAsU/xMukkYGACgw/w460-h458-no/HB+Avatar.jpg" /></div> # We need to replace this with a pic of Fred rather than Harry!
+    avatar:       <div class="author_image"><img src="https://plus.google.com/s2/photos/profile/113917031846021461080" /></div>
     spiel:        |
       <div class="author_spiel">
-        <a href="/fred.html">Fred</a> is an intern at Snowplow Analytics. You can find him on <a href="uk.linkedin.com/pub/fred-blundun/8a/16a/722">LinkedIn</a>
+        <a href="/fred.html">Fred</a> is an intern at Snowplow Analytics. You can find him on <a href="https://plus.google.com/u/0/113917031846021461080" rel="author">Google+</a> and <a href="" <a href="uk.linkedin.com/pub/fred-blundun/8a/16a/722">LinkedIn</a>
       </div>
