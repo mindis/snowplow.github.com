@@ -13,15 +13,15 @@ In this release we have introduced some new tracking options and compressed our 
 
 This blog post will cover the following changes:
 
-1. [New feature: gzipping]
-2. [New feature: set user ID from a cookie]
-3. [New feature: set user ID from a querystring]
-4. [New feature: pass a referrer through an iframe]
-5. [New feature: respecting Do Not Track]
-6. [New build process]
-7. [Other structural improvements]
-8. [Upgrading]
-9. [Getting help]
+1. [New feature: gzipping](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+2. [New feature: set user ID from a cookie](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#cookie)
+3. [New feature: set user ID from a querystring](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#querystring)
+4. [New feature: pass a referrer through an iframe](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#iframe)
+5. [New feature: respecting Do Not Track](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#donottrack)
+6. [New build process](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#grunt)
+7. [Other structural improvements](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#structure)
+8. [Upgrading](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+9. [Getting help](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
 
 <h2><a name="gzipping">1. New feature: gzipping</a></h2>
 
@@ -69,9 +69,21 @@ _snaq.push([['setUserIdFromReferrer', 'id']]);
 
 You can now pass the referrer back to Snowplow from inside an iframe. To do this, set `referrer=x` in the querystring of the iframe's URL, where 'x' is the required referrer. This also works if you set `referer=x` (with one 'r').
 
-<h2><a name="iframe">5. New feature: respecting Do Not Track</a></h2>
+<h2><a name="donottrack">5. New feature: respecting Do Not Track</a></h2>
 
-Section to add.
+Most browsers offer a Do Not Track feature, allowing users to request not to be tracked by websites. You can now respect that preference with:
+
+{% highlight javascript %}
+function respectDoNotTrack(enable);
+{% endhighlight %}
+
+Use this function like so:
+
+{% highlight javascript %}
+_snaq.push(['respectDoNotTrack', true]); 
+{% endhighlight %}
+
+If the browser's Do Not Track feature is enabled, the above code will prevent the SnowPlow JavaScript Tracker from setting first-party cookies and sending events to a collector.
 
 <h2><a name="grunt">6. Switched to Grunt-based build process</a></h2>
 
@@ -79,16 +91,15 @@ We have replaced our custom `snowpak.sh` Bash script with a standardised [Grunt]
 
 It should also help us move to a more modular project structure and add a test suite in the [next release] [100-issues].
 
-<h2><a name="housekeeping">7. Other structural improvements</a></h2>
+<h2><a name="structure">7. Other structural improvements</a></h2>
 
 We have also:
 
-* Moved cookie-related functionality into a new file [(#77)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/77]
-* Moved requestStringBuilder into a new file [(#55)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/55]
-* Moved functions to detect browser attributes into a new file [(#37)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/37]
-* Renamed setDoNotTrack to respectDoNotTrack [(#28)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/28]
-* Removed getLegacyCookieName [(#50)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/50]
-* Removed the legacy Piwik debug code [(#65)] [https://github.com/snowplow/snowplow-javascript-tracker/issues/65]
+* Moved cookie-related functionality into a new file [(#77)] [77]
+* Moved requestStringBuilder into a new file [(#55)] [55]
+* Moved functions to detect browser attributes into a new file [(#37)] [37]
+* Removed getLegacyCookieName [(#50)] [50]
+* Removed the legacy Piwik debug code [(#65)] [65]
 
 <h2><a name="upgrading">8. Upgrading </a></h2>
 
@@ -117,3 +128,9 @@ As always, if you run into any issues or don't understand any of the above chang
 
 [issues]: https://github.com/snowplow/snowplow/issues
 [talk-to-us]: https://github.com/snowplow/snowplow/wiki/Talk-to-us
+
+[77]: https://github.com/snowplow/snowplow-javascript-tracker/issues/77
+[55]: https://github.com/snowplow/snowplow-javascript-tracker/issues/55
+[37]: https://github.com/snowplow/snowplow-javascript-tracker/issues/37
+[50]: https://github.com/snowplow/snowplow-javascript-tracker/issues/50
+[65]: https://github.com/snowplow/snowplow-javascript-tracker/issues/65
