@@ -9,7 +9,7 @@ category: Releases
 
 *Alex writes: this is the first blog post - and code release - by Snowplow "springtern" Fred Blundun. Stay tuned for another blog post soon introducing Fred!*
 
-We are pleased to announce the release of the [SnowPlow JavaScript Tracker version 0.14.0] [0140-release]. 
+We are pleased to announce the release of the [Snowplow JavaScript Tracker version 0.14.0] [0140-release]. 
 
 In this release we have introduced some new tracking options and compressed our tracker for better load times. We have also updated our build process to use [Grunt] [grunt].
 
@@ -89,7 +89,7 @@ Use this function like so:
 _snaq.push(['respectDoNotTrack', true]); 
 {% endhighlight %}
 
-If the browser's Do Not Track feature is enabled, the above code will prevent the SnowPlow JavaScript Tracker from setting first-party cookies and sending events to a collector.
+If the browser's Do Not Track feature is enabled, the above code will prevent the Snowplow JavaScript Tracker from either setting first-party cookies or sending events to a collector.
 
 <h2><a name="grunt">6. Switched to Grunt-based build process</a></h2>
 
@@ -132,7 +132,7 @@ As always, if you run into any issues or don't understand any of the above chang
 
 [joshspivey]: https://github.com/joshspivey
 
-[grunt]: [http://gruntjs.com/]
+[grunt]: [http://gruntjs.com/
 
 [issues]: https://github.com/snowplow/snowplow/issues
 [talk-to-us]: https://github.com/snowplow/snowplow/wiki/Talk-to-us
