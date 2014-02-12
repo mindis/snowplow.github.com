@@ -15,15 +15,17 @@ In this release we have introduced some new tracking options and compressed our 
 
 This blog post will cover the following changes:
 
-1. [New feature: gzipping](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
-2. [New feature: set user ID from a cookie](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#cookie)
-3. [New feature: set user ID from a querystring](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#querystring)
-4. [New feature: pass a referrer through an iframe](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#iframe)
-5. [New feature: respecting Do Not Track](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#donottrack)
-6. [New build process](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#grunt)
-7. [Other structural improvements](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#structure)
-8. [Upgrading](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
-9. [Getting help](/blog/2014/02/xx/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+1. [New feature: gzipping](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+2. [New feature: set user ID from a cookie](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#cookie)
+3. [New feature: set user ID from a querystring](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#querystring)
+4. [New feature: pass a referrer through an iframe](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#iframe)
+5. [New feature: respecting Do Not Track](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#donottrack)
+6. [New build process](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#grunt)
+7. [Other structural improvements](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#structure)
+8. [Upgrading](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+9. [Getting help](/blog/2014/02/12/snowplow-javascript-tracker-0.13.0-released/#gzipping)
+
+<!--more-->
 
 <h2><a name="gzipping">1. New feature: gzipping</a></h2>
 
