@@ -7,9 +7,9 @@ author: Fred
 category: Releases
 ---
 
-_Alex writes: this is the first blog post - and code release - by Snowplow "springtern" Fred Blundun. Stay tuned for another blog post soon introducing Fred!_
+*Alex writes: this is the first blog post - and code release - by Snowplow "springtern" Fred Blundun. Stay tuned for another blog post soon introducing Fred!*
 
-We are happy to announce the release of the [SnowPlow JavaScript Tracker version 0.14.0] [0140-release]. 
+We are pleased to announce the release of the [SnowPlow JavaScript Tracker version 0.14.0] [0140-release]. 
 
 In this release we have introduced some new tracking options and compressed our tracker for better load times. We have also updated our build process to use [Grunt] [grunt].
 
@@ -73,6 +73,8 @@ _snaq.push([['setUserIdFromReferrer', 'id']]);
 
 You can now pass the referrer back to Snowplow from inside an iframe. To do this, set `referrer=x` in the querystring of the iframe's URL, where 'x' is the required referrer. This also works if you set `referer=x` (with one 'r').
 
+Many thanks to community member [Josh Spivey] [joshspivey] for this idea and some suggested code!
+
 <h2><a name="donottrack">5. New feature: respecting Do Not Track</a></h2>
 
 Most browsers offer a Do Not Track feature, allowing users to request not to be tracked by websites. You can now respect that preference with:
@@ -127,6 +129,8 @@ As always, if you run into any issues or don't understand any of the above chang
 
 [0140-release]: https://github.com/snowplow/snowplow-javascript-tracker/releases/tag/0.14.0
 [100-issues]: https://github.com/snowplow/snowplow-javascript-tracker/issues?milestone=4&page=1&state=open
+
+[joshspivey]: https://github.com/joshspivey
 
 [grunt]: [http://gruntjs.com/]
 
