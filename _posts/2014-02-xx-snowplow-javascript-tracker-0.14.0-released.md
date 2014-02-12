@@ -7,6 +7,8 @@ author: Fred
 category: Releases
 ---
 
+_Alex writes: this is the first blog post - and code release - by Snowplow "springtern" Fred Blundun. Stay tuned for another blog post soon introducing Fred!_
+
 We are happy to announce the release of the [SnowPlow JavaScript Tracker version 0.14.0] [0140-release]. 
 
 In this release we have introduced some new tracking options and compressed our tracker for better load times. We have also updated our build process to use [Grunt] [grunt].
